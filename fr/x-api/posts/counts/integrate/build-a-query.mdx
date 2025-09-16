@@ -1,0 +1,276 @@
+---
+title: Créer une requête
+sidebarTitle: Créer une requête
+---
+
+<div id="building-a-query">
+  #### Créer une requête
+</div>
+
+**Limites des requêtes !**
+
+Vos requêtes sont limitées selon le [niveau d’accès](/fr/x-api/getting-started/about-x-api) que vous utilisez.
+
+Si vous avez un accès Pro, votre requête peut contenir jusqu’à 512 caractères.
+
+Si vous avez un accès Enterprise, veuillez contacter votre chargé de compte.
+
+**Disponibilité des opérateurs**
+
+La plupart des opérateurs sont disponibles pour tous les développeurs, mais certains sont réservés aux utilisateurs approuvés pour l’accès Enterprise. Nous indiquons le niveau d’accès requis pour chaque opérateur dans la [liste des opérateurs](/fr/x-api/posts/search/integrate/build-a-query) à l’aide des libellés suivants :
+
+* Opérateurs de base : disponibles avec n’importe quel [Project](/fr/resources/fundamentals/projects).
+* Opérateurs avancés : disponibles avec un Project disposant de l’accès Enterprise 
+   
+
+<div id="operator-types-standalone-and-conjunction-required">
+  #### Types d'opérateurs : autonomes et nécessitant une conjonction
+</div>
+
+Les **opérateurs autonomes** peuvent être utilisés seuls ou avec n’importe quels autres opérateurs (y compris ceux qui nécessitent une conjonction).
+
+Par exemple, la requête suivante fonctionne car elle utilise l’opérateur #hashtag, qui est autonome :
+
+#xapiv2
+
+Les opérateurs **nécessitant une conjonction** ne peuvent pas être utilisés seuls dans une requête ; ils ne peuvent être utilisés que lorsqu’au moins un opérateur autonome est inclus dans la requête. En effet, utilisés seuls, ces opérateurs seraient bien trop généraux et correspondraient à un volume extrêmement élevé de Posts.
+
+Par exemple, les requêtes suivantes ne sont pas prises en charge puisqu’elles ne contiennent que des opérateurs nécessitant une conjonction :
+
+has:media
+has:links OR is:retweet
+
+Si l’on ajoute un opérateur autonome, tel que l’expression « X data », la requête fonctionnera alors correctement.
+
+« X data » has:mentions (has:media OR has:links)
+
+<div id="boolean-operators-and-grouping">
+  #### Opérateurs booléens et regroupement
+</div>
+
+Si vous souhaitez enchaîner plusieurs opérateurs dans une seule requête, vous disposez des outils suivants :
+
+|     |     |
+| :--- | :--- |
+| **Logique AND** | Des opérateurs successifs séparés par un espace appliquent une logique booléenne « AND », ce qui signifie que les Posts ne correspondront que si les deux conditions sont remplies. Par exemple, snow day #NoSchool correspondra aux Posts contenant les termes snow et day ainsi que le hashtag #NoSchool. |
+| **Logique OR** | Des opérateurs successifs avec OR entre eux appliquent une logique OR, ce qui signifie que les Posts correspondront si l’une des conditions est remplie. Par exemple, spécifier grumpy OR cat OR #meme correspondra à tout Post contenant au moins les termes grumpy ou cat, ou le hashtag #meme. |
+| **Logique NOT, négation** | Préfixez un mot-clé (ou tout opérateur) d’un tiret (-) pour le nier (NOT). Par exemple, cat #meme -grumpy correspondra aux Posts contenant le hashtag #meme et le terme cat, mais uniquement s’ils ne contiennent pas le terme grumpy. Une clause de requête courante est -is:retweet, qui n’inclura pas les Retweets, et correspondra ainsi uniquement aux Posts originaux, aux Quote Tweets et aux réponses. Tous les opérateurs peuvent être niés, mais les opérateurs niés ne peuvent pas être utilisés seuls. |
+| **Regroupement** | Vous pouvez utiliser des parenthèses pour regrouper des opérateurs. Par exemple, (grumpy cat) OR (#meme has:images) renverra soit des Posts contenant les termes grumpy et cat, soit des Posts avec images contenant le hashtag #meme. Notez que les AND sont appliqués en premier, puis les OR. |
+
+**Remarque sur les négations**
+
+L’opérateur -is:nullcast doit toujours être nié.
+
+Les opérateurs niés ne peuvent pas être utilisés seuls.
+
+Ne niez pas un ensemble d’opérateurs regroupés entre parenthèses. À la place, niez chaque opérateur individuellement. Par exemple, au lieu d’utiliser skiing -(snow OR day OR noschool), nous vous suggérons d’utiliser skiing -snow -day -noschool. 
+
+**Ordre des opérations**
+
+Lorsque vous combinez les fonctionnalités AND et OR, l’ordre des opérations suivant déterminera la façon dont votre requête est évaluée.
+
+1. Les opérateurs reliés par une logique AND sont combinés en premier
+2. Ensuite, les opérateurs reliés par une logique OR sont appliqués
+
+Par exemple :
+
+* apple OR iphone ipad serait évalué comme apple OR (iphone ipad)
+* ipad iphone OR android serait évalué comme (iphone ipad) OR android
+
+Pour éliminer toute incertitude et garantir que votre requête est évaluée comme prévu, regroupez les termes entre parenthèses lorsque cela est approprié. 
+
+Par exemple :
+
+* (apple OR iphone) ipad
+* iphone (ipad OR android)
+   
+
+**Ponctuation, diacritiques et sensibilité à la casse**
+
+Si vous spécifiez une requête par mot-clé ou hashtag avec des accents ou des diacritiques, elle correspondra au texte des Posts qui contient à la fois le terme avec les accents et diacritiques, ainsi que le même terme sans accents. Par exemple, des requêtes avec le mot-clé Diacrítica ou le hashtag #cumpleaños correspondront à *Diacrítica* ou *#cumpleaños*, ainsi qu’à *Diacritica* ou *#cumpleanos* sans le tilde í ou la eñe.
+
+Les caractères avec accents ou diacritiques sont traités de la même manière que les caractères normaux et ne sont pas considérés comme des délimiteurs de mots. Par exemple, une requête avec le mot-clé cumpleaños ne correspondrait qu’aux activités contenant le mot *cumpleaños* et ne correspondrait pas aux activités contenant *cumplea*, *cumplean* ou *os*.
+
+Tous les opérateurs sont évalués sans tenir compte de la casse. Par exemple, la requête cat correspondra aux Posts contenant tous les éléments suivants : *cat*, *CAT*, *Cat*.
+
+Le comportement de correspondance du [flux filtré](/fr/x-api/posts/filtered-stream) diffère de celui des décomptes de Posts. Lors de la [création d’une règle de flux filtré](/fr/x-api/posts/filtered-stream#building-rules-for-filtered-stream), sachez que les mots-clés et hashtags qui incluent des accents et des diacritiques ne correspondront qu’aux termes qui incluent également l’accent et le diacritique, et ne correspondront pas aux termes qui utilisent des caractères non accentués. 
+
+Par exemple, des règles de flux filtré qui incluent le mot-clé Diacrítica ou le hashtag #cumpleaños ne correspondront qu’aux termes *Diacrítica* et *#cumpleaños*, et ne correspondront pas à *Diacritica* ou *#cumpleanos* sans le tilde í ou la eñe.
+
+**Spécificité et efficacité**
+
+Lorsque vous commencez à élaborer votre requête, il est important de garder quelques éléments à l’esprit.
+
+* L’utilisation d’opérateurs larges et isolés dans votre requête, comme un seul mot-clé ou un #hashtag, n’est généralement pas recommandée, car elle fera correspondre un volume massif de Posts. Rédiger une requête plus robuste produira un ensemble plus spécifique de Posts correspondants et, idéalement, augmentera la précision de vos décomptes de Posts pour vous aider à obtenir des insights plus pertinents.
+  * Par exemple, si votre requête se limitait au mot-clé happy, vous obtiendriez probablement entre 200 000 et 300 000 Posts par jour.
+  * L’ajout d’opérateurs conditionnels supplémentaires resserre vos résultats, par exemple (happy OR happiness) place_country:GB -birthday -is:retweet
+* Rédiger des requêtes efficaces aide également à respecter la limite de longueur (en caractères). Le décompte inclut l’intégralité de la chaîne de requête, espaces et opérateurs compris.
+  * Par exemple, la requête suivante comporte 59 caractères : (happy OR happiness) place_country:GB -birthday -is:retweet
+
+**Comportement d’appariement des Quote Tweets**
+
+Lorsque vous utilisez les endpoints de décompte de Posts, les opérateurs ne correspondent pas au contenu du Post original cité, mais correspondent au contenu inclus dans le Quote Tweet.
+
+Cependant, veuillez noter que le [flux filtré](/fr/x-api/posts/filtered-stream) fera correspondre à la fois le contenu du Post original cité et le contenu du Quote Tweet.
+ 
+
+**Construire une requête de manière itérative**
+
+**Testez votre requête tôt et souvent**
+
+Obtenir dès la première tentative des résultats « corrects » est rare. Il y a tellement de contenu sur X qui peut ne pas être évident au départ, et la syntaxe de requête décrite ci-dessus peut être difficile à aligner avec votre besoin.
+
+Au fur et à mesure que vous construisez une requête, il est important de la tester périodiquement à l’aide de l’un des endpoints [Search Post](/fr/x-api/posts/search/introduction) afin de vous assurer que les Posts correspondant à votre requête sont pertinents pour votre cas d’usage.
+
+Pour cette section, nous allons commencer avec la requête suivante et l’ajuster en fonction des résultats obtenus lors de nos tests :
+
+happy OR happiness
+
+**Utilisez les résultats pour restreindre la requête**
+
+Quand vous testez la requête avec Search Posts, parcourez les Posts renvoyés pour vérifier s’ils contiennent les données attendues. Commencer par une requête large et un surensemble de correspondances de Posts vous permet d’examiner les résultats et de resserrer la requête afin de filtrer les éléments indésirables.
+
+Lors du test de l’exemple de requête, nous avons constaté que nous recevions des Posts dans plusieurs langues. Dans ce cas, nous voulons recevoir uniquement des Posts en anglais ; nous allons donc ajouter l’opérateur lang :
+
+(happy OR happiness) lang:en
+
+Le test a renvoyé un certain nombre de Posts souhaitant un joyeux anniversaire ; nous allons donc ajouter -birthday comme mot-clé négatif. Nous souhaitons également ne recevoir que des Posts originaux, nous avons donc ajouté l’opérateur négatif -is:retweet :
+
+(happy OR happiness) lang:en -birthday -is:retweet
+
+**Ajuster l’inclusion si nécessaire**
+
+Si vous constatez que vous ne recevez pas via Search Posts des données que vous attendez, alors que vous savez que des Posts existants devraient remonter, vous devrez peut-être élargir votre requête en supprimant des opérateurs susceptibles d’exclure les données souhaitées.
+
+Dans notre exemple, nous avons remarqué d’autres Posts dans notre timeline personnelle exprimant l’émotion recherchée qui n’apparaissaient pas dans les résultats de test. Pour améliorer la couverture, nous allons ajouter les mots-clés excited et elated.
+
+(happy OR happiness OR excited OR elated) lang:en -birthday -is:retweet
+
+**Ajuster en fonction des tendances/« pics » sur la période**
+
+Les tendances vont et viennent rapidement sur X. La maintenance de votre requête doit être un processus continu. Si vous prévoyez d’utiliser une requête sur une période prolongée, nous vous suggérons de vérifier périodiquement les données reçues pour déterminer si des ajustements sont nécessaires.
+
+Dans notre exemple, nous constatons que nous avons commencé à recevoir des Posts souhaitant de « joyeuses fêtes ». Comme nous ne voulons pas inclure ces Posts dans nos résultats, nous allons ajouter le mot-clé négatif -holidays.
+
+(happy OR happiness OR excited OR elated) lang:en -birthday -is:retweet -holidays
+
+Une fois votre requête correctement testée et itérée, vous pouvez commencer à l’envoyer aux endpoints de décompte de Posts pour ne recevoir que le volume de Posts, plutôt que les charges utiles complètes.
+
+<div id="adding-a-query-to-your-request">
+  #### Ajouter une requête à votre requête
+</div>
+
+Pour ajouter votre requête à votre requête, vous devez utiliser le paramètre query. Comme pour tout paramètre de requête, assurez-vous d’encoder en HTTP la requête que vous avez définie.
+
+Voici un exemple de ce à quoi cela peut ressembler avec une commande cURL. Si vous souhaitez utiliser cette commande, remplacez $BEARER_TOKEN par votre propre [jeton Bearer](/fr/resources/fundamentals/authentication#oauth-2-0) :
+
+```
+      curl https://api.x.com/2/tweets/counts/recent?query=cat%20has%3Amedia%20-grumpy&tweet.fields=created_at&max_results=100 -H "Authorization: Bearer $BEARER_TOKEN"
+```
+
+<div id="query-examples">
+  #### Exemples de requêtes
+</div>
+
+**Suivre une catastrophe naturelle**
+
+La requête suivante faisait correspondre des Posts originaux provenant d’agences météorologiques et de stations de mesure qui évoquaient l’ouragan Harvey, qui a frappé Houston en 2017.
+
+Voici à quoi ressemblerait la requête sans encodage HTTP :
+
+has:geo (from:NWSNHC OR from:NHC_Atlantic OR from:NWSHouston OR from:NWSSanAntonio OR from:USGS_TexasRain OR from:USGS_TexasFlood OR from:JeffLindner1) -is:retweet
+
+Et voici à quoi ressemblerait la requête avec l’encodage HTTP, le paramètre de requête et l’URI des décomptes récents de Posts :
+
+https://api.x.com/2/tweets/counts/recent?query=-is%3Aretweet%20has%3Ageo%20(from%3ANWSNHC%20OR%20from%3ANHC_Atlantic%20OR%20from%3ANWSHouston%20OR%20from%3ANWSSanAntonio%20OR%20from%3AUSGS_TexasRain%20OR%20from%3AUSGS_TexasFlood%20OR%20from%3AJeffLindner1)
+
+**Analyser le sentiment d’une conversation**
+
+La règle suivante peut être utilisée pour mieux comprendre le sentiment autour du hashtag *#nowplaying*, mais limitée aux Posts publiés en Amérique du Nord.
+
+Voici à quoi ressembleraient les deux requêtes, l’une pour le positif et l’autre pour le négatif, sans encodage HTTP :
+
+#nowplaying (happy OR exciting OR excited OR favorite OR fav OR amazing OR lovely OR incredible) (place_country:US OR place_country:MX OR place_country:CA) -horrible -worst -sucks -bad -disappointing
+
+#nowplaying (horrible OR worst OR sucks OR bad OR disappointing) (place_country:US OR place_country:MX OR place_country:CA) -happy -exciting -excited -favorite -fav -amazing -lovely -incredible
+
+Et voici à quoi ressembleraient les requêtes avec l’encodage HTTP, le paramètre de requête et l’URI des décomptes récents de Posts :
+
+https://api.x.com/2/tweets/counts/recent?query=%23nowplaying%20(happy%20OR%20exciting%20OR%20excited%20OR%20favorite%20OR%20fav%20OR%20amazing%20OR%20lovely%20OR%20incredible)%20(place_country%3AUS%20OR%20place_country%3AMX%20OR%20place_country%3ACA)%20-horrible%20-worst%20-sucks%20-bad%20-disappointing
+
+https://api.x.com/2/tweets/counts/recent?query=%23nowplaying%20(horrible%20OR%20worst%20OR%20sucks%20OR%20bad%20disappointing)%20(place_country%3AUS%20OR%20place_country%3AMX%20OR%20place_country%3ACA)%20-happy%20-exciting%20-excited%20-favorite%20-fav%20-amazing%20-lovely%20-incredible
+
+**Trouver des Posts liés à une annotation de Post spécifique**
+
+Cette règle a été conçue pour filtrer les Posts originaux qui incluent l’image d’un animal de compagnie autre qu’un chat, lorsque la langue identifiée dans le Post est le japonais. Pour ce faire, nous avons utilisé l’opérateur context: afin de tirer parti de la fonctionnalité [Post annotation](/fr/x-api/fundamentals/post-annotations). Nous avons d’abord utilisé l’endpoint [Post lookup](/fr/x-api/posts/lookup/introduction) et le paramètre de champs tweet.fields=context_annotations pour identifier quels IDs domain.entity nous devons utiliser dans notre requête :
+
+* Les Posts liés aux chats renvoient le **domaine** 66 (catégorie Interests and Hobbies) avec l’entity 852262932607926273 (Cats).
+* Les Posts liés aux animaux de compagnie renvoient le **domaine** 65 (Interests and Hobbies Vertical) avec l’entity 852262932607926273 (Pets).
+
+Voici à quoi ressemblerait la requête sans encodage HTTP :
+
+context:65.852262932607926273 -context:66.852262932607926273 -is:retweet has:images lang:ja
+
+Et voici à quoi ressemblerait la requête avec l’encodage HTTP, le paramètre de requête et l’URI des décomptes récents de Posts :
+
+https://api.x.com/2/tweets/counts/recent?query=context%3A65.852262932607926273%20-context%3A66.852262932607926273%20-is%3Aretweet%20has%3Aimages%20lang%3Aja
+
+<div id="operators">
+  #### Opérateurs
+</div>
+
+| Opérateur               | Type         | Disponibilité | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+|:------------------------|:--------------|:--------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `keyword`              | Autonome     | Principal     | Fait correspondre un mot-clé dans le corps d’une publication. Il s’agit d’une correspondance tokenisée, ce qui signifie que votre chaîne de mot-clé sera comparée au texte tokenisé du corps de la publication. La tokenisation segmente les mots en fonction de la ponctuation, des symboles et des caractères séparateurs du plan de base Unicode. Par exemple, une publication contenant « I like coca-cola » serait segmentée en jetons suivants : I, like, coca, cola. Ces jetons seraient ensuite comparés à la chaîne de mot-clé utilisée dans votre requête. Pour faire correspondre des chaînes contenant de la ponctuation (par exemple coca-cola), des symboles ou des caractères séparateurs, vous devez entourer votre mot-clé de guillemets doubles. Exemple : `pepsi OR cola OR "coca cola"` |
+| `emoji`                | Autonome     | Principal     | Fait correspondre un emoji dans le corps d’une publication. À l’instar d’un mot-clé, les emojis sont une correspondance tokenisée, ce qui signifie que votre emoji sera comparé au texte tokenisé du corps de la publication. Notez que si un emoji possède une variante, vous devez l’entourer de guillemets doubles pour l’ajouter à une requête. Exemple : `(😃 OR 😡) 😬`                                                                                                                                                                                                                      |
+| `"exact phrase match"` | Autonome     | Principal     | Fait correspondre l’expression exacte dans le corps d’une publication. Exemple : `("X API" OR #v2) -"recent counts"`                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `#`                    | Autonome     | Principal     | Fait correspondre toute publication contenant un hashtag reconnu, si le hashtag est une entité reconnue dans une publication. Cet opérateur effectue une correspondance exacte, PAS une correspondance tokenisée, ce qui signifie que la règle `#thanku` fera correspondre les publications avec le hashtag exact #thanku, mais pas celles avec le hashtag #thankunext. Exemple : `#thankunext #fanart OR @arianagrande`                                                                                                                                                                          |
+| `@`                    | Autonome     | Principal     | Fait correspondre toute publication mentionnant le nom d’utilisateur indiqué, si le nom d’utilisateur est une entité reconnue (y compris le caractère @). Exemple : `(@XDevelopers OR @API) -@X`                                                                                                                                                                                                                                                                                                                      |
+| `$`                    | Autonome     | Avancé        | Fait correspondre toute publication contenant le « cashtag » spécifié (où le premier caractère du jeton est le caractère « $ »). Notez que l’opérateur cashtag s’appuie sur l’extraction d’entités « symbols » de X pour faire correspondre les cashtags, plutôt que d’essayer d’extraire le cashtag du corps lui-même. Exemple : `$twtr OR @XDevelopers -$fb`                                                                                                                                                                          |
+| `from:`                | Autonome     | Principal     | Fait correspondre toute publication provenant d’un utilisateur spécifique. La valeur peut être soit le nom d’utilisateur (sans le caractère @), soit l’identifiant numérique de l’utilisateur. Vous ne pouvez transmettre qu’un seul nom d’utilisateur/ID par opérateur `from:`. Exemple : `from:XDevelopers OR from:API -from:X`                                                                                                                                                                                                                  |
+| `to:`                  | Autonome     | Principal     | Fait correspondre toute publication qui est une réponse à un utilisateur particulier. La valeur peut être soit le nom d’utilisateur (sans le caractère @), soit l’identifiant numérique de l’utilisateur. Vous ne pouvez transmettre qu’un seul nom d’utilisateur/ID par opérateur `to:`. Exemple : `to:XDevelopers OR to:API -to:X`                                                                                                                                                                                                                             |
+| `url:`                 | Autonome     | Principal     | Effectue une correspondance tokenisée sur toute URL correctement formatée d’une publication. Cet opérateur peut faire correspondre le contenu des champs `url` ou `expanded_url`. Par exemple, une publication contenant « You should check out X Developer Labs: https://t.co/c0A36SWil4 » (avec l’URL courte redirigeant vers https://developer.x.com) correspondra aux deux règles suivantes : `from:XDevelopers url:"https://developer.x.com"` et `from:XDevelopers url:"https://t.co"`. Les jetons et expressions contenant de la ponctuation ou des caractères spéciaux doivent être entourés de guillemets doubles. |
+| `retweets_of:`         | Autonome     | Principal     | Fait correspondre les publications qui sont des Retweets de l’utilisateur spécifié. La valeur peut être soit le nom d’utilisateur (sans le caractère @), soit l’identifiant numérique de l’utilisateur. Vous ne pouvez transmettre qu’un seul nom d’utilisateur/ID par opérateur `retweets_of:`. Exemple : `retweets_of:XDevelopers OR retweets_of:API`                                                                                                                                                                                                                                      |
+| `context:`             | Autonome     | Noyau        | Fait correspondre les Posts avec une paire d’identifiants domaine/entité spécifique. Vous ne pouvez transmettre qu’un seul couple domaine/entité par opérateur `context:`. Exemple : `context:domain_id.entity_id`. Vous pouvez combiner plusieurs domaines/entités avec l’opérateur OR : `(context:47.113922 9372198469633 OR context:11.1088514520308342784)` |
+| `entity:`              | Autonome     | Noyau        | Fait correspondre les Posts avec une valeur de chaîne d’entité spécifique. Vous ne pouvez utiliser qu’un seul opérateur `entity:`. Exemple : `entity:"string declaration of entity/place"`. Veuillez noter que cela n’est disponible qu’avec la recherche récente. |
+| `conversation_id:`     | Autonome     | Noyau        | Fait correspondre les Posts qui partagent un identifiant de conversation commun. Un identifiant de conversation correspond à l’identifiant du Post qui a démarré une conversation. Au fur et à mesure que des réponses à un Post sont publiées, y compris des réponses à des réponses, le `conversation_id` est ajouté à leur charge utile JSON. Vous ne pouvez transmettre qu’un seul identifiant de conversation par opérateur `conversation_id:`. Exemple : `conversation_id:1334987486343299072 (from:XDevelopers OR from:API)` |
+| `list:`                | Autonome     | Avancé       | Fait correspondre les Posts publiés par des utilisateurs membres d’une liste donnée. Par exemple, si @XDevelopers et @API étaient membres de la liste 123 et que vous incluiez `list:123` dans votre requête, votre réponse ne contiendrait que les Posts publiés par ces comptes. Vous pouvez trouver des identifiants de liste à l’aide du point de terminaison de recherche de listes. Exemple : `list:123` |
+| `place:`               | Autonome     | Avancé       | Fait correspondre les Posts étiquetés avec l’emplacement spécifié ou l’identifiant de lieu X. Les noms de lieux composés (« New York City », « Palo Alto ») doivent être placés entre guillemets. Vous ne pouvez transmettre qu’un seul lieu par opérateur `place:`. Remarque : consultez le point de terminaison standard v1.1 GET geo/search pour savoir comment obtenir des identifiants de lieu X. Exemple : `place:"new york city" OR place:seattle OR place:fd70c22040963ac7` |
+| `place_country:`       | Autonome     | Avancé       | Fait correspondre les Posts où le code pays associé à un lieu/localisation étiqueté correspond au code ISO alpha-2 fourni. Vous pouvez trouver une liste de codes ISO valides sur Wikipédia. Vous ne pouvez transmettre qu’un seul code ISO par opérateur `place_country:`. Exemple : `place_country:US OR place_country:MX OR place_country:CA` |
+| `point_radius:`        | Autonome     | Avancé       | Fait correspondre l’objet `place.geo.coordinates` du Post lorsqu’il est présent et, dans X, un polygone géographique de lieu, lorsque le polygone de lieu est entièrement contenu dans la région définie. `point_radius:[longitude latitude radius]`. Les unités de rayon prises en charge sont les miles (mi) et les kilomètres (km). Le rayon doit être inférieur à 25 mi. La longitude est dans l’intervalle ±180. La latitude est dans l’intervalle ±90. Toutes les coordonnées sont en degrés décimaux. Les arguments de règle sont entre crochets, séparés par des espaces. Exemple : `point_radius:[2.355128 48.861118 16km] OR point_radius:[-41.287336 174.761070 20mi]` |
+| `bounding_box:`        | Autonome     | Avancé       | Fait correspondre l’objet place.geo.coordinates du Post lorsqu’il est présent et, dans X, un polygone géographique de lieu, lorsque le polygone de lieu est entièrement contenu dans la région définie. `bounding_box:[west_long south_lat east_long north_lat]`. La largeur et la hauteur de la boîte englobante doivent être inférieures à 25 mi. La longitude est dans l’intervalle ±180. La latitude est dans l’intervalle ±90. Toutes les coordonnées sont en degrés décimaux. Les arguments de règle sont entre crochets, séparés par des espaces. Exemple : `bounding_box:[-105.301758 39.964069 -105.178505 40.09455]` |
+| `is:retweet`           | Conjonction requise | Noyau        | Fait correspondre les Retweets qui correspondent au reste de la règle spécifiée. Cet opérateur recherche uniquement les véritables Retweets (par exemple, ceux générés à l’aide du bouton Retweet). Les Tweets cités ne seront pas renvoyés par cet opérateur. Exemple : `data @XDevelopers -is:retweet` |
+| `is:reply`             | Conjonction requise | Noyau        | Ne livre que les réponses explicites qui correspondent à une règle. Peut également être utilisé en négation pour exclure de la livraison les réponses correspondant à une requête. Remarque : cet opérateur est aussi disponible avec le point de terminaison de flux filtré. Lorsqu’il est utilisé avec le flux filtré, cet opérateur fait correspondre les réponses à un Post d’origine, les réponses dans des Posts cités et les réponses dans des Retweets. Exemple : `from:XDevelopers is:reply` |
+| `is:quote`             | Conjonction requise | Noyau         | Renvoie toutes les citations (Quote Tweets), également appelées Publications avec commentaire. Exemple : `"sentiment analysis" is:quote`                                                                                                                                                                                                                                                                                                                                                       |
+| `is:verified`          | Conjonction requise | Noyau         | Renvoie uniquement les Publications dont les auteurs sont vérifiés par X. Exemple : `#nowplaying is:verified`                                                                                                                                                                                                                                                                                                                                                                  |
+| `-is :nullcast`         | Conjonction requise | Avancé      | Exclut les Publications créées uniquement à des fins promotionnelles sur ads.x.com dont la valeur `"source"` est `"Twitter for Advertisers (legacy)"` ou `"Twitter for Advertisers"`. Cet opérateur doit être utilisé sous forme négative. Pour en savoir plus sur les Publications « Nullcast », consultez notre page sur la disponibilité des Publications. Exemple : `"mobile games" -is:nullcast`                                                                                                                                        |
+| `has:hashtags`         | Conjonction requise | Noyau         | Correspond aux Publications contenant au moins un hashtag. Exemple : `from:XDevelopers -has:hashtags`                                                                                                                                                                                                                                                                                                                                                                  |
+| `has:cashtags`         | Conjonction requise | Avancé      | Correspond aux Publications contenant un cashtag (avec un caractère « $ » en préfixe, par exemple « $tag »). Exemple : `#stonks has:cashtags`                                                                                                                                                                                                                                                                                                                                                       |
+| `has:links`            | Conjonction requise | Noyau         | Correspond aux Publications qui contiennent des liens et/ou des médias dans le corps de la Publication. Exemple : `from:XDevelopers announcement has:links`                                                                                                                                                                                                                                                                                                                                                       |
+| `has:mentions`         | Conjonction requise | Noyau         | Correspond aux Publications qui mentionnent un autre utilisateur X. Exemple : `#nowplaying has:mentions`                                                                                                                                                                                                                                                                                                                                                                  |
+| `has:media`            | Conjonction requise | Noyau         | Correspond aux Publications qui contiennent un objet média, tel qu’une photo, un GIF ou une vidéo, tel que déterminé par X. Ne correspond pas aux médias créés avec Periscope, ni aux Publications contenant des liens vers d’autres sites d’hébergement de médias. Exemple : `(kittens OR puppies) has:media`                                                                                                                                                                                                                                  |
+| `has:images`           | Conjonction requise | Noyau         | Correspond aux Publications contenant une URL reconnue pointant vers une image. Exemple : `#meme has:images`                                                                                                                                                                                                                                                                                                                                                                  |
+| `has:videos`           | Conjonction requise | Noyau         | Correspond aux Publications contenant des vidéos natives X, téléversées directement sur X. Ne correspond pas aux vidéos créées avec Periscope, ni aux Publications contenant des liens vers d’autres sites d’hébergement de vidéos. Exemple : `#icebucketchallenge has:videos`                                                                                                                                                                                                                                  |
+| `has:geo`              | Conjonction requise | Avancé      | Correspond aux Publications qui disposent de données de géolocalisation spécifiques à la Publication fournies par l’utilisateur X. Il peut s’agir soit d’un lieu au format « lieu X », avec le nom d’affichage correspondant, un polygone géo et d’autres champs, soit, plus rarement, d’une coordonnée géographique lat‑long. Remarque : les opérateurs portant sur le lieu (géo de la Publication) n’incluent que les correspondances provenant des publications originales. Les Retweets ne contiennent aucune donnée de lieu. Exemple : `recommend #paris has:geo -bakery` |
+| `lang:`                | Conjonction requise | Noyau         | Correspond aux Publications que X a classées dans une langue particulière (si, et seulement si, la Publication a été classée). Il est important de noter que chaque Publication n’est actuellement classée que dans une seule langue ; utiliser l’opérateur ET avec plusieurs langues ne renverra aucun résultat. Vous ne pouvez transmettre qu’un seul identifiant de langue BCP 47 par opérateur `lang:`. Remarque : si aucune classification de langue ne peut être effectuée, le résultat fourni est « und » (indéterminé). Exemple : `recommend #paris lang:en` |
+
+|     |     |     |     |
+| :--- | :--- | :--- | :--- |
+| Amharique : **am** | Allemand : **de** | Malayalam : **ml** | Slovaque : **sk** |
+| Arabe : **ar** | Grec : **el** | Maldivien : **dv** | Slovène : **sl** |
+| Arménien : **hy** | Gujarati : **gu** | Marathi : **mr** | Kurde sorani : **ckb** |
+| Basque : **eu** | Créole haïtien : **ht** | Népalais : **ne** | Espagnol : **es** |
+| Bengali : **bn** | Hébreu : **iw** | Norvégien : **no** | Suédois : **sv** |
+| Bosniaque : **bs** | Hindi : **hi** | Odia (oriya) : **or** | Tagalog : **tl** |
+| Bulgare : **bg** | Hindi latinisé : **hi-Latn** | Pendjabi : **pa** | Tamoul : **ta** |
+| Birman : **my** | Hongrois : **hu** | Pachto : **ps** | Telugu : **te** |
+| Croate : **hr** | Islandais : **is** | Persan : **fa** | Thaï : **th** |
+| Catalan : **ca** | Indonésien : **in** | Polonais : **pl** | Tibétain : **bo** |
+| Tchèque : **cs** | Italien : **it** | Portugais : **pt** | Chinois traditionnel : **zh-TW** |
+| Danois : **da** | Japonais : **ja** | Roumain : **ro** | Turc : **tr** |
+| Néerlandais : **nl** | Kannada : **kn** | Russe : **ru** | Ukrainien : **uk** |
+| Anglais : **en** | Khmer : **km** | Serbe : **sr** | ourdou : **ur** |
+| Estonien : **et** | Coréen : **ko** | Chinois simplifié : **zh-CN** | Ouïghour : **ug** |
+| Finnois : **fi** | Lao : **lo** | Sindhi : **sd** | Vietnamien : **vi** |
+| Français : **fr** | Letton : **lv** | Singhalais : **si** | Gallois : **cy** |
+| Géorgien : **ka** | Lituanien : **lt** |     |

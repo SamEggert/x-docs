@@ -1,0 +1,56 @@
+---
+title: Introduction
+sidebarTitle: Introduction
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+<div id="list-members-lookup">
+  ### Recherche des membres d’une Liste
+</div>
+
+Le groupe de recherche des membres propose deux endpoints. Vous pouvez récupérer des informations sur les membres d’une Liste donnée et voir à quelles Listes un utilisateur appartient. Ces endpoints peuvent être utilisés pour aider les personnes à créer et organiser de nouvelles Listes à partir des informations d’appartenance.
+
+La limite est de 900 requêtes par tranche de 15 minutes pour la consultation des détails des membres, et de 75 requêtes par tranche de 15 minutes pour la consultation des appartenances d’un utilisateur.
+
+Vous pouvez utiliser [OAuth 1.0a User Context](/fr/resources/fundamentals/authentication), [App only](https://developer.x.com/resources/fundamentals/authentication#app-only-authentication-and-oauth-2-0-bearer-token) ou [OAuth 2.0 Authorization Code with PKCE](fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-2) pour authentifier vos requêtes vers cet endpoint. 
+ 
+
+<div id="manage-list-members">
+  ### Gérer les membres d’une Liste
+</div>
+
+Les endpoints de gestion des membres d’une Liste vous permettent d’ajouter et de retirer des membres d’une Liste pour le compte d’un utilisateur authentifié. Pour ces endpoints, deux méthodes sont disponibles : POST et DELETE. La méthode POST permet d’ajouter un membre à une Liste, et la méthode DELETE permet de retirer un membre d’une Liste. Une limite de débit de 300 requêtes par utilisateur et par tranche de 15 minutes s’applique à ces deux endpoints.
+
+Notez qu’une Liste ne peut pas comporter plus de 5 000 membres.
+
+Comme vous effectuez des requêtes pour le compte d’un utilisateur avec ces endpoints, vous devez l’authentifier soit avec [OAuth 1.0a (User Context)](/fr/resources/fundamentals/authentication), soit avec [OAuth 2.0 (Authorization Code avec PKCE)](fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-2), et utiliser les jetons d’accès utilisateur associés à un utilisateur ayant autorisé votre application. Ces jetons peuvent être générés à l’aide du [flux OAuth à 3 volets](/fr/resources/fundamentals/authentication#obtaining-access-tokens-using-3-legged-oauth-flow) (OAuth 1.0a) ou du [flux Authorization Code avec PKCE](/fr/resources/fundamentals/authentication#how-to-connect-to-endpoints-using-oauth-2-0-authorization-code-flow-with-pkce) (OAuth 2.0).
+
+<Note>
+  **Configuration du compte**
+
+  Pour accéder à ces endpoints, vous aurez besoin de :
+
+  * D’un [compte développeur](https://developer.x.com/en/portal/petition/essential/basic-info) approuvé.
+  * D’authentifier en utilisant les clés et jetons d’une [application développeur](/fr/resources/fundamentals/developer-apps) située dans un [projet](/fr/resources/fundamentals/projects). 
+
+  Pour en savoir plus sur l’accès aux endpoints de l’API X v2, consultez notre [guide de démarrage](/fr/x-api/getting-started/getting-access).
+</Note>
+
+<div className="flex space-x-2">
+  <Button href="/fr/x-api/lists/list-members/quickstart/overview">
+    Démarrage rapide
+  </Button>
+
+  <Button href="https://github.com/xdevplatform/Twitter-API-v2-sample-code">
+    Exemples de code
+  </Button>
+
+  <Button href="https://app.getpostman.com/run-collection/9956214-784efcda-ed4c-4491-a4c0-a26470a67400">
+    Exécuter dans Postman
+  </Button>
+
+  <Button href="https://developer.x.com/apitools/api?endpoint=/2/lists/%7Bid%7D/members&method=get">
+    Essayer avec API Explorer
+  </Button>
+</div>

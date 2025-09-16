@@ -1,0 +1,92 @@
+---
+title: Guide d’intégration
+sidebarTitle: Guide d’intégration
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+Cette page présente plusieurs outils et concepts clés à connaître lors de l’intégration des endpoints de blocage dans votre système. Nous avons divisé la page en plusieurs sections :
+
+* [Outils pratiques](#helpful)
+* Concepts clés
+* [Authentification](#authentication)
+* [Developer Portal, Projects et Apps](#portal)
+* [Limites de requêtes](#limits)
+* [Champs et expansions](#fields)
+* [Pagination](#pagination)
+
+<div id="helpful-tools">
+  ### Outils pratiques
+</div>
+
+Avant d’aborder quelques concepts clés qui vous aideront à intégrer cet endpoint, nous vous recommandons de vous familiariser avec :
+
+<div id="postman">
+  #### Postman
+</div>
+
+Postman est un excellent outil pour tester un endpoint. Chaque requête Postman inclut tous les paramètres de chemin et de corps afin de vous aider à comprendre rapidement ce qui est disponible. Pour en savoir plus sur nos collections Postman, consultez notre page [&quot;Using Postman&quot;](/fr/tutorials/postman-getting-started). 
+
+<div id="code-samples">
+  #### Exemples de code
+</div>
+
+Vous souhaitez commencer à utiliser ce point de terminaison avec du code dans votre langage de programmation préféré ? Nous proposons plusieurs exemples de code à utiliser comme point de départ sur notre [page GitHub](https://github.com/xdevplatform/Twitter-API-v2-sample-code).
+
+<div id="third-party-libraries">
+  #### Bibliothèques tierces
+</div>
+
+Profitez de l’une des [bibliothèques tierces](/fr/x-api/tools-and-libraries/overview) maintenues par notre communauté pour vous lancer. Vous pouvez trouver une bibliothèque compatible avec les points de terminaison v2 en recherchant l’étiquette de version appropriée.
+
+<div id="key-concepts">
+  ### Concepts clés
+</div>
+
+<div id="authentication">
+  #### Authentification
+</div>
+
+Tous les endpoints de X API v2 exigent d’authentifier vos requêtes avec un ensemble d’identifiants, également appelés clés et jetons. Vous pouvez utiliser OAuth 1.0a User Context ou OAuth 2.0 Authorization Code avec PKCE pour authentifier vos requêtes vers ces endpoints.
+
+[OAuth 1.0a User Context](/fr/resources/fundamentals/authentication) vous amène à utiliser vos API Keys, des user Access Tokens, et quelques autres paramètres pour [créer un en-tête d’autorisation](/fr/resources/fundamentals/authentication#authorizing-a-request), que vous joindrez ensuite à votre requête. Les Access Tokens doivent être associés à l’utilisateur pour le compte duquel vous effectuez la requête. Si vous souhaitez générer un ensemble d’Access Tokens pour un autre utilisateur, celui-ci doit autoriser votre App via le [flux OAuth à 3 intervenants (3-legged OAuth)](https://developer-staging.x.com/resources/fundamentals/authentication/obtaining-user-access-tokens).
+
+Veuillez noter qu’OAuth 1.0a peut être difficile à utiliser. Si vous n’êtes pas familier avec cette méthode d’authentification, nous vous recommandons d’utiliser une [bibliothèque](/fr/x-api/tools-and-libraries/overview), un outil comme Postman, ou d’utiliser OAuth 2.0 pour authentifier vos requêtes.
+
+[OAuth 2.0 Authorization Code avec PKCE](/fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-3) offre un meilleur contrôle sur le périmètre d’une application, ainsi que des parcours d’autorisation multi-appareils. OAuth 2.0 vous permet de choisir des périmètres fins (fine-grained scopes) qui vous confèrent des autorisations spécifiques au nom d’un utilisateur.
+
+Pour activer OAuth 2.0 dans votre App, vous devez l’activer dans les paramètres d’authentification de votre App, disponibles dans la section App settings du portail développeur.
+
+<div id="developer-portal-projects-and-developer-apps">
+  #### Portail développeur, Projets et applications développeur
+</div>
+
+Pour obtenir un ensemble d’informations d’identification compatible avec les endpoints de l’API X v2, vous devez [créer un compte développeur](https://developer.x.com/en/portal/petition/essential/basic-info), configurer un [Project](/fr/resources/fundamentals/projects) dans ce compte, puis créer une [application développeur](/fr/resources/fundamentals/developer-apps) au sein de ce Project. Vous pourrez ensuite retrouver vos clés et jetons dans votre application développeur.
+ 
+
+<div id="rate-limits">
+  #### Limites de débit
+</div>
+
+Chaque jour, des milliers de développeurs envoient des requêtes à l’API X. Pour gérer l’important volume de ces requêtes, des [limites de débit](/fr/x-api/fundamentals/rate-limits) sont appliquées à chaque endpoint, limitant le nombre de requêtes que vous pouvez effectuer au nom de votre application ou d’un utilisateur authentifié.
+
+Ces endpoints sont limités au niveau utilisateur : l’utilisateur authentifié pour lequel vous effectuez la requête ne peut appeler l’endpoint qu’un certain nombre de fois, et ce, sur n’importe quelle application développeur. La limite de débit utilisateur est de 50 requêtes par intervalle de 15 minutes et par endpoint pour les méthodes POST et DELETE. En revanche, pour la méthode GET, la limite n’est que de 15 requêtes par intervalle de 15 minutes.
+ 
+
+<div id="fields-and-expansions">
+  #### Champs et expansions
+</div>
+
+Les endpoints GET de l’API X v2 permettent aux utilisateurs de sélectionner exactement quelles données ils souhaitent récupérer depuis l’API à l’aide d’un ensemble d’outils appelés champs et expansions. Le paramètre expansions vous permet de développer les objets référencés dans la charge utile. Par exemple, cet endpoint vous permet de récupérer les [expansions](/fr/x-api/fundamentals/expansions) suivantes :
+
+* pinned_tweet_id
+
+Le paramètre **fields** vous permet de choisir précisément quels [champs](/fr/x-api/fundamentals/fields) des différents objets de données vous souhaitez recevoir. Ces endpoints renvoient principalement des objets Post. Par défaut, l’objet Post renvoie les champs **id** et **text**. Pour recevoir des champs supplémentaires tels que **tweet.created_at** ou **tweet.entities**, vous devez les demander explicitement via le paramètre **fields**. Parmi les champs importants à envisager pour votre intégration figurent nos données de sondage, les métriques, les annotations de Post et les champs d’ID de conversation.
+
+Nous avons ajouté à notre [dictionnaire de données de l’API X v2](/fr/x-api/fundamentals/data-dictionary) un guide expliquant comment [utiliser ensemble les champs et les expansions](/fr/x-api/fundamentals/data-dictionary#how-to-use-fields-and-expansions).
+
+<div id="pagination">
+  #### Pagination
+</div>
+
+La recherche des blocages peut renvoyer un grand volume de données. Afin d’éviter de renvoyer trop de résultats à la fois, nous utilisons la pagination. En savoir plus sur la manière de [parcourir les résultats.](/fr/x-api/fundamentals/pagination)

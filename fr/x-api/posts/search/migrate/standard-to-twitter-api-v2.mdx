@@ -1,0 +1,196 @@
+---
+title: de v1 à v2
+sidebarTitle: de v1 à v2
+---
+
+<div id="standard-v11-compared-to-x-api-v2">
+  ### Standard v1.1 par rapport à X API v2
+</div>
+
+Si vous avez déjà utilisé la [recherche/publications](/fr/x-api/posts/search/introduction) v1.1, ce guide vise à vous aider à comprendre les similitudes et les différences entre l’interface standard et le point de terminaison de recherche de publications de X API v2.
+
+* **Similitudes**
+  * OAuth 1.0a en contexte utilisateur et OAuth 2.0 en mode application uniquement
+  * Prise en charge de l’historique des modifications des publications et des métadonnées
+* **Différences**
+  * URLs des points de terminaison
+
+  * Exigences pour les applications et les projets
+
+  * Format des données de réponse
+
+  * Paramètres de requête
+
+  * Nouveaux opérateurs de requête
+
+  * Priorité des opérateurs AND/OR 
+
+<div id="similarities">
+  #### Similarités
+</div>
+
+**Authentification OAuth 1.0a en contexte utilisateur et OAuth 2.0 App-Only**
+
+Les endpoints v1.1 search/posts et l’endpoint recent search de l’API X v2 prennent en charge à la fois [OAuth 1.0a User Context](/fr/resources/fundamentals/authentication) et [OAuth 2.0 App-Only](/fr/resources/fundamentals/authentication#oauth-2-0).
+
+Ainsi, si vous utilisiez auparavant l’endpoint standard v1.1 search, vous pouvez continuer à utiliser la même méthode d’authentification en migrant vers la version API X v2.
+
+Selon la bibliothèque ou le package d’authentification que vous choisissez, l’authentification App-Only est probablement la manière la plus simple de commencer et peut être configurée via un simple en-tête de requête. Pour savoir comment générer un App Access Token, consultez ce [guide OAuth 2.0 App-Only](/fr/resources/fundamentals/authentication#bearer-token-also-known-as-app-only).
+
+Si vous souhaitez exploiter la possibilité de récupérer des métriques privées ou publicitaires avec l’endpoint de l’API X v2, vous devrez utiliser OAuth 1.0a User Context et transmettre les jetons d’accès de l’utilisateur qui a publié le Post pour lequel vous voulez récupérer des métriques.
+
+**Prise en charge de l’historique d’édition des Posts et des métadonnées**
+
+Les deux versions fournissent des métadonnées décrivant tout historique d’édition. Consultez les [références de l’API search](/fr/x-api/posts/recent-search) et la [page sur les principes fondamentaux de l’édition de Posts](/fr/x-api/fundamentals/edit-posts) pour plus de détails. 
+
+<div id="differences">
+  #### Différences
+</div>
+
+**URLs des endpoints**
+
+* Endpoints standard v1.1 :
+  * https://api.x.com/1.1/search/tweets
+
+* Endpoint X API v2 :
+  * https://api.x.com/2/tweets/search/recent
+     
+
+**Exigences pour l’app et le projet**
+
+Les endpoints de X API v2 exigent que vous utilisiez des identifiants provenant d’une [developer app](/fr/resources/fundamentals/developer-apps) associée à un [projet](/fr/resources/fundamentals/projects) lors de l’authentification de vos requêtes. Tous les endpoints X API v1.1 peuvent utiliser des identifiants provenant d’apps autonomes ou d’apps associées à un projet. 
+
+**Format des données de réponse**
+
+L’une des principales différences entre les versions standard v1.1 et X API v2 des endpoints est la manière dont vous sélectionnez les champs renvoyés dans votre payload.
+
+Pour les endpoints standard, de nombreux champs de réponse sont fournis par défaut, puis vous pouvez utiliser des paramètres pour indiquer quels champs ou ensembles de champs doivent être renvoyés dans le payload.
+
+La version X API v2 ne fournit par défaut que les champs id et text du Post. Pour demander des champs ou objets supplémentaires, vous devez utiliser les paramètres [fields](/fr/x-api/fundamentals/fields) et [expansions](/fr/x-api/fundamentals/expansions). Tous les champs de Post que vous demandez sur ces endpoints seront renvoyés dans l’objet Post principal. Tous les objets et champs user, media, poll ou place étendus seront renvoyés dans un objet includes au sein de votre réponse. Vous pouvez ensuite faire correspondre tout objet étendu avec l’objet Post en faisant correspondre les IDs présents à la fois dans le Post et dans l’objet étendu. 
+
+Nous vous encourageons à en savoir plus sur ces nouveaux paramètres dans leurs guides respectifs, ou en lisant notre guide sur [how to use fields and expansions](/fr/x-api/fundamentals/data-dictionary#how-to-use-fields-and-expansions). 
+
+Nous avons également élaboré un [data format migration guide](/fr/x-api/migrate/data-format-migration#migrating-from-standard-v1-1s-data-format-to-v2) qui peut vous aider à faire correspondre les champs standard v1.1 aux nouveaux champs v2. Ce guide vous indiquera également le paramètre spécifique d’expansion et de champ que vous devrez transmettre avec votre requête v2 pour renvoyer des champs précis. 
+ 
+
+En plus des changements dans la manière de demander certains champs, X API v2 introduit également de nouveaux modèles JSON pour les objets renvoyés par les API, y compris les objets [Post](/fr/x-api/fundamentals/data-dictionary#tweet) et [user](/fr/x-api/fundamentals/data-dictionary#user).
+
+* Au niveau racine du JSON, les endpoints standard renvoient des objets Post dans un tableau statuses, tandis que X API v2 renvoie un tableau data. 
+* Au lieu de faire référence à des « statuses » Retweeted et Quoted, le JSON de X API v2 fait référence à des Tweets Retweeted et Quoted. De nombreux champs hérités et obsolètes, tels que contributors et user.translator_type, sont supprimés. 
+* Au lieu d’utiliser à la fois favorites (dans l’objet Post) et favourites (dans l’objet user), X API v2 utilise le terme like. 
+* X adopte la convention selon laquelle les valeurs JSON sans valeur (par exemple, null) ne sont pas écrites dans le payload. Les attributs Post et user ne sont inclus que s’ils ont des valeurs non nulles. 
+   
+
+Nous avons également introduit un nouvel ensemble de champs dans le [Post object](/fr/x-api/fundamentals/data-dictionary#tweet), notamment :
+
+* Un champ [conversation_id](/fr/x-api/fundamentals/conversation-id)
+* Deux nouveaux champs [annotations](/fr/x-api/fundamentals/post-annotations), à savoir context et entities
+* Plusieurs nouveaux champs [metrics](/fr/x-api/fundamentals/metrics) 
+* Un nouveau champ reply_setting, qui indique qui peut répondre à un Post donné
+
+<div id="request-parameters">
+  #### Paramètres de requête
+</div>
+
+Les paramètres de requête standard v1.1 suivants ont des équivalents dans X API v2 :
+
+| Recherche standard v1.1 | Recherche de Posts v2 |
+| :--- | :--- |
+| q   | query |
+|     | start_time (YYYY-MM-DDTHH:mm:ssZ) |
+| until (YYYY-MM-DD) | end_time (YYYY-MM-DDTHH:mm:ssZ) |
+| since_id | since_id |
+| max_id | until_id |
+| count | max_results |
+| La réponse fournit search_metadata.next_results | next_token |
+
+Il existe également un ensemble de paramètres standard de requête de recherche de Posts **non** pris en charge dans X API v2 :
+
+| **Paramètre standard v1.1** | **Détails** |
+| :--- | :--- |
+| geocode | La recherche de Posts avec l’offre Basic Access ne prend pas en charge les opérateurs géographiques. |
+| locale | Avec la recherche standard, ceci servait à spécifier la langue de la requête, mais n’a jamais été pleinement implémenté. |
+| lang | Les endpoints de recherche de Posts proposent un opérateur de requête lang pour faire correspondre les langues d’intérêt. |
+| include_entities | Les entités d’un Post sont toujours incluses. |
+| result_type | Les endpoints de recherche de Posts renvoient tous les Posts correspondants, quel que soit le niveau d’engagement. |
+| extended | X API v2 est conçu dès le départ pour prendre en charge des Posts jusqu’à 280 caractères. Avec v2, il n’existe pas de notion de Posts « étendus ». |
+
+Voici un exemple de requête qui illustre la différence entre une requête Standard et une requête Search Posts :
+
+|     |     |
+| :--- | :--- |
+| **Standard v1.1** | **X API v2** |
+| https://api.x.com/1.1/search/tweets.json?q=snow&amp;count=50 | https://api.x.com/2/tweets/search/recent?query=snow&amp;max_results=50 |
+
+Ces requêtes renverront toutes deux les 50 Posts les plus récents contenant le mot-clé snow. La requête v2 renverra les champs id et text par défaut des Posts correspondants. Voici un exemple de spécification de champs supplémentaires de Posts et d’utilisateurs à inclure dans la charge utile JSON :
+
+|     |
+| :--- |
+| **X API v2** |
+| https://api.x.com/2/tweets/search/recent?query=snow&amp;max_results=50&amp;tweet.fields=id,created_at,author_id,text,source,entities,attachments&amp;user.fields=id,name,username,description |
+
+**Nouveaux opérateurs de requête**
+
+Search Posts introduit de nouveaux opérateurs en appui de deux nouvelles fonctionnalités de X API v2 : 
+
+* **[Conversation IDs](/fr/x-api/fundamentals/conversation-id)** - À mesure que les conversations se déroulent sur X, un ID de conversation sera disponible pour marquer les Posts qui en font partie. Tous les Posts de la conversation auront leur conversation_id défini sur l’ID du Post à l’origine de celle-ci. 
+  * `conversation_id:`
+* **[X Annotations](/fr/x-api/fundamentals/post-annotations)** fournissent des informations contextuelles sur les Posts et incluent des annotations d’entité et de contexte. Les entités regroupent des personnes, des lieux, des produits et des organisations. Les contextes sont des domaines, ou sujets, dont font partie les entités mises en avant. Par exemple, les personnes mentionnées dans un Post peuvent avoir un contexte indiquant si elles sont athlètes, acteurs ou responsables politiques.  
+  * context: correspond aux Posts qui ont été annotés avec un contexte d’intérêt. 
+  * entity: correspond aux Posts qui ont été annotés avec une entité d’intérêt. 
+
+     
+
+#### Priorité des opérateurs AND / OR 
+
+L’élément de base pour créer des requêtes de recherche est l’utilisation de regroupements logiques OR et AND. L’API de recherche standard applique les OR avant les AND, tandis que les endpoints Search Posts (ainsi que les versions Premium et Enterprise) appliquent les AND avant les OR. Cette différence est essentielle lors de la traduction des requêtes entre les deux. 
+
+Par exemple, avec la recherche standard, si vous souhaitez cibler des Posts contenant le mot-clé « storm » qui mentionnent le mot « colorado » ou le hashtag #COwx, vous pouvez utiliser la requête suivante :
+
+storm #COwx OR colorado
+
+Avec la priorité des opérateurs de Search Posts, les AND sont appliqués avant les OR. La requête ci-dessus est donc équivalente à : 
+
+(storm #COwx) OR colorado
+
+Cependant, cette règle ferait correspondre tous les Posts qui mentionnent « Colorado », que le Post mentionne « storm » ou le hashtag #COwx ou non. En outre, elle ferait également correspondre les Posts mentionnant à la fois le mot-clé « storm » et le hashtag #COwx. 
+
+Pour que la requête se comporte comme prévu à l’origine, les clauses OR doivent être regroupées. La traduction de la requête standard d’origine vers Search Posts serait :
+
+storm (#COwx OR colorado)
+
+Ces deux règles présentent des comportements de correspondance très différents. Pour le mois d’octobre 2019, la règle d’origine correspond à plus de 1 175 000 Posts, tandis que la règle correctement traduite correspond à environ 5 600 Posts. Veillez à bien gérer vos AND et OR et à utiliser des parenthèses lorsque nécessaire. 
+
+<div id="curl-requests">
+  #### Requêtes cURL
+</div>
+
+**La section suivante présente des requêtes cURL pour le point de terminaison standard v1.1 et son équivalent en v2.**
+
+Les requêtes utilisent [OAuth 2.0 App-Only](https://developer.x.com/resources/fundamentals/authentication#app-only-authentication-and-oauth-2-0-bearer-token). Pour exécuter les requêtes cURL ci-dessous, remplacez ACCESS_TOKEN dans l’en-tête Authorization par le jeton d’accès de votre application. Pour les points de terminaison v2, ce jeton doit appartenir à une [application développeur](/fr/resources/fundamentals/developer-apps/overview) au sein d’un [projet](/fr/resources/fundamentals/projects/overview).
+
+La charge utile renvoyée par le point de terminaison v1.1 diffère de celle renvoyée par le point de terminaison v2. Avec v2, la réponse inclut les champs par défaut, ainsi que tout autre champ demandé via les paramètres [fields](/fr/x-api/fundamentals/fields) et [expansions](/fr/x-api/fundamentals/expansions). Vous pouvez utiliser ces paramètres pour demander un ensemble différent de champs.
+
+**Points de terminaison standard v1.1 [GET search/tweets](https://developer.x.com/en/docs/twitter-api/v1/tweets/search/api-reference/get-search-tweets) et v2 [GET tweets/search/recent](/fr/x-api/posts/recent-search)**
+
+```bash
+      curl --request GET \
+  --url 'https://api.x.com/1.1/search/tweets.json?q=from%3ATwitterDev%20-is%3Aretweet&count=100' \
+  --header 'Authorization: Bearer $ACCESS_TOKEN'
+```
+
+```bash
+      curl --request GET \
+  --url 'https://api.x.com/2/tweets/search/recent?query=from%3ATwitterDev%20-is%3Aretweet&tweet.fields=created_at%2Cconversation_id%2Centities&max_results=100' \
+  --header 'Authorization: Bearer $ACCESS_TOKEN'
+```
+
+**Étapes suivantes**
+
+[Consultez notre guide de démarrage rapide pour la recherche récente de X API v2](/fr/x-api/posts/search/quickstart/recent-search)
+
+[Consultez la référence de l’API pour la recherche récente](/fr/x-api/posts/recent-search)
+
+[Découvrez du code d’exemple pour ces points de terminaison](https://github.com/xdevplatform/Twitter-API-v2-sample-code "Découvrez du code d’exemple pour ces points de terminaison")
+
+[Guide pas à pas pour effectuer votre première requête de recherche récente](/fr/x-api/getting-started/make-your-first-request "Guide pas à pas pour effectuer votre première requête de recherche récente")

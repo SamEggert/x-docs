@@ -1,0 +1,146 @@
+---
+title: Modifier des posts
+---
+
+<div id="introduction">
+  # Introduction
+</div>
+
+Les endpoints de l’API X v2 fournissent des métadonnées relatives aux publications éditées. La fonctionnalité *Edit Posts* a été introduite pour des tests auprès des employés de X le 1er septembre 2022. À partir de cette date, les publications éligibles peuvent être modifiées pendant 30 minutes et jusqu’à 5 fois. *Tous les objets pour les publications créées depuis le 29 septembre 2022* incluent des métadonnées d’édition, même si la publication n’a jamais été modifiée. Chaque fois qu’une publication est modifiée, un nouvel ID de publication est créé. L’historique des modifications d’une publication peut être reconstitué en chaînant ces ID, en commençant par l’ID d’origine. De plus, si une publication quelconque dans la chaîne d’édition est supprimée, toutes les publications de cette chaîne sont également supprimées.
+
+Avec l’API X v2, un développeur peut déterminer :
+
+* Si une publication était éligible à l’édition au moment de sa création. Certaines publications, comme celles avec des sondages ou les publications programmées, ne peuvent pas être modifiées.
+* Les publications sont modifiables pendant 30 minutes et peuvent être modifiées jusqu’à 5 fois. Pour les publications modifiables, vous pouvez voir s’il reste du temps pour l’édition et combien d’autres modifications sont possibles.
+* Si vous consultez une version éditée d’une publication (dans la plupart des cas, l’API renverra la version la plus récente d’une publication, sauf si une version antérieure spécifique est demandée par ID de publication).
+* L’intégralité de l’historique des modifications de la publication.
+* L’engagement attribué à chaque version de la publication.
+
+Il existe trois composants dans l’historique des modifications d’une publication :
+
+1. Par défaut, le payload de la publication contient un tableau d’ID de publication qui font partie de l’historique des modifications d’une publication. Cette information est fournie par `edit_history_tweet_ids`, qui est un champ par défaut du payload de la publication. Ce tableau contient au moins un ID, celui de la publication originale, non modifiée. Lorsqu’il n’y a qu’un seul ID, cela signifie que la publication n’a pas d’historique d’édition. 
+2. Vous pouvez obtenir des informations telles que si une publication était modifiable au moment de sa création, combien de temps, le cas échéant, il reste pour modifier une publication, et combien de modifications restent, en spécifiant `edit_controls` dans votre paramètre [tweet.fields](/fr/x-api/fundamentals/fields).
+3. Enfin, vous pouvez obtenir les objets Publication pour chaque publication de l’historique des modifications, en spécifiant `edit_history_tweet_ids` à l’aide du paramètre [expansion](/fr/x-api/fundamentals/expansions)
+
+La plupart des publications sont éligibles à l’édition. Cependant, les types de publications suivants ne le sont pas : 
+
+* Publication promue
+* Publication avec sondage
+* Réponse dans un fil qui n’est pas le sien (non-self-thread)
+* Retweet (notez que les Tweets cités sont éligibles à l’édition)
+* Publication nullcast
+* Publication de communauté
+* Publication Superfollow
+* Publication collaborative
+
+Exemples
+
+***
+
+Les exemples ci-dessous montrent comment un développeur peut demander des métadonnées d’édition de publication via l’API X v2. 
+
+Remarque : Les exemples ci-dessous utilisent l’endpoint User Post Timeline, mais vous pouvez demander ces métadonnées avec les mêmes paramètres (fields et expansions) pour tous les endpoints qui renvoient des publications (p. ex. lookup de publications, recherche, flux filtré, etc.)
+
+<div id="default-behavior">
+  ### Comportement par défaut
+</div>
+
+Par défaut, lorsqu’une requête API est envoyée à n’importe quel endpoint qui renvoie des objets Post dans l’API X v2, vous recevez :
+
+* L’ID du Post
+* Le texte du Post
+* Un tableau d’ID de Posts correspondant à l’historique des modifications d’un Post. S’il n’y a qu’un seul ID, cela signifie que le Post n’a pas été modifié.
+
+**Requête :**
+
+`curl --request GET 'https://api.x.com/2/users/:id/tweets' --header 'Authorization: Bearer $BEARER_TOKEN'`
+
+**Exemple de réponse :**
+
+```{
+  "data": [
+    {
+      "id": "1514991667853602823",
+      "text": "we have an edit button",
+      "edit_history_tweet_ids": ["1514991667853602822", "1514991667853602823"]
+    }
+  ]
+}
+```
+
+<div id="getting-additional-data-with-edit_controls">
+  ### Obtenir des données supplémentaires avec edit_controls
+</div>
+
+Si vous voulez des métadonnées supplémentaires liées à l’édition d’une Publication, par exemple si une Publication était éligible à l’édition lorsqu’elle a été créée et combien de temps il reste pendant lequel elle peut encore être modifiée, vous pouvez demander ces informations à l’aide du paramètre tweet.fields en le définissant sur edit_control.
+
+**Requête :**
+
+`curl --request GET 'https://api.x.com/2/users/:id/tweets?tweet.fields=edit_control' --header 'Authorization: Bearer $BEARER_TOKEN'`
+
+**Exemple de réponse :**
+
+```
+  {
+  "data": [
+    {
+      "id": "1514991667853602823",
+      "text": "we have an edit button",
+      "edit_history_tweet_ids": ["1514991667853602822", "1514991667853602823"],
+      "edit_controls": {
+        "is_edit_eligible": true,
+        "editable_until": "2022-04-21 09:35:20.311",
+        "edits_remaining": 4
+      }
+    }
+  ]
+}
+```
+
+<div id="getting-post-objects-for-all-posts-in-a-posts-edit-history">
+  ### Récupérer les objets Post pour tous les Posts de l’historique des modifications d’un Post
+</div>
+
+Les exemples ci-dessus fournissent un tableau d’IDs de Post dans l’historique des modifications d’un Post. Si vous souhaitez obtenir l’objet Post correspondant à chacun de ces IDs de Post, vous pouvez utiliser le paramètre d’expansion et le définir sur `edit_history_tweet_ids`. Les objets Post qui constituent l’historique des modifications seront fournis dans l’objet &quot;includes&quot;.
+
+**Requête :**
+
+```bash
+      curl --location --request GET 'https://api.x.com/2/users/:id/tweets?tweet.fields=edit_control&expansions=edit_history_tweet_ids' --header 'Authorization: Bearer $BEARER_TOKEN'`
+```
+
+**Exemple de réponse :**
+
+```
+  {
+  "data": [
+    {
+      "id": "1514991667853602823",
+      "text": "we have an edit button",
+      "edit_history_tweet_ids": ["1514991667853602822", "1514991667853602823"],
+      "edit_controls": {
+        "is_edit_eligible": true,
+        "editable_until": "2022-04-21 09:35:20.311",
+        "edits_remaining": 4
+      }
+    }
+  ],
+  "includes": {
+    "tweets": [
+      {
+        "id": "1514991667853602822",
+        "text": "we need an eidt button",
+        "edit_history_tweet_ids": [
+          "1514991667853602822",
+          "1514991667853602823"
+        ],
+        "edit_controls": {
+          "is_edit_eligible": true,
+          "editable_until": "2022-04-21 09:35:20.311",
+          "edits_remaining": 4
+        }
+      }
+    ]
+  }
+}
+```

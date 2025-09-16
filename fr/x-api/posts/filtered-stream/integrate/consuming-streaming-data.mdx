@@ -1,0 +1,108 @@
+---
+title: Consommer des données en flux
+sidebarTitle: Consommer des données en flux
+---
+
+<div id="building-a-client-to-consume-streaming-data">
+  ### Créer un client pour consommer des données en streaming
+</div>
+
+Lors de l’utilisation d’un point de terminaison de streaming, il existe quelques bonnes pratiques générales à prendre en compte afin d’en optimiser l’usage.  
+ 
+
+<div id="client-design">
+  #### Conception du client
+</div>
+
+Lors de la création d’une solution avec l’endpoint de flux filtré, vous aurez besoin d’un client capable de :
+
+1. Établir une connexion de streaming HTTPS vers l’endpoint de flux filtré.
+2. Envoyer de façon asynchrone des requêtes POST à l’endpoint des règles du flux filtré pour ajouter et supprimer des règles du flux.
+3. Gérer de faibles volumes de données – maintenir la connexion de streaming, détecter les objets Post et les signaux de keep-alive.
+4. Gérer de forts volumes de données – découpler l’ingestion du flux du traitement supplémentaire à l’aide de processus asynchrones, et veiller à purger régulièrement les tampons côté client.
+5. Assurer le suivi de la consommation côté client.
+6. Détecter les déconnexions du flux, évaluer la situation et se reconnecter automatiquement au flux.
+    
+
+<div id="connecting-to-a-streaming-endpoint">
+  #### Connexion à un endpoint de streaming
+</div>
+
+Établir une connexion aux endpoints de streaming de l’API X v2 consiste à effectuer une requête HTTP de très longue durée et à analyser la réponse au fil de l’eau. Conceptuellement, on peut l’assimiler au téléchargement d’un fichier infiniment long via HTTP. Une fois la connexion établie, le serveur X enverra des événements de publication via cette connexion tant qu’elle restera ouverte.
+ 
+
+<div id="consuming-data">
+  #### Consommation des données
+</div>
+
+Notez que les champs des objets JSON ne sont pas ordonnés et que tous les champs ne seront pas systématiquement présents. De même, les activités distinctes ne sont pas livrées dans un ordre trié et des messages en double peuvent survenir. Gardez à l’esprit qu’au fil du temps, de nouveaux types de messages peuvent être ajoutés et envoyés via le flux.
+
+Ainsi, votre client doit tolérer :
+
+* Des champs pouvant apparaître dans n’importe quel ordre
+* Des champs inattendus ou manquants
+* Des Posts non triés
+* Des messages en double
+* De nouveaux types de messages arbitraires pouvant arriver sur le flux à tout moment
+
+En plus des données pertinentes du Post et des paramètres de champs demandés, les types de messages suivants peuvent être livrés sur une connexion de flux. Notez que cette liste peut ne pas être exhaustive — des objets supplémentaires peuvent être introduits dans les flux. Assurez-vous que votre parseur tolère les formats de messages inattendus.
+ 
+
+<div id="buffering">
+  #### Mise en mémoire tampon
+</div>
+
+Les endpoints de streaming vous envoient les données dès qu’elles sont disponibles, ce qui peut entraîner des volumes élevés dans de nombreux cas. Si le serveur X ne peut pas écrire immédiatement de nouvelles données dans le flux (par exemple, si votre client ne lit pas assez vite, voir [gestion des déconnexions](/fr/x-api/posts/filtered-stream#what-is-a-disconnection) pour en savoir plus), il met le contenu en mémoire tampon de son côté pour permettre à votre client de rattraper son retard. Cependant, lorsque cette mémoire tampon est pleine, une déconnexion forcée est initiée pour couper la connexion, et les Posts mis en tampon sont supprimés et ne sont pas renvoyés. Voir ci-dessous pour plus de détails.
+
+Une façon d’identifier les moments où votre application prend du retard consiste à comparer l’horodatage des Posts reçus à l’heure actuelle et à suivre cet écart dans le temps.
+
+Bien que les congestions de flux ne puissent jamais être complètement éliminées en raison de la latence potentielle et des aléas d’Internet public, elles peuvent être largement évitées grâce à une configuration adéquate de votre application. Pour réduire au minimum leur occurrence :
+
+* Assurez-vous que votre client lit le flux suffisamment vite. En général, évitez tout traitement lourd pendant la lecture. Lisez le flux et déléguez l’activité à un autre thread/processus/stockage de données pour traiter de manière asynchrone.
+* Assurez-vous que votre centre de données dispose d’une bande passante entrante suffisante pour absorber de gros volumes soutenus ainsi que des pics nettement plus importants (p. ex. 5 à 10× le volume normal). Pour le flux filtré, le volume et la bande passante correspondante requis de votre côté dépendent entièrement des Posts correspondant à vos règles.
+   
+
+<div id="usage-tracking-and-rule-management">
+  #### Suivi d’utilisation et gestion des règles
+</div>
+
+Étant donné que les attentes des développeurs concernant ce que devrait être un volume de données « normal » pour leurs flux varient, nous n’avons pas de recommandation générale quant à un pourcentage précis de baisse/hausse ni à une période donnée.
+
+Envisagez de surveiller les volumes de données de votre flux afin de détecter des écarts inattendus. Une baisse du volume de données peut être le signe d’un problème différent d’une déconnexion du flux. Dans un tel cas, un flux continuerait de recevoir le signal keep-alive et probablement certaines nouvelles données d’activité. Cependant, une diminution significative du nombre de Posts doit vous amener à vérifier s’il existe des facteurs provoquant la baisse du volume de données entrantes vers votre application ou votre réseau, et à consulter la [page de statut](https://api.twitterstat.us/) pour toute notification associée.
+
+Pour mettre en place une telle surveillance, vous pouvez suivre le nombre de nouveaux Posts que vous vous attendez à voir sur une période définie. Si le volume de données d’un flux descend nettement en dessous du seuil spécifié et ne se rétablit pas dans un délai défini, des alertes et notifications doivent être déclenchées. Vous pouvez également surveiller une forte augmentation du volume de données, en particulier si vous êtes en train de modifier des règles dans un flux filtré, ou si un événement se produit et génère un pic d’activité de Posts.
+
+Il est important de noter que les Posts livrés via un flux filtré sont comptabilisés dans le volume mensuel total de Posts, et vous devez suivre et ajuster la consommation afin d’optimiser. Si le volume est élevé, envisagez d’ajouter l’opérateur sample: à chacune de vos règles pour passer de 100 % de correspondance à sample:50 ou sample:25 lorsque nécessaire.
+
+En outre, nous vous encourageons à implémenter des mécanismes au sein de votre application qui alerteront votre équipe si le volume dépasse un seuil prédéfini, et éventuellement à introduire d’autres mesures, comme la suppression automatisée des règles qui génèrent trop de données, ou la déconnexion complète du flux dans des circonstances extrêmes.
+ 
+
+<div id="responding-to-system-messages">
+  #### Répondre aux messages système
+</div>
+
+Signaux de maintien de connexion
+Au moins toutes les 20 secondes, le flux enverra un signal de maintien de connexion (heartbeat) sous la forme d’un retour chariot \r\n via la connexion ouverte afin d’éviter l’expiration de votre client. Votre application cliente doit tolérer les caractères \r\n présents dans le flux.
+
+Si votre client implémente correctement un délai d’expiration de lecture dans votre bibliothèque HTTP, votre application pourra s’appuyer sur le protocole HTTP et sur la bibliothèque HTTP pour déclencher un événement si aucune donnée n’est lue durant cette période, et vous n’aurez pas besoin de surveiller explicitement le caractère \r\n.
+
+Cet événement sera généralement une exception levée ou un autre type d’événement selon la bibliothèque HTTP utilisée. Il est fortement recommandé d’entourer vos méthodes HTTP de gestionnaires d’erreurs/événements pour détecter ces expirations. En cas d’expiration, votre application doit tenter de se reconnecter.
+
+Messages d’erreur
+Les endpoints de streaming v2 peuvent également diffuser des messages d’erreur au sein du flux. Ci-dessous figure le format de base de ces messages, ainsi que quelques exemples. Veuillez noter que les messages diffusés peuvent évoluer, avec de nouveaux messages introduits. Les applications clientes doivent tolérer des charges utiles de messages système susceptibles de changer.
+
+Notez que les messages d’erreur incluront un lien vers la documentation décrivant comment résoudre le problème.
+
+Format du message :
+
+```{
+	"errors": [{
+		"title": "operational-disconnect",
+		"disconnect_type": "UpstreamOperationalDisconnect",
+		"detail": "This stream has been disconnected upstream for operational reasons.",
+		"type": "https://api.x.com/2/problems/operational-disconnect"
+	}]
+}
+```
+
+Notez que les messages d’erreur indiquant une déconnexion forcée due à un tampon plein peuvent ne jamais parvenir à votre client si l’engorgement à l’origine de la déconnexion forcée l’en empêche. En conséquence, votre application ne doit pas dépendre de ces messages pour initier une reconnexion.

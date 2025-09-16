@@ -1,0 +1,98 @@
+---
+title: Prise en main
+sidebarTitle: Prise en main
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+## Prise en main des endpoints de gestion des Posts**
+
+Ce guide de démarrage rapide vous aidera à effectuer votre première requête vers les endpoints de gestion des Posts à l’aide de [Postman](/fr/tutorials/postman-getting-started).
+
+Veuillez consulter notre dépôt GitHub [X API v2 sample code](https://github.com/xdevplatform/Twitter-API-v2-sample-code) si vous souhaitez voir des exemples de code dans différentes langues.
+
+<Info>
+  **Prérequis**
+
+  Pour suivre ce guide, vous devez disposer d’un ensemble de [keys and tokens](/fr/resources/fundamentals/authentication) pour authentifier votre requête. Vous pouvez générer ces clés et ces jetons en suivant ces étapes :
+
+  * [Inscrivez-vous pour obtenir un compte développeur](https://developer.x.com/en/apply-for-access) et attendez l’approbation.
+  * Créez un [Project](/fr/resources/fundamentals/projects) et une [developer App](/fr/resources/fundamentals/developer-apps) associée dans le portail développeur.
+  * Accédez à la page « Keys and tokens » de votre App pour générer les identifiants requis. Veillez à enregistrer tous les identifiants dans un emplacement sécurisé.
+</Info>
+
+<div id="steps-to-building-manage-posts-requests">
+  ### Étapes pour créer des requêtes Manage Posts
+</div>
+
+**Première étape : commencez avec un outil ou une bibliothèque**
+
+Il existe plusieurs outils, exemples de code et bibliothèques que vous pouvez utiliser pour effectuer une requête vers cet endpoint, mais nous allons utiliser l’outil Postman pour simplifier le processus.
+
+Pour charger la collection Postman de X API v2 dans votre environnement, cliquez sur le bouton suivant :
+
+<Button href="https://app.getpostman.com/run-collection/9956214-784efcda-ed4c-4491-a4c0-a26470a67400">
+  Ajouter X API v2 à Postman
+</Button>
+
+Une fois la collection X API v2 chargée dans Postman, accédez au dossier “Manage Posts” et sélectionnez “Create a Post”.
+ 
+
+**Deuxième étape : authentifiez votre requête**
+
+Pour effectuer correctement une requête vers la X API, vous devez vérifier que vous êtes autorisé à le faire. Pour cela, avec les endpoints Manage Posts, vous devez authentifier votre requête en utilisant soit [OAuth 1.0a User Context](/fr/resources/fundamentals/authentication), soit [OAuth 2.0 Authorization Code with PKCE](fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-2).
+
+Dans cet exemple, nous allons utiliser OAuth 1.0a User Context.
+
+Vous devez ajouter vos clés et jetons (en particulier votre API Key, API Secret Key, OAuth 1.0a user Access Token et OAuth 1.0a user Access Token Secret) à Postman. Pour ce faire, sélectionnez l’environnement nommé “X API v2” (dans le coin supérieur droit de Postman) et ajoutez vos clés et jetons dans les champs &quot;initial value&quot; et &quot;current value&quot; (en cliquant sur l’icône en forme d’œil à côté du menu déroulant de l’environnement).
+
+Si vous avez effectué cette opération correctement, ces variables seront automatiquement intégrées dans l’onglet Authorization de la requête.
+
+**Troisième étape : spécifiez le texte du Post**
+
+Lors de la création d’un nouveau Post avec cet endpoint, le texte ou les médias du Post sont les paramètres requis du corps de la requête.
+
+Dans Postman, accédez à l’onglet “Body” et saisissez le texte du Post comme valeur du paramètre `text`. En outre, si vous souhaitez ajouter des paramètres pour des éléments tels que des sondages, répondre à un Post ID ou définir des paramètres de réponse, vous pouvez également le faire ici. Vous pouvez en savoir plus sur ce qui est disponible dans notre [guide de référence de l’API](/fr/x-api/posts/manage-tweets/introduction).
+
+|     |     |     |
+| :--- | :--- | :--- |
+| **Key** | **Value** | **Parameter type** |
+| `text` | Hello world! | body |
+
+**Quatrième étape : identifiez et indiquez les champs que vous souhaitez récupérer**
+
+Une fois que tout est configuré, cliquez sur le bouton &quot;Send&quot; et vous recevrez une réponse similaire à l’exemple suivant :
+
+```
+{
+  "data": {
+    "id": "1445880548472328192",
+    "text": "Hello world!"
+  }
+}
+```
+
+Si l’objet de réponse contient un `id` et le `text` de votre Post, vous avez créé un Post avec succès.
+ 
+
+**Cinquième étape : supprimez votre Post**
+
+Pour supprimer un Post, sélectionnez la requête “Delete a Post” également présente dans le dossier “Manage Posts” de la collection X API v2 chargée dans Postman. Cet endpoint requiert l’ID du Post que vous souhaitez supprimer. Ensuite, dans l’onglet “Params”, saisissez l’ID du Post que vous souhaitez supprimer comme valeur de la colonne `id`. 
+
+En cas de réussite, vous recevrez une réponse similaire à l’exemple suivant :
+
+```
+{
+   "data": {
+       "deleted" : true
+   }
+}
+```
+
+**Étapes suivantes**
+
+[Référence de l’API](/fr/x-api/posts/manage-tweets#manage-tweets-api-reference-index)
+
+[Obtenir de l’aide](https://developer.x.com/en/support/x-api)
+
+[Exemples de code](https://github.com/xdevplatform/Twitter-API-v2-sample-code "Sample code")

@@ -1,0 +1,96 @@
+---
+title: Guide d’intégration
+sidebarTitle: Guide d’intégration
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+Cette page présente plusieurs outils et concepts clés à connaître lors de l’intégration des endpoints de mise en sourdine à votre système. Nous avons scindé la page en plusieurs sections :
+
+* [Outils pratiques](#helpful)
+* Concepts clés
+* [Authentification](#authentication)
+* [Portail développeur, projets et applications](#portal)
+* [Limites de débit](#limits)
+* [Champs et extensions](#fields)
+
+<div id="helpful-tools">
+  ### Outils pratiques
+</div>
+
+Avant d’aborder quelques concepts clés qui vous aideront à intégrer ce point de terminaison, nous vous recommandons de vous familiariser avec :
+
+<div id="postman">
+  #### Postman
+</div>
+
+Postman est un excellent outil pour tester un endpoint. Chaque requête Postman inclut tous les paramètres de chemin et de corps afin de vous aider à comprendre rapidement ce qui est disponible. Pour en savoir plus sur nos collections Postman, consultez notre page [&quot;Utiliser Postman&quot;](/fr/tutorials/postman-getting-started). 
+
+<div id="code-samples">
+  #### Exemples de code
+</div>
+
+Vous souhaitez configurer cet endpoint avec du code dans votre langage de programmation préféré ? Nous proposons plusieurs exemples de code à utiliser comme point de départ sur notre [page GitHub](https://github.com/xdevplatform/Twitter-API-v2-sample-code).
+
+<div id="third-party-libraries">
+  #### Bibliothèques tierces
+</div>
+
+Profitez de l’une des [bibliothèques tierces](/fr/x-api/tools-and-libraries/overview) proposées par nos communautés pour bien démarrer. Pour trouver une bibliothèque compatible avec les endpoints v2, recherchez le tag de version approprié.
+
+<div id="key-concepts">
+  ### Concepts clés
+</div>
+
+<div id="authentication">
+  #### Authentification
+</div>
+
+Tous les endpoints de X API v2 exigent d’authentifier vos requêtes à l’aide d’un ensemble d’identifiants, également appelés clés et jetons. Vous pouvez utiliser le contexte utilisateur OAuth 1.0a pour authentifier vos requêtes vers cet endpoint.
+
+[Contexte utilisateur OAuth 1.0a](/fr/resources/fundamentals/authentication), ce qui signifie que vous devez utiliser un ensemble de clés API et de jetons d’accès utilisateur pour effectuer une requête réussie. Les jetons d’accès doivent être associés à l’utilisateur pour le compte duquel vous effectuez la requête. Si vous souhaitez générer un ensemble de jetons d’accès pour un autre utilisateur, celui-ci doit autoriser votre application via le [flux OAuth à 3 volets](https://developer.x.com/resources/fundamentals/authentication/obtaining-user-access-tokens).
+
+Veuillez noter qu’OAuth 1.0a peut être difficile à utiliser. Si vous ne connaissez pas cette méthode d’authentification, nous vous recommandons d’utiliser une [bibliothèque](/fr/x-api/tools-and-libraries/overview) ou un outil comme Postman.
+
+<div id="developer-portal-projects-and-developer-apps">
+  #### Portail développeur, projets et applications développeur
+</div>
+
+Pour obtenir un ensemble d’identifiants d’authentification compatibles avec les endpoints de l’API X v2, vous devez [créer un compte développeur](https://developer.x.com/en/portal/petition/essential/basic-info), configurer un [projet](/fr/resources/fundamentals/projects) dans ce compte, puis créer une [application développeur](/fr/resources/fundamentals/developer-apps) dans ce projet. Vous pourrez ensuite trouver vos clés et jetons dans votre application développeur.
+ 
+
+<div id="rate-limits">
+  #### Limites de débit
+</div>
+
+Chaque jour, des dizaines de milliers de développeurs envoient des requêtes à l’API X. Pour gérer le volume de ces requêtes, des [limites de débit](/fr/x-api/fundamentals/rate-limits) sont appliquées à chaque endpoint, ce qui restreint le nombre de requêtes que vous pouvez effectuer au nom de votre application ou d’un utilisateur authentifié.
+
+Ces endpoints sont limités au niveau de l’utilisateur, ce qui signifie que l’utilisateur authentifié pour lequel vous effectuez la requête ne peut appeler l’endpoint qu’un certain nombre de fois, quel que soit l’App du développeur.
+
+Le tableau ci-dessous présente les limites de débit pour chaque endpoint.
+
+|     |     |     |
+| :--- | :--- | :--- |
+| **Endpoint** | **Méthode HTTP** | **Limite de débit** |
+| /2/users/:id/pinned_lists | POST | 50 requêtes par 15 minutes |
+| /2/users/:id/pinned_lists/:list_id | DELETE | 50 requêtes par 15 minutes |
+| /2/users/:id/pinned_lists | GET | 15 requêtes par 15 minutes |
+
+<div id="fields-and-expansions">
+  #### Champs et expansions
+</div>
+
+Le point de terminaison GET de X API v2 permet aux utilisateurs de sélectionner précisément les données à retourner par l’API à l’aide d’outils appelés `fields` et `expansions`. Le paramètre `expansions` permet d’étendre les objets référencés dans le payload. Par exemple, interroger les listes épinglées permet de récupérer les [expansions](/fr/x-api/fundamentals/expansions) suivantes :
+
+* `owner_id`
+
+Le paramètre `fields` permet de sélectionner exactement quels [champs](/fr/x-api/fundamentals/fields) au sein des différents objets de données vous souhaitez recevoir. Ce point de terminaison renvoie principalement des objets utilisateur. Par défaut, l’objet List retourne les champs `id` et `name`. Pour recevoir des champs supplémentaires tels que `list.created_at` ou `list.description`, vous devez les demander explicitement via un paramètre `fields`. 
+
+Nous avons ajouté à notre [dictionnaire de données X API v2](/fr/x-api/fundamentals/data-dictionary) un guide sur l’utilisation conjointe des [champs et expansions](/fr/x-api/fundamentals/data-dictionary#how-to-use-fields-and-expansions).
+
+Le tableau ci-dessous présente les champs et expansions disponibles pour le point de terminaison de lookup :
+
+|     |     |     |
+| :--- | :--- | :--- |
+| **Point de terminaison** | **Champs** | **Expansions** |
+| /2/users/:id/pinned_lists | `list.fields`<br /><br />`user.fields` | `owner_id` |

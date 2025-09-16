@@ -1,0 +1,130 @@
+---
+title: "Mesures"
+---
+
+<div id="overview">
+  ## Aperçu
+</div>
+
+Le champ metrics permet aux développeurs d’accéder aux métriques d’engagement publiques et privées pour les objets Publication et média. Les métriques publiques sont accessibles à toute personne disposant d’un compte développeur, tandis que les métriques privées sont accessibles depuis des comptes détenus/autorisés (définition ci-dessous). Les métriques incluent le nombre total d’impressions, de Retweets, de Tweets cités, de mentions J’aime, de réponses, de vues vidéo, de quartiles de visionnage vidéo, ainsi que les clics sur des URL et sur des liens de profil pour chaque Publication spécifiée dans la requête. Il est également possible d’afficher une ventilation des métriques obtenues dans un contexte organique ou sponsorisé, si la Publication a été promue en tant que [Ad](https://ads.x.com/).
+
+Les métriques publiques peuvent être demandées avec l’authentification [App-only Token](/fr/resources/fundamentals/authentication#oauth-2-0). Les métriques non publiques peuvent être demandées uniquement pour des Publications détenues/autorisées, ce qui signifie que les développeurs doivent s’authentifier via l’autorisation en contexte utilisateur [OAuth 2.0](/fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-3) ou [OAuth 1.0a](/fr/resources/fundamentals/authentication#oauth-1-0a-2).
+
+**Les métriques non publiques, organiques et sponsorisées ne sont disponibles que pour les Publications créées au cours des 30 derniers jours.**
+
+<div id="terminology">
+  ### Terminologie
+</div>
+
+* **Compte autorisé** : Un compte X qui a autorisé votre [application développeur X](/fr/resources/fundamentals/developer-apps) en lui accordant l’accès à ce compte (tout [niveau d’autorisation de l’application](/fr/resources/fundamentals/developer-apps#app-permissions) permet l’accès aux métriques de publication).
+* **Compte détenu** : Un compte X lié à votre [application développeur X](/fr/resources/fundamentals/developer-apps).
+* **Métriques publiques** : Totaux accessibles à tous sur [X](https://x.com/home), tels que le nombre de mentions J’aime et le nombre de Retweets.
+* **Métriques non publiques** : Totaux non visibles publiquement sur [X](https://x.com/home), tels que le nombre d’impressions et les quartiles de vues vidéo. Nécessite une authentification en contexte utilisateur [OAuth 2.0](/fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-3) ou [OAuth 1.0a](/fr/resources/fundamentals/authentication#oauth-1-0a-2).
+* **Métriques organiques** : Regroupement de métriques publiques et non publiques attribuées à un contexte organique (publiées et consultées de manière classique). Nécessite une authentification en contexte utilisateur [OAuth 2.0](/fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-3) ou [OAuth 1.0a](/fr/resources/fundamentals/authentication#oauth-1-0a-2).
+* **Métriques sponsorisées** : Regroupement de métriques publiques et non publiques attribuées à un contexte sponsorisé (publiées ou consultées dans le cadre d’une campagne publicitaire). Nécessite une authentification en contexte utilisateur [OAuth 2.0](/fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-3) ou [OAuth 1.0a](/fr/resources/fundamentals/authentication#oauth-1-0a-2) et que la publication ait été promue dans une annonce.
+
+<div id="available-metrics">
+  ## Métriques disponibles
+</div>
+
+| Metric               | API Representations                                                                                                                                                                                                                                     | Description                                                                                                                                                                                                                                                                                                                                                                                |
+|:----------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Impressions**      | `data.non_public_metrics.impression_count`, `data.organic_metrics.impression_count`, `data.promoted_metrics.impression_count`                                                                                                                           | Nombre de fois où la publication a été affichée (non unique par utilisateur). Une vue est comptabilisée dès qu’une partie de la publication est visible à l’écran. Nécessite l’authentification OAuth 1.0a en contexte utilisateur (User Context).                                                                                                 |
+| **Retweets**         | `data.public_metrics.retweet_count`, `data.organic_metrics.retweet_count`, `data.promoted_metrics.retweet_count`                                                                                                                                       | Nombre de fois où la publication a été retweetée. N’inclut pas les Tweets avec citation (« Retweets avec commentaire »). Pour obtenir le total « Retweets et commentaires » tel qu’affiché dans les clients X, additionnez `retweet_count` et `quote_count`.                                                |
+| **Tweets avec citation**     | `data.public_metrics.quote_count`                                                                                                                                                                                                                      | Nombre de fois où la publication a été retweetée avec un nouveau commentaire (message). Il n’existe pas de Tweets avec citation issus d’un contexte payant, donc tous les Tweets avec citation sont organiques.                                                                                                                                    |
+| **Mentions J’aime**            | `data.public_metrics.like_count`, `data.organic_metrics.like_count`, `data.promoted_metrics.like_count`                                                                                                                                                 | Nombre de fois où la publication a reçu une mention J’aime. Le champ `public_metrics` renvoie le total des mentions J’aime des contextes organique et payant afin d’assurer la cohérence avec les décomptes affichés publiquement sur X.                                                                                                            |
+| **Réponses**          | `data.public_metrics.reply_count`, `data.organic_metrics.reply_count`, `data.promoted_metrics.reply_count`                                                                                                                                              | Nombre de fois où la publication a reçu une réponse. Le champ `public_metrics` renvoie le total des réponses provenant des contextes organique et payant.                                                                                                                                                    |
+| **Clics sur des liens URL**  | `data.non_public_metrics.url_link_clicks`, `data.organic_metrics.url_link_clicks`, `data.promoted_metrics.url_link_clicks`                                                                                                                             | Nombre de fois où un utilisateur clique sur un lien URL ou sur une carte d’aperçu d’URL dans une publication. Nécessite l’authentification OAuth 1.0a en contexte utilisateur (User Context).                                                                                                              |
+| **Clics vers le profil** | `data.non_public_metrics.user_profile_clicks`, `data.organic_metrics.user_profile_clicks`, `data.promoted_metrics.user_profile_clicks`                                                                                                             | Nombre de fois où un utilisateur clique sur des éléments d’une publication : nom affiché, nom d’utilisateur, photo de profil. Nécessite l’authentification OAuth 1.0a en contexte utilisateur (User Context).                                                                                               |
+| **Vues vidéo**      | `includes.media.public_metrics.view_count`, `includes.media.organic_metrics.view_count`, `includes.media.promoted_metrics.view_count`                                                                                                                  | Nombre de fois où la vidéo incluse dans la publication a été visionnée. Il s’agit du nombre de vues vidéo agrégé sur toutes les publications dans lesquelles cette vidéo a été publiée. Nécessite l’extension média `expansions=attachment.media_keys`.                                                      |
+| **Quartiles de visionnage vidéo** | `includes.media.non_public_metrics.playback_0_count`, `includes.media.non_public_metrics.playback_25_count`, `includes.media.non_public_metrics.playback_50_count`, `includes.media.non_public_metrics.playback_75_count`, `includes.media.non_public_metrics.playback_100_count` | Nombre d’utilisateurs ayant visionné la vidéo jusqu’à chaque quartile. Nécessite l’authentification OAuth 1.0a en contexte utilisateur (User Context) et l’extension média `expansions=attachment.media_keys`.                                                                                               |
+
+<div id="requesting-metrics">
+  ## Requête de métriques
+</div>
+
+<div id="public-metrics">
+  ### Indicateurs publics
+</div>
+
+Dans la requête suivante, nous demandons les indicateurs publics du Post et de la vidéo jointe avec les champs et l’extension suivants. Assurez-vous de remplacer `$BEARER_TOKEN` par votre propre jeton Bearer.
+
+* `tweet.fields=public_metrics`
+* `expansions=attachments.media_keys&media.fields=public_metrics`
+
+<div id="sample-request">
+  #### Exemple de requête
+</div>
+
+```bash
+curl 'https://api.x.com/2/tweets?ids=1204084171334832128&tweet.fields=public_metrics&expansions=attachments.media_keys&media.fields=public_metrics' --header 'Authorization: Bearer $BEARER_TOKEN'
+```
+
+<div id="private-metrics-non-public-organic-metrics">
+  ### Indicateurs privés (indicateurs non publics, organiques)
+</div>
+
+La requête suivante demande des indicateurs non publics, avec des détails supplémentaires sur les indicateurs organiques pour la publication et la vidéo jointe. Étant donné que ces champs sont privés et non visibles publiquement sur X, la requête nécessite une authentification en contexte utilisateur via [OAuth 2.0](/fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-3) ou [OAuth 1.0a](/fr/resources/fundamentals/authentication#oauth-1-0a-2). Consultez notre [guide](/fr/resources/fundamentals/authentication#creating-a-signature) pour générer la signature OAuth 1.0a requise ci-dessous.
+
+* `tweet.fields=non_public_metrics,organic_metrics`
+* `expansions=attachments.media_keys&media.fields=non_public_metrics,organic_metrics`
+
+<div id="sample-request">
+  #### Exemple de requête
+</div>
+
+```bash
+curl 'https://api.x.com/2/tweets/1204084171334832128?tweet.fields=non_public_metrics,organic_metrics&media.fields=non_public_metrics,organic_metrics&expansions=attachments.media_keys' --header 'authorization: OAuth oauth_consumer_key="CONSUMER_API_KEY", oauth_nonce="OAUTH_NONCE", oauth_signature="OAUTH_SIGNATURE", oauth_signature_method="HMAC-SHA1", oauth_timestamp="OAUTH_TIMESTAMP", oauth_token="ACCESS_TOKEN", oauth_version="1.0"'
+```
+
+<div id="sample-response">
+  #### Exemple de réponse
+</div>
+
+```
+{
+  "data": {
+    "attachments": {
+      "media_keys": ["13_1204080851740315648"]
+    },
+    "id": "1263145271946551300",
+    "non_public_metrics": {
+      "impression_count": 956,
+      "url_link_clicks": 9,
+      "user_profile_clicks": 34
+    },
+    "organic_metrics": {
+      "impression_count": 956,
+      "like_count": 49,
+      "reply_count": 2,
+      "retweet_count": 9,
+      "url_link_clicks": 9,
+      "user_profile_clicks": 34
+    },
+    "text": "test"
+  },
+  "includes": {
+    "media": [
+      {
+        "media_key": "13_1204080851740315648",
+        "non_public_metrics": {
+          "playback_0_count": 0,
+          "playback_100_count": 1,
+          "playback_25_count": 2,
+          "playback_50_count": 1,
+          "playback_75_count": 1
+        },
+        "organic_metrics": {
+          "playback_0_count": 0,
+          "playback_100_count": 1,
+          "playback_25_count": 2,
+          "playback_50_count": 1,
+          "playback_75_count": 1,
+          "view_count": 1
+        },
+        "type": "video"
+      }
+    ]
+  }
+}
+```

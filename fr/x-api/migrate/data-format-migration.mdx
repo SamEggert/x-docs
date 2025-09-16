@@ -1,0 +1,972 @@
+---
+title: Migration du schéma des données
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+<div id="introduction">
+  ## Introduction
+</div>
+
+Avec le lancement de la v2 de l’API X, nous avons adopté un nouveau format de réponse et une nouvelle méthode pour demander différents objets et champs, que nous appelons simplement le format X API v2.
+
+Dans la section sur les différences générales, vous pouvez découvrir certains changements pertinents pour les utilisateurs standard et enterprise. Nous avons également préparé un guide spécifique pour le [format natif v1.1 (standard)](https://developer.x.com/en/docs/x-api/v1/data-dictionary/overview), le [format Native Enriched (enterprise)](/fr/x-api/enterprise-gnip-2.0/fundamentals/data-dictionary#native-enriched-tweet-object) et le [format Activity Streams (enterprise)](/fr/x-api/enterprise-gnip-2.0/fundamentals/data-dictionary#activity-object), qui aide à faire correspondre les champs et explique quels champs et expansions utiliser pour demander les nouveaux champs v2.
+
+* [Format natif vers X API v2 (v1.1 standard)](/fr/x-api/migrate/data-format-migration#migrating-from-standard-v1-1s-data-format-to-v2)
+* [Native Enriched vers X API v2 (enterprise)](/fr/x-api/migrate/data-format-migration#migrating-from-native-enriched-data-format-to-v2)
+* [Activity Streams vers X API v2 (enterprise)](/fr/x-api/migrate/data-format-migration#migrating-from-activity-streams-data-format-to-v2)
+
+Vous pouvez également être intéressé par notre [outil visuel de migration des formats de données](/fr/x-api/migrate/data-format-migration#visual-data-format-migration-tool), qui vous aide à voir rapidement les différences entre le [format de données X API v1.1](https://developer.x.com/en/docs/x-api/v1/data-dictionary/overview) et le [format X API v2](/fr/x-api/introduction).
+
+<div id="general-differences">
+  ### Différences générales
+</div>
+
+<div id="requesting-objects-and-fields">
+  #### Requête d’objets et de champs
+</div>
+
+L’une des principales différences entre les endpoints pré‑v2 et v2 est que la nouvelle version ne renvoie que quelques champs par défaut, tandis que les endpoints standard, premium et enterprise renvoient la plupart des champs par défaut. La nouvelle version utilise des paramètres appelés [fields](/fr/x-api/fundamentals/fields) et [expansions](/fr/x-api/fundamentals/expansions) pour demander explicitement des données supplémentaires au-delà des valeurs par défaut, ce qui vous permet de ne récupérer que les données dont vous avez besoin sans devoir ingérer des champs qui ne vous concernent pas.
+
+Tous les champs que vous demandez et qui se rapportent à l’objet de données principal seront renvoyés dans cet objet principal, avec les valeurs par défaut. En revanche, si vous demandez des objets étendus à l’aide du paramètre expansions, les objets secondaires seront renvoyés dans un nouvel objet includes. Vous pouvez faire correspondre les objets étendus présents dans l’objet includes à l’objet principal en utilisant le champ id, qui sera renvoyé dans les deux.
+
+Par exemple, si vous utilisez l’endpoint v2 [Post lookup](/fr/x-api/posts/lookup/introduction) et que vous incluez le paramètre expansions=author_id dans votre requête, vous recevrez le champ author_id dans l’objet Post principal, ainsi qu’un objet user par Post dans l’objet includes, chacun incluant le champ id par défaut qui peut être utilisé pour faire correspondre l’objet user à l’objet Post. Voici un exemple de ce à quoi cela ressemble :
+
+```
+{
+  "data": [
+    {
+      "author_id": "2244994945",
+      "id": "1397568983931392004",
+      "text": "The Twitter Developer Platform. Ooh la la! https://t.co/iGTdPXBfOv https://t.co/Ze8z8EODdg"
+    }
+  ],
+  "includes": {
+    "users": [
+      {
+        "id": "2244994945",
+        "name": "Twitter Dev",
+        "username": "TwitterDev"
+      }
+    ]
+  }
+}
+```
+
+<div id="updated-json-design">
+  #### Modèle JSON mis à jour
+</div>
+
+En plus des changements concernant la façon de demander certains champs, X API v2 introduit également de nouveaux modèles JSON pour les objets renvoyés par les API, notamment les objets [Post](/fr/x-api/fundamentals/data-dictionary#tweet) et [user](/fr/x-api/fundamentals/data-dictionary#user).
+
+* Au niveau racine du JSON, les endpoints standard renvoient des objets Post dans un tableau **statuses**, tandis que X API v2 renvoie un tableau **data**.
+* Au lieu de faire référence à des « statuses » Retweeted et Quoted, le JSON de X API v2 fait référence à des Tweets retweetés et cités. De nombreux champs hérités et obsolètes, tels que **contributors** et **user.translator_type**, sont supprimés.
+* Au lieu d’utiliser à la fois **favorites** (dans l’objet Post) et **favourites** (dans l’objet user), X API v2 utilise le terme like.
+* X adopte la convention selon laquelle les valeurs JSON sans valeur (par exemple null) ne sont pas écrites dans la charge utile. Les attributs Post et user ne sont inclus que s’ils ont des valeurs non nulles. 
+   
+
+<div id="new-v2-fields">
+  #### Nouveaux champs v2
+</div>
+
+Nous avons également introduit un nouvel ensemble de champs dans l’[objet Post](/fr/x-api/fundamentals/data-dictionary#tweet), notamment :
+
+* Un champ [conversation_id](/fr/x-api/fundamentals/conversation-id)
+* Deux nouveaux champs [annotations](/fr/x-api/fundamentals/post-annotations), à savoir context et entities
+* Plusieurs nouveaux champs [metrics](/fr/x-api/fundamentals/metrics)
+* Un nouveau champ reply_setting, qui indique qui est autorisé à répondre à une publication donnée
+
+<div id="migrating-from-standard-v11s-data-format-to-v2">
+  ### Migration du format de données standard v1.1 vers v2
+</div>
+
+Si ce n’est pas déjà fait, nous vous recommandons de commencer par lire l’introduction à la [migration des formats de données](/fr/x-api/migrate/data-format-migration). Vous pouvez également consulter notre [outil visuel de migration des formats de données](/fr/x-api/migrate/data-format-migration#visual-data-format-migration-tool) pour comparer rapidement le [format de données de l’API X v1.1](https://developer.x.com/en/docs/x-api/v1/data-dictionary/overview) et le [format de l’API X v2](/fr/x-api/fundamentals/data-dictionary).
+
+Le format de données standard v1.1, également appelé format natif, est le principal format diffusé via les endpoints [standard v1.1](https://developer.x.com/en/docs/twitter-api/v1).
+
+Si vous utilisez l’offre Premium, veuillez consulter le [guide du format natif enrichi](/fr/x-api/migrate/data-format-migration#migrating-from-native-enriched-data-format-to-v2). Les clients Enterprise peuvent utiliser le format natif enrichi ou les flux d’activités, selon la configuration de votre espace dans la console Gnip. 
+
+<div id="standard-v11-vs-v2-payload-structure">
+  #### Structure de charge utile standard v1.1 vs v2
+</div>
+
+Le tableau suivant présente les objets de haut niveau et le format que vous pouvez attendre de v2, comparés au format v1.1.
+
+|     | **structure v1.1** | **structure v2** |
+| :--- | :--- | :--- |
+| **Par défaut** | &#123;<br />	~tous les champs de l&#39;objet tweet~,<br />	&quot;entities&quot;: &#123;<br />		&quot;hashtags&quot;: [],<br />		&quot;symbols&quot;: [],<br />		&quot;user_mentions&quot;: [],<br />		&quot;urls&quot;: [],<br />		&quot;media&quot;: []<br />	&#125;,<br />	&quot;extended_entities&quot;: {},<br />	&quot;user&quot;: {},<br />	&quot;place&quot;: {},<br />	&quot;retweeted_status/quoted_status&quot;<br />&#125; | &#123;<br />	&quot;data&quot;: [&#123;<br />		&quot;id&quot;,<br />		&quot;text&quot;,<br /><br />      &quot;edit_history_tweet_ids&quot;<br />	&#125;]<br />&#125; |
+| **Avec des paramètres [fields and expansions](/fr/x-api/fundamentals/data-dictionary#how-to-use-fields-and-expansions) définis** |     | &#123;<br />	&quot;data&quot;: [&#123;<br />		~champs de l&#39;objet tweet~,<br />		&quot;entities&quot;: &#123;<br />			&quot;hashtags&quot;: [],<br />			&quot;cashtags&quot;: [],<br />			&quot;mentions&quot;: [],<br />			&quot;urls&quot;: [],<br />		&#125;,<br />		&quot;attachments&quot;: &#123;<br /><br />        &quot;media_keys&quot;: [],<br /><br />        &quot;poll_ids&quot;: []<br /><br />     &#125;<br />	&#125;],<br />	&quot;includes&quot;: [<br />		&quot;tweets&quot;: [~tweet objects~],<br />		&quot;users&quot;: [~user objects~],<br />		&quot;media&quot;: [~media objects~],<br />		&quot;places&quot;: [~place object~],<br /><br />      &quot;polls&quot;: [~poll object~]<br />	],<br /><br />   &quot;matching_rules&quot;: []<br />&#125; |
+
+**Correspondance des champs**
+
+La section suivante décrit quels champs de la v1.1 correspondent aux champs de la v2, ainsi que quels paramètres de la v2 sont requis pour recevoir le nouveau champ.
+ 
+
+<div id="tweet-object">
+  #### Objet Tweet
+</div>
+
+|     |     |     |
+| :--- | :--- | :--- |
+| **Format Twitter 1.1** | **Format Twitter v2** | **Paramètres v2 requis** |
+| created_at | data.created_at | tweet.fields=created_at |
+| id  |     | N/A l’ID est une chaîne |
+| id_str | data.id | par défaut |
+| text | data.text | par défaut |
+| full_text |     | N/A text contient le texte complet |
+| truncated |     | N/A text contient le texte complet |
+| display_text_range |     | N/A text contient le texte complet |
+| edit_history | data.edit_history_tweet_ids | par défaut |
+| edit_controls | data.edit_controls | tweet.fields=edit_controls |
+| editable | data.edit_controls.is_edit_eligible | tweet.fields=edit_controls |
+| entities | data.entities | tweet.fields=entities |
+| entities.user_mentions | data.entities.mentions | tweet.fields=entities |
+| entities.symbols | data.entities.cashtags | tweet.fields=entities |
+| entities.hashtags | data.entities.hashtags | tweet.fields=entities |
+| entities.urls | data.entities.urls | tweet.fields=entities |
+| entities.media | includes.media | expansions=attachments.media_keys |
+| extended_entities | data.attachments | tweet_fields=attachments |
+| in_reply_to_status_id |     | N/A referenced_tweets.id est une chaîne |
+| in_reply_to_status_id_str | data.referenced_tweets.id (si type=replied_to) | expansions=referenced_tweets.id |
+| in_reply_to_user_id |     | N/A in_reply_to_user_id est une chaîne |
+| in_reply_to_user_id_str | data.in_reply_to_user_id | tweet.fields=in_reply_to_user_id |
+| in_reply_to_screen_name | includes.users..username | tweet.fields=in_reply_to_user_id&amp;expansions=entities.mentions.username |
+| user | includes.users | expansions=author_id |
+| geo | data.geo.place_id | tweet.fields=geo |
+| coordinates | data.geo.place_id | expansions=geo.place_id |
+| place | data.geo.place_id | expansions=geo.place_id |
+| retweeted_status | data.referenced_tweets.id (si type=retweeted) | expansions=referenced_tweets.id |
+| is_quoted_status |     | Non disponible |
+| quoted_status_id |     | N/A referenced_tweets.id est une chaîne |
+| quoted_status_id_str | data.referenced_tweets.id (si type=quoted) | expansions=referenced_tweets.id |
+| quoted_status_permalink |     | Non disponible |
+| quoted_status | data.referenced_tweets (si type=quoted) | expansions=referenced_tweets.id |
+| retweet_count | data.public_metrics.retweet_count | tweet.fields=public_metrics |
+| favorite_count | data.public_metrics.like_count | tweet.fields=public_metrics |
+| favorited |     | Non disponible |
+| retweeted |     | Non disponible |
+| possibly_sensitive | data.possibly_sensitive | tweet.fields=possibly_sensitive |
+| lang | data.lang | tweet.fields=lang |
+| scopes |     | Non disponible |
+| withheld | data.withheld | tweet.fields=withheld |
+
+**Exemple**
+
+|     |     |
+| :--- | :--- |
+| **Objet Tweet en 1.1**<br /><br />Exemple d’URI avec paramètres :  <br /><br />https://api.x.com/1.1/statuses/lookup.json?id=1359554366051504129&amp;tweet_mode=extended | **Objet Tweet et requête en v2**<br /><br />Exemple d’URI avec paramètres :  <br /><br />https://api.x.com/2/tweets?ids=1359554366051504129&amp;tweet.fields=attachments,author_id,context_annotations,conversation_id,created_at,entities,geo,id,in_reply_to_user_id,lang,possibly_sensitive,public_metrics,referenced_tweets,reply_settings,text,withheld |&quot;description&quot;: &quot;Marques et entreprises&quot;,<br />
+
+***
+
+<div id="user-object">
+  #### Objet utilisateur
+</div>
+
+|     |     |     |
+| :--- | :--- | :--- |
+| **Format Twitter 1.1** | **Format Twitter v2** | **Paramètres v2 requis** |
+| user_id | data.author_id | tweet.fields=author_id |
+| user.id |     | N/A utiliser includes.users.id |
+| user.id_str | includes.users.id | expansions=author_id |
+| user.name | includes.users.name | expansions=author_id |
+| user.screen_name | includes.users.username | expansions=author_id |
+| user.location | includes.users.location | expansions=author_id&amp;user.fields=location |
+| user.description | includes.users.description | expansions=author_id&amp;user.fields=description |
+| user.url | includes.users.url | expansions=author_id&amp;user.fields=entities |
+| user.entities | includes.users.entities |     |
+| user.entities.url.urls.url | includes.users.entities.url.urls.url |     |
+| user.entities.url.urls.expanded_url | includes.users.entities.url.urls.expanded_url | expansions=author_id&amp;user.fields=entities |
+| user.entities.url.urls.display_url | includes.users.entities.url.urls.display_url | expansions=author_id&amp;user.fields=entities |
+| user.entities.url.urls.display_url.indicies[0] | includes.users.entities.url.urls.start | expansions=author_id&amp;user.fields=entities |
+| user.entities.url.urls.display_url.indicies[1] | includes.users.entities.url.urls.end | expansions=author_id&amp;user.fields=entities |
+| user.protected | includes.users.protected | expansions=author_id&amp;user.fields=protected |
+| user.followers_count | includes.users.public_metrics.followers_count | expansions=author_id&amp;user.fields=public_metrics |
+| user.friends_count | includes.users.public_metrics.following_count | expansions=author_id&amp;user.fields=public_metrics |
+| user.listed_count | includes.users.public_metrics.listed_count | expansions=author_id&amp;user.fields=public_metrics |
+| user.created_at | includes.users.created_at | expansions=author_id&amp;user.fields=created_at |
+| user.favourites_count |     |     |
+| user.verified | includes.users.verified | expansions=author_id&amp;user.fields=verified |
+| user.statuses_count | includes.users.public_metrics.tweet_count | expansions=author_id&amp;user.fields=public_metrics |
+| user.profile_image_url_https | includes.users.profile_image_url | expansions=author_id&amp;user.fields=profile_image_url |
+
+**Exemple**
+
+|     |     |
+| :--- | :--- |
+| **Objet User en 1.1** | **Objet User et requête avec v2** || &quot;user&quot;: &#123;<br />	&quot;name&quot;: &quot;Twitter Dev&quot;,<br />	&quot;location&quot;: &quot;127.0.0.1&quot;,<br />	&quot;description&quot;: &quot;La voix de l’équipe #TwitterDev et votre source officielle pour les mises à jour, les actualités et les événements liés à la #TwitterAPI.&quot;,<br />	&quot;entities&quot;: &#123;<br />		&quot;url&quot;: &#123;<br />			&quot;urls&quot;: [&#123;<br />				&quot;display_url&quot;: &quot;developer.x.com\/en\/community&quot;,<br />				&quot;indices&quot;: [<br />					0,<br />					23<br />				]<br />			&#125;]<br />		&#125;,<br />		&quot;description&quot;: &#123;<br />			&quot;urls&quot;: []<br />		&#125;<br />	&#125;,<br />	&quot;verified&quot;: true,<br />	&quot;lang&quot;: null,<br />	&quot;profile_background_image_url&quot;: &quot;http:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png&quot;,<br />	&quot;profile_background_image_url_https&quot;: &quot;https:\/\/abs.twimg.com\/images\/themes\/theme1\/bg.png&quot;,<br />	&quot;profile_image_url&quot;: &quot;http:\/\/pbs.twimg.com\/profile_images\/1354494203451961345\/d8HkZl6p_normal.jpg&quot;,<br />	&quot;profile_image_url_https&quot;: &quot;https:\/\/pbs.twimg.com\/profile_images\/1354494203451961345\/d8HkZl6p_normal.jpg&quot;,<br />	&quot;profile_banner_url&quot;: &quot;https:\/\/pbs.twimg.com\/profile_banners\/2244994945\/1611792896&quot;,<br />	&quot;profile_link_color&quot;: &quot;0084B4&quot;,<br />	&quot;profile_sidebar_border_color&quot;: &quot;FFFFFF&quot;,<br />	&quot;profile_sidebar_fill_color&quot;: &quot;DDEEF6&quot;,<br />	&quot;profile_text_color&quot;: &quot;333333&quot;,<br />	&quot;translator_type&quot;: &quot;regular&quot;<br />&#125; | &#123;<br />	&quot;data&quot;: [&#123;<br />		&quot;text&quot;: &quot;De nos salons au vôtre 🐱‍💻🛋️ Nos responsables de la relation développeurs ont prévu des streams Twitch et des événements virtuels passionnants pour vous aider à démarrer avec la nouvelle #TwitterAPI. Consultez le programme pour plus de détails et dites-nous si vous voulez en voir davantage !\n👇\nhttps://t.co/cixDY9qkvH&quot;<br />	&#125;],<br />	&quot;includes&quot;: &#123;<br />		&quot;users&quot;: [&#123;<br />			&quot;entities&quot;: &#123;<br />				&quot;url&quot;: &#123;<br />					&quot;urls&quot;: [&#123;<br />						&quot;display_url&quot;: &quot;developer.x.com/en/community&quot;<br />					&#125;]<br />				&#125;,<br />				&quot;description&quot;: &#123;<br />					&quot;hashtags&quot;: [&#123;<br />							&quot;tag&quot;: &quot;TwitterDev&quot;<br />						&#125;,<br />						&#123;<br />							&quot;tag&quot;: &quot;TwitterAPI&quot;<br />						&#125;<br />					]<br />				&#125;<br />			&#125;,<br />			&quot;description&quot;: &quot;La voix de l’équipe #TwitterDev et votre source officielle pour les mises à jour, les actualités et les événements liés à la #TwitterAPI.&quot;,<br />			&quot;name&quot;: &quot;Twitter Dev&quot;,<br />			&quot;verified&quot;: true,<br />			&quot;location&quot;: &quot;127.0.0.1&quot;,<br />			&quot;profile_image_url&quot;: &quot;https://pbs.twimg.com/profile_images/1354494203451961345/d8HkZl6p_normal.jpg&quot;,<br />			&quot;created_at&quot;: &quot;2013-12-14T04:35:55.000Z&quot;<br />		&#125;]<br />	&#125;<br />&#125; |
+
+<div id="entities-and-expanded-entities-objects">
+  #### Objets entities et expanded entities
+</div>
+
+|     |     |     |     |
+| :--- | :--- | :--- | :--- |
+| **Format Twitter 1.1** | **Format Twitter v2** | **Paramètres v2 requis** | **Type dans v2** |
+| entities | data.entities | tweet.fields=entities | objet |
+| entities.hashtags | data.entities.hashtags | tweet.fields=entities | tableau d’objets |
+| entities.hashtags.indices[0] | data.entities.hashtags.start | tweet.fields=entities | nombre |
+| entities.hashtags.indices[1] | data.entities.hashtags.end | tweet.fields=entities | nombre |
+| entities.hashtags.text | data.entities.hashtags.tag | tweet.fields=entities | chaîne de caractères |
+| entities.urls | data.entities.urls | tweet.fields=entities | tableau d’objets |
+| entities.urls.indices[0] | data.entities.urls.start | tweet.fields=entities | nombre |
+| entities.urls.indices[1] | data.entities.urls.end | tweet.fields=entities | nombre |
+| entities.urls.url | data.entities.urls.url | tweet.fields=entities | chaîne de caractères |
+| entities.user_mentions | data.entities.mentions | tweet.fields=entities | tableau d’objets |
+| entities.user_mentions.indicies[0] | data.entities.mentions.start | tweet.fields=entities | nombre |
+| entities.user_mentions.indicies[1] | data.entities.mentions.end | tweet.fields=entities | nombre |
+| entities.user_mentions.screen_name | data.entities.mentions.username | tweet.fields=entities | chaîne de caractères |
+| entities.symbols | data.entities.cashtags | tweet.fields=entities | tableau d’objets |
+| entities.symbols.indices[0] | data.entities.cashtags.start | tweet.fields=entities | nombre |
+| entities.symbols.indices[1] | data.entities.cashtags.end | tweet.fields=entities | nombre |
+| entities.symbols.text | data.entities.cashtags.tag | tweet.fields=entities | chaîne de caractères |
+| entities.media | includes.media | expansions=attachments.media_keys | tableau d’objets |
+| entities.media.id_str | includes.media.media_key | expansions=attachments.media_keys | chaîne de caractères |
+| entities.media.type | includes.media.media.type | expansions=attachments.media_keys | chaîne de caractères |
+| entities.media.media_url |     | N/A utiliser includes.media.url | chaîne de caractères |
+| entities.media.media_url_https | includes.media.url | expansions=attachments.media_keys&amp;media.fields=url | chaîne de caractères |
+| entities.media.url |     |     |     |
+| entities.media.display_url |     |     |     |
+| entities.media.expanded_url |     |     |     |
+| entities.media.media_url_https | includes.media.preview_image_url | expansions=attachments.media_keys&amp;media.fields=preview_image_url | chaîne de caractères |
+| extended_entities | data.attachments | tweet_fields=attachments | objet |
+| extended_entities | data.attachments.media_keys | tweet.fields=attachments | tableau d’objets |
+| extended_entities.media | includes.media | expansions=attachments.media_keys | tableau d’objets |
+| extended_entities.media.id_str | includes.media.media_key | expansions=attachments.media_keys | chaîne de caractères |
+| extended_entities.media.type | includes.media.media.type | expansions=attachments.media_keys | chaîne de caractères |
+| extended_entities.media.sizes.thumb.w |     | Non disponible |     |
+| extended_entities.media.sizes.thumb.h |     | Non disponible |     |
+| extended_entities.media.sizes.thumb.resize |     | Non disponible |     |
+| extended_entities.media.sizes.large.w | includes.media.height | expansions=attachments.media_keys&amp;media.fields=height |     |
+| extended_entities.media.sizes.large.h | includes.media.width | expansions=attachments.media_keys&amp;media.fields=width |     |
+| extended_entities.media.sizes.large.resize |     | Non disponible |     |
+| extended_entities.media.sizes.small.w |     | Non disponible |     |
+| extended_entities.media.sizes.small.h |     | Non disponible |     |
+| extended_entities.media.sizes.small.resize |     | Non disponible |     |
+| extended_entities.media.sizes.medium.w |     | Non disponible |     |
+| extended_entities.media.sizes.medium.h |     | Non disponible |     |
+| extended_entities.media.sizes.medium.resize |     | Non disponible |     |
+| extended_entities.media.media_url_https | includes.media.url | expansions=attachments.media_keys&amp;media.fields=url | chaîne de caractères |
+| extended_entities.media.media_url_https | includes.media.preview_image_url | expansions=attachments.media_keys&amp;media.fields=preview_image_url | chaîne de caractères |
+| extended_entities.media.video_info.duration_millis | includes.media.duration_ms | expansions=attachments.media_keys&amp;media.fields=duration_ms | nombre |
+
+**Exemple**
+
+|     |     |
+| :--- | :--- |
+| **Entités et entités étendues en v1.1 (avec vidéo)** | **Entités, pièces jointes et éléments inclus en v2**<br /><br />https://api.x.com/2/tweets?ids=1370161532013735937&amp;expansions=attachments.media_keys,entities.mentions.username&amp;tweet.fields=entities&amp;user.fields=created_at,description,entities,location,name,profile_image_url,protected,public_metrics,url,username,verified,withheld&amp;media.fields=duration_ms,height,media_key,preview_image_url,public_metrics,type,url,width |&quot;description&quot;: &quot;La voix de l’équipe #TwitterDev et votre source officielle pour les mises à jour, les actualités et les événements liés à la #TwitterAPI.&quot;,<br />
+
+***
+
+<div id="place-object">
+  #### Objet Place
+</div>
+
+|     |     |     |
+| :--- | :--- | :--- |
+| **Format Twitter 1.1** | **Format Twitter v2** | **Paramètres v2 requis** |
+| place | data.geo.place_id | tweet.fields=geo |
+| place.id | includes.places.id | expansions=geo.place_id |
+| place.id.place_type | includes.places.place_type | expansions=geo.place_id&amp;place.fields=place_type |
+| place.id.name | includes.places.name | expansions=geo.place_id&amp;place.fields=name |
+| place.id.full_name | includes.places.full_name | expansions=geo.place_id |
+| place.id.country_code | includes.places.country_code | expansions=geo.place_id&amp;place.fields=country_code |
+| place.id.country | includes.places.country | expansions=geo.place_id&amp;place.fields=country |
+| place.id.contained_within | includes.places.contained_within | expansions=geo.place_id&amp;place.fields=contained_within |
+| place.id.bounding_box.type | includes.places.geo.type | expansions=geo.place_id&amp;place.fields=place_type |
+| place.id.bounding_box.coordinates | includes.places.geo.bbox | expansions=geo.place_id&amp;place.fields=geo |
+| place.id.attributes | includes.places.properties | expansions=geo.place_id&amp;place.fields=geo |
+
+**Exemple**
+
+|     |     |
+| :--- | :--- |
+| **Objet place en v1.1** | **Objet place avec v2**<br /><br />https://api.x.com/2/tweets?ids=1370161532013735937&amp;expansions=geo.place_id&amp;tweet.fields=geo&amp;place.fields=contained_within,country,country_code,full_name,geo,id,name,place_type |
+| &quot;place&quot;: &#123;<br />    &quot;id&quot;: &quot;f7eb2fa2fea288b1&quot;,<br />    &quot;url&quot;: &quot;https:\/\/api.x.com\/1.1\/geo\/id\/f7eb2fa2fea288b1.json&quot;,<br />    &quot;place_type&quot;: &quot;city&quot;,<br />    &quot;name&quot;: &quot;Lakewood&quot;,<br />    &quot;full_name&quot;: &quot;Lakewood, CO&quot;,<br />    &quot;country_code&quot;: &quot;US&quot;,<br />    &quot;country&quot;: &quot;United States&quot;,<br />    &quot;contained_within&quot;: [],<br />    &quot;bounding_box&quot;: &#123;<br />      &quot;type&quot;: &quot;Polygon&quot;,<br />      &quot;coordinates&quot;: [<br />        [<br />          [<br />            -105.193475,<br />            39.60973<br />          ],<br />          [<br />            -105.053164,<br />            39.60973<br />          ],<br />          [<br />            -105.053164,<br />            39.761974<br />          ],<br />          [<br />            -105.193475,<br />            39.761974<br />          ]<br />        ]<br />      ]<br />    &#125;,<br />    &quot;attributes&quot;: {}<br />  &#125; | &#123;<br />	&quot;data&quot;: [&#123;<br />		&quot;id&quot;: &quot;1370161532013735937&quot;,<br />		&quot;text&quot;: &quot;Another #test with a video and @TwitterDev mention. Excited for new format migration docs! https://t.co/XVLZ3uwikc https://t.co/dz4oByygWA&quot;,<br />		&quot;geo&quot;: &#123;<br />			&quot;place_id&quot;: &quot;f7eb2fa2fea288b1&quot;<br />		&#125;<br />	&#125;],<br />	&quot;includes&quot;: &#123;<br />		&quot;places&quot;: [&#123;<br />			&quot;name&quot;: &quot;Lakewood&quot;,<br />			&quot;place_type&quot;: &quot;city&quot;,<br />			&quot;full_name&quot;: &quot;Lakewood, CO&quot;,<br />			&quot;id&quot;: &quot;f7eb2fa2fea288b1&quot;,<br />			&quot;geo&quot;: &#123;<br />				&quot;type&quot;: &quot;Feature&quot;,<br />				&quot;bbox&quot;: [<br />					-105.193475,<br />					39.60973,<br />					-105.053164,<br />					39.761974<br />				],<br />				&quot;properties&quot;: {}<br />			&#125;,<br />			&quot;country_code&quot;: &quot;US&quot;,<br />			&quot;country&quot;: &quot;United States&quot;<br />		&#125;]<br />	&#125; |
+
+**Étapes suivantes**
+
+* En savoir plus sur les [champs](/fr/x-api/fundamentals/fields)
+* En savoir plus sur les [extensions](/fr/x-api/fundamentals/expansions)
+* Découvrez comment [utiliser les champs avec les extensions](/fr/x-api/fundamentals/data-dictionary#how-to-use-fields-and-expansions)
+
+<div id="migrating-from-native-enriched-data-format-to-v2">
+  ### Migration du format de données Native Enriched vers v2
+</div>
+
+Le format de données Native Enriched est utilisé par nos produits [Enterprise](/fr/x-api/enterprise-gnip-2.0/enterprise-gnip).
+
+Le format de données Native Enriched a été mis à jour pour fournir des métadonnées de Tweets édités. Pour en savoir plus sur les métadonnées d’édition de Tweets, consultez la page [Principes de base de l’édition de Tweets](/fr/x-api/enterprise-gnip-2.0/fundamentals/edit-tweets).
+
+Si vous utilisez les endpoints standard v1.1, veuillez consulter le [guide de migration de la version standard v1.1 vers v2](/fr/x-api/migrate/data-format-migration#migrating-from-standard-v1-1s-data-format-to-v2). Si vous utilisez les produits Enterprise avec Activity Streams, nous proposons également un guide [Activity Streams vers v2](/fr/x-api/migrate/data-format-migration#migrating-from-activity-streams-data-format-to-v2).
+
+X API v2 introduit de nouveaux schémas JSON pour les objets [Tweet](/fr/x-api/fundamentals/data-dictionary#tweet) et [user](/fr/x-api/fundamentals/data-dictionary#user).
+
+* Au niveau racine du JSON, le format Native Enriched renvoie des objets Tweet dans un tableau results, tandis que X API v2 renvoie un tableau data.
+* Au lieu d’utiliser à la fois favorites (dans l’objet Tweet) et favourites (dans l’objet user), X API v2 utilise le terme like.
+* X adopte la convention selon laquelle les valeurs JSON sans valeur (par exemple null) ne sont pas incluses dans la charge utile. Les attributs des objets Tweet et user ne sont présents que s’ils ont des valeurs non nulles.
+* Tous les champs id en v2 seront des chaînes de caractères
+
+En plus des modifications apportées au nouveau format JSON, nous avons également introduit un nouvel ensemble de champs dans l’objet Tweet, notamment :
+
+* conversation_id
+* reply_settings
+* alt_text sur les médias
+* Deux nouveaux champs [annotations](/fr/x-api/fundamentals/post-annotations), à savoir context et entities
+* Plusieurs nouveaux champs [metrics](/fr/x-api/fundamentals/metrics)
+* Plusieurs nouveaux champs [polls](/fr/x-api/fundamentals/data-dictionary#poll)
+
+De nombreux champs hérités et obsolètes sont supprimés :
+
+* contributors
+* Certains champs entities.media et extended_entities.media
+* filter_level
+* timestamp_ms
+* truncated
+
+<div id="native-enriched-vs-v2-payload-structure">
+  #### Structure de payload Native Enriched vs v2
+</div>
+
+Le tableau suivant présente les objets et le format de haut niveau que vous pouvez attendre de v2 par rapport au format Native Enriched.
+
+|     | **Structure Native Enriched** | **Structure v2** |
+| :--- | :--- | :--- |
+| **Par défaut** | &#123;<br />  ~tweet object fields~,<br /><br />  &quot;user&quot;: {},<br />  &quot;place&quot;: {},<br />  &quot;entities&quot;: &#123;<br />    &quot;hashtags&quot;: [],<br />    &quot;urls&quot;: [],<br />    &quot;user_mentions&quot;: [],<br />    &quot;symbols&quot;: [],<br />    &quot;annotations&quot;: [],<br />    &quot;media&quot;: []<br />  &#125;,<br />  &quot;extended_entities&quot;: {},<br />  &quot;matching_rules&quot;: []<br />&#125; | &#123;<br />  &quot;data&quot;: [&#123;<br />    &quot;id&quot;,<br />    &quot;text&quot;,<br /><br />    &quot;edit_history_tweet_ids&quot; <br />  &#125;]<br />&#125; |
+| **Avec des paramètres [fields et expansions](/fr/x-api/fundamentals/data-dictionary#how-to-use-fields-and-expansions) définis** |     | &#123;<br />  &quot;data&quot;: [&#123;<br />    ~tweet object fields~,<br />    &quot;entities&quot;: &#123;<br />      &quot;hashtags&quot;: [],<br />      &quot;cashtags&quot;: [],<br />      &quot;mentions&quot;: [],<br />      &quot;urls&quot;: [],<br />    &#125;,<br />    &quot;attachments&quot;: &#123;<br />      &quot;media_keys&quot;: [],<br />      &quot;poll_ids&quot;: []<br />    &#125;<br />  &#125;],<br />  &quot;includes&quot;: [<br />    &quot;tweets&quot;: [~user objects~],<br />    &quot;users&quot;: [~user objects~],<br />    &quot;media&quot;: [~media objects~],<br />    &quot;places&quot;: [~place object~],<br />    &quot;polls&quot;: [~poll object~]<br />  ],<br />  &quot;matching_rules&quot;: []<br />&#125; |
+
+**Correspondance des champs**
+
+La section suivante décrit quels champs Native Enriched correspondent aux champs v2, ainsi que les paramètres v2 requis pour recevoir le nouveau champ.
+ 
+
+<div id="tweet-object">
+  #### Objet Tweet
+</div>
+
+|     |     |     |     |
+| :--- | :--- | :--- | :--- |
+| **Format enrichi natif** | **Format Twitter v2** | **Paramètres v2 requis** | **Type dans v2** |
+| created_at | data.created_at | tweet.fields=created_at | Chaîne |
+| id  |     | N/A - Voir id |     |
+| id_str | data.id | Par défaut | Chaîne |
+| text | data.text | Par défaut | Chaîne |
+| edit_history | data.edit_history_tweet_ids | Par défaut | Tableau |
+| edit_controls | data.edit_controls | tweet.fields=edit_controls | Objet |
+| editable | data.edit_controls.is_edit_eligible | tweet.fields=edit_controls | Booléen |
+| display_text_range |     | N/A - text inclut le texte complet |     |
+| source | data.source | tweet.fields=source | Chaîne |
+| truncated |     | N/A - text inclut le texte complet |     |
+| Non disponible | data.conversation_id | tweet.fields=conversation_id | Chaîne |
+| Non disponible | data.reply_settings | tweet.fields=reply_settings | Chaîne |
+| in_reply_to_status_id |     | N/A - Voir referenced_tweets.id |     |
+| in_reply_to_status_id_str | data.referenced_tweets.id (si type=replied_to) | expansions=referenced_tweets.id | Chaîne |
+| in_reply_to_user_id |     | N/A - Voir in_reply_to_user_id_str |     |
+| in_reply_to_user_id_str | data.in_reply_to_user_id | tweet.fields=in_reply_to_user_id | Chaîne |
+| in_reply_to_screen_name | includes.users..username | tweet.fields=in_reply_to_user_id&amp;expansions=entities.mentions.username | Chaîne |
+| user | includes.users | expansions=author_id | Objet |
+| user.id_str | data.author_id | tweet.fields=author_id | Chaîne |
+| geo | data.geo.place_id | tweet.fields=geo |     |
+| coordinates | data.geo.place_id | tweet.fields=geo |     |
+| place | data.geo.place_id | tweet.fields=geo |     |
+| is_quoted_status | data.referenced_tweets.id (si type=quoted) | tweet.fields=referenced_tweets | Chaîne |
+| extended_tweet.full_text |     | N/A - text est le texte complet |     |
+| Non disponible | data.public_metrics | tweet.fields=public_metrics | Objet |
+| quote_count | data.public_metrics.quote_count | tweet.fields=public_metrics | Entier |
+| reply_count | data.public_metrics.reply_count | tweet.fields=public_metrics | Entier |
+| retweet_count | data.public_metrics.retweet_count | tweet.fields=public_metrics | Entier |
+| favorite_count | data.public_metrics.like_count | tweet.fields=public_metrics | Entier |
+| Non disponible | data.non_public_metrics | tweet.fields=non_public_metrics | Objet |
+| Non disponible | data.non_public_metrics.impression_count | tweet.fields=non_public_metrics | Entier |
+| Non disponible | data.non_public_metrics.url_link_count | tweet.fields=non_public_metrics | Entier |
+| Non disponible | data.non_public_metrics.user_profile_count | tweet.fields=non_public_metrics | Entier |
+| Non disponible | data.organic_metrics | tweet.fields=organic_metrics | Objet |
+| Non disponible | data.organic_metrics.like_count | tweet.fields=organic_metrics | Entier |
+| Non disponible | data.organic_metrics.retweet_count | tweet.fields=organic_metrics | Entier |
+| Non disponible | data.organic_metrics.reply_count | tweet.fields=organic_metrics | Entier |
+| Non disponible | data.organic_metrics.impression_count | tweet.fields=organic_metrics | Entier |
+| Non disponible | data.organic_metrics.url_link_count | tweet.fields=organic_metrics | Entier |
+| Non disponible | data.organic_metrics.user_profile_count | tweet.fields=organic_metrics | Entier |
+| Non disponible | data.promoted_metrics | tweet.fields=promoted_metrics | Objet |
+| Non disponible | data.promoted_metrics.like_count | tweet.fields=promoted_metrics | Entier |
+| Non disponible | data.promoted_metrics.retweet_count | tweet.fields=promoted_metrics | Entier |
+| Non disponible | data.promoted_metrics.reply_count | tweet.fields=promoted_metrics | Entier |
+| Non disponible | data.promoted_metrics.impression_count | tweet.fields=promoted_metrics | Entier |
+| Non disponible | data.promoted_metrics.url_link_count | tweet.fields=promoted_metrics | Entier |
+| Non disponible | data.promoted_metrics.user_profile_count | tweet.fields=promoted_metrics | Entier |
+| contributors | Non disponible | Non disponible |     |
+| entities | data.entities | tweet.fields=entities | Objet |
+| entities.user_mentions | data.entities.mentions | tweet.fields=entities | Tableau d’objets |
+| entities.symbols | data.entities.cashtags | tweet.fields=entities | Tableau d’objets |
+| entities.hashtags | data.entities.hashtags | tweet.fields=entities | Tableau d’objets |
+| entities.urls | data.entities.urls | tweet.fields=entities | Tableau d’objets |
+| entities.media | includes.media | expansions=attachments.media_keys | Tableau d’objets |
+| entities.annotations |     | tweet.fields=entities,context_annotations | Objet |
+| entities.annotations.context | data.context_annotations | tweet.fields=entities,context_annotations | Tableau d’objets |
+| Aucun équivalent | data.context_annotations.domain | tweet.fields=context_annotations | Objet |
+| entities.annotations.context.context_domain_id_str | data.context_annotations.domain.id | tweet.fields=context_annotations | Chaîne |
+| entities.annotations.context.context_domain_id | Non disponible | Non disponible — voir data.context_annotations.domain.id pour le format de chaîne |     |
+| entities.annotations.context.context_domain_name | data.context_annotations.domain.name | tweet.fields=context_annotations | Chaîne |
+| entities.annotations.context.context_domain_description | data.context_annotations.domain.description | tweet.fields=context_annotations | Chaîne |
+| Aucun équivalent | data.context_annotations.entity | tweet.fields=context_annotations | Objet |
+| entities.annotations.context.context_entity_id_str | data.context_annotations.entity.id | tweet.fields=context_annotations | Chaîne |
+| entities.annotations.context.context_entity_id | Non disponible | Non disponible — voir data.context_annotations.entity.id pour le format de chaîne |     |
+| entities.annotations.context.context_entity_name | data.context_annotations.entity.name | tweet.fields=context_annotations | Chaîne |
+| entities.annotations.context.context_entity_description | data.context_annotations.entity.description | tweet.fields=context_annotations | Chaîne |
+| entities.annotations.entity | data.entities.annotations | tweet.fields=entities,context_annotations | Tableau d’objets |
+| extended_entities | data.attachments | tweet_fields=attachments | Objet |
+| favorited | Non disponible | Non disponible |     |
+| retweeted | Non disponible | Non disponible |     |
+| retweeted_status |     |     |     |
+| possibly_sensitive | data.possibly_sensitive | tweet.fields=possibly_sensitive | Booléen |
+| lang | data.lang | tweet.fields=lang | Chaîne |
+| filter_level | Non disponible | Non disponible |     |
+| scopes | Non disponible | Non disponible |     |
+| timestamp_ms | Non disponible | Non disponible |     |
+| withheld | data.withheld | tweet.fields=withheld | Tableau d’objets |
+| matching_rules | matching_rules |     | Tableau d’objets |
+| matching_rules.id | Non disponible | Non disponible |     |
+| matching_rules.id_str | matching_rules.id | Par défaut avec le flux filtré | Chaîne |
+| matching_rules.tag | matching_rules.tag | Par défaut avec le flux filtré | Chaîne |
+
+<div id="user-object">
+  #### Objet User
+</div>
+
+|     |     |     |     |
+| :--- | :--- | :--- | :--- |
+| **Format enrichi natif** | **Format Twitter v2** | **Paramètres v2 requis** | **Type dans v2** |
+| user | includes.users | expansions=author_id | Tableau d’objets |
+| user.id | Non disponible | N/A - voir includes.users.id | Chaîne |
+| user.id_str | includes.users.id | expansions=author_id | Chaîne |
+| user.name | includes.users.name | expansions=author_id | Chaîne |
+| user.screen_name | includes.users.username | expansions=author_id | Chaîne |
+| user.location | includes.users.location | expansions=author_id&amp;user.fields=location | Objet |
+| user.description | includes.users.description | expansions=author_id&amp;user.fields=description | Chaîne |
+| Non disponible | includes.users.url | expansions=author_id&amp;user.fields=url | Chaîne |
+| user.followers_count | includes.users.public_metrics.followers_count | expansions=author_id&amp;user.fields=public_metrics | Entier |
+| user.friends_count | includes.users.public_metrics.following_count | expansions=author_id&amp;user.fields=public_metrics | Entier |
+| user.listed_count | includes.users.public_metrics.listed_count | expansions=author_id&amp;user.fields=public_metrics | Entier |
+| user.created_at | includes.users.created_at | expansions=author_id&amp;user.fields=created_at | Chaîne |
+| user.favourites_count |     | Pas encore disponible |     |
+| user.verified | includes.users.verified | expansions=author_id&amp;user.fields=verified | Booléen |
+| Non disponible | includes.users.pinned_tweet_id | expansions=author_id&amp;user.fields=pinned_tweet_id | Chaîne |
+| user.statuses_count | includes.users.public_metrics.tweet_count | expansions=author_id&amp;user.fields=public_metrics | Entier |
+| user.profile_image_url_https | includes.users.profile_image_url | expansions=author_id&amp;user.fields=profile_image_url | Chaîne |
+| user.translator_type | Non disponible | Non disponible |     |
+| user.utc_offset | Non disponible | Non disponible |     |
+| user.time_zone | Non disponible | Non disponible |     |
+| user.geo_enabled | Non disponible | Non disponible |     |
+| user.lang | Non disponible | Non disponible - à déduire d’après la langue du Tweet |     |
+| user.contributors_enabled | Non disponible | Non disponible |     |
+| user.is_translator | Non disponible | Non disponible |     |
+| user.profile_background_color | Non disponible | Non disponible |     |
+| user.profile_background_image_url | Non disponible | Non disponible |     |
+| user.profile_background_image_url_https | Non disponible | Non disponible |     |
+| user.profile_background_title | Non disponible | Non disponible |     |
+| user.profile_sidebar_border_color | Non disponible | Non disponible |     |
+| user.profile_sidebar_fill_color | Non disponible | Non disponible |     |
+| user.profile_text_color | Non disponible | Non disponible |     |
+| user.profile_user_background_image | Non disponible | Non disponible |     |
+| user.profile_image_url |     | Voir includes.user.profile_image_url |     |
+| user.default_profile | Non disponible | Non disponible |     |
+| user.default_profile_image | Non disponible | Non disponible |     |
+| user.following | Non disponible | Non disponible |     |
+| user.follow_request_sent | Non disponible | Non disponible |     |
+| user.notifications | Non disponible | Non disponible |     |
+| user.withheld_in_countries | includes.users.withheld | expansions=author_id&amp;user.fields=withheld | Objet |
+| user.protected | includes.users.protected | expansions=author_id&amp;user.fields=protected | Booléen |
+| Non disponible | includes.users.entities | expansions=author_id&amp;user.fields=entities | Objet |
+| Non disponible | includes.users.entities.url | expansions=author_id&amp;user.fields=entities | Objet |
+| Non disponible | includes.users.entities.url.urls | expansions=author_id&amp;user.fields=entities | Tableau d’objets |
+| Non disponible | includes.users.entities.url.urls.start | expansions=author_id&amp;user.fields=entities | Entier |
+| Non disponible | includes.users.entities.url.urls.end | expansions=author_id&amp;user.fields=entities | Entier |
+| Non disponible | includes.users.entities.url.urls.url | expansions=author_id&amp;user.fields=entities | Chaîne |
+| user.url | includes.users.entities.url.urls.expanded_url | expansions=author_id&amp;user.fields=entities | Chaîne |
+| Non disponible | includes.users.entities.url.urls.display_url | expansions=author_id&amp;user.fields=entities | Chaîne |
+| Non disponible | includes.users.entities.descriptions | expansions=author_id&amp;user.fields=entities | Objet |
+| Non disponible | includes.users.entities.descriptions.hashtags | expansions=author_id&amp;user.fields=entities | Tableau d’objets |
+| Non disponible | includes.users.entities.descriptions.hashtags.start | expansions=author_id&amp;user.fields=entities | Entier |
+| Non disponible | includes.users.entities.descriptions.hashtags.end | expansions=author_id&amp;user.fields=entities | Entier |
+| Inclus dans user.description | includes.users.entities.descriptions.hashtags.tag | expansions=author_id&amp;user.fields=entities | Chaîne |
+| Non disponible | includes.users.entities.descriptions.mentions | expansions=author_id&amp;user.fields=entities | Tableau d’objets |
+| Non disponible | includes.users.entities.descriptions.mentions.start | expansions=author_id&amp;user.fields=entities | Entier |
+| Non disponible | includes.users.entities.descriptions.mentions.end | expansions=author_id&amp;user.fields=entities | Entier |
+| Inclus dans user.description | includes.users.entities.descriptions.mentions.username | expansions=author_id&amp;user.fields=entities | Chaîne |
+| Non disponible | includes.users.entities.descriptions.cashtags | expansions=author_id&amp;user.fields=entities | Tableau d’objets |
+| Non disponible | includes.users.entities.descriptions.cashtags.start | expansions=author_id&amp;user.fields=entities | Entier |
+| Non disponible | includes.users.entities.descriptions.cashtags.end | expansions=author_id&amp;user.fields=entities | Entier |
+| Inclus dans user.description | includes.users.entities.descriptions.cashtags.tag | expansions=author_id&amp;user.fields=entities | Chaîne |
+
+<div id="entities-and-expanded-entities-objects">
+  #### Objets entities et expanded_entities
+</div>
+
+|     |     |     |     |
+| :--- | :--- | :--- | :--- |
+| **Format enrichi natif** | **Format Twitter v2** | **Paramètres v2 requis** | **Type dans v2** |
+| entities | data.entities | tweet.fields=entities | Objet |
+| entities.hashtags | data.entities.hashtags | tweet.fields=entities | Tableau d’objets |
+| entities.hashtags.indices[0] | data.entities.hashtags.start | tweet.fields=entities | Entier |
+| entities.hashtags.indices[1] | data.entities.hashtags.end | tweet.fields=entities | Entier |
+| entities.hashtags.text | data.entities.hashtags.tag | tweet.fields=entities | Chaîne |
+| entities.urls | data.entities.urls | tweet.fields=entities | Tableau d’objets |
+| entities.urls.indices[0] | data.entities.urls.start | tweet.fields=entities | Entier |
+| entities.urls.indices[1] | data.entities.urls.end | tweet.fields=entities | Entier |
+| entities.urls.url | data.entities.urls.url | tweet.fields=entities | Chaîne |
+| entities.urls.expanded_url | data.entities.urls.expanded_url | tweet.fields=entities | Chaîne |
+| entities.urls.display_url | data.entities.urls.display_url | tweet.fields=entities | Chaîne |
+| entities.urls.unwound.url | data.entities.urls.unwound_url | tweet.fields=entities | Chaîne |
+| entities.urls.unwound.status | data.entities.urls.status | tweet.fields=entities | Chaîne |
+| entities.urls.unwound.title | data.entities.urls.title | tweet.fields=entities | Chaîne |
+| entities.urls.unwound.description | data.entities.urls.description | tweet.fields=entities | Chaîne |
+| Non disponible | data.entities.urls.images | tweet.fields=entities | Tableau d’objets |
+| Non disponible | data.entities.urls.images.url | tweet.fields=entities | Chaîne |
+| Non disponible | data.entities.urls.images.width | tweet.fields=entities | Entier |
+| Non disponible | data.entities.urls.images.height | tweet.fields=entities | Entier |
+| entities.user_mentions | data.entities.mentions | tweet.fields=entities | Tableau d’objets |
+| entities.user_mentions.indicies[0] | data.entities.mentions.start | tweet.fields=entities | Entier |
+| entities.user_mentions.indicies[1] | data.entities.mentions.end | tweet.fields=entities | Entier |
+| entities.user_mentions.screen_name | data.entities.mentions.username | tweet.fields=entities | Chaîne |
+| entities.symbols | data.entities.cashtags | tweet.fields=entities | Tableau d’objets |
+| entities.symbols.indices[0] | data.entities.cashtags.start | tweet.fields=entities | Entier |
+| entities.symbols.indices[1] | data.entities.cashtags.end | tweet.fields=entities | Entier |
+| entities.symbols.text | data.entities.cashtags.tag | tweet.fields=entities | Chaîne |
+| entities.media OR extended_entities.media | includes.media | expansions=attachments.media_keys | Tableau d’objets |
+| entities.media.id_str OR extended_entities.media.id_str | includes.media.media_key | expansions=attachments.media_keys | Chaîne |
+| entities.media.id OR extended_entities.media.id |     | Non disponible - id est une chaîne |     |
+| entities.media.type OR extended_entities.media.type | includes.media.media.type | expansions=attachments.media_keys | Chaîne |
+| entities.media.indices OR extended_entities.media.indices | Non disponible | Non disponible |     |
+| Non disponible | includes.media.alt_text | expansions=attachments.media_keys&amp;media.fields=alt_text | Chaîne |
+| entities.media.additional_media_info OR extended_entities.media.additional_media_info | Non disponible | Non disponible |     |
+| entities.media.additional_media_info.monetizable OR extended_entities.media.additional_media_info.monetizable | Non disponible | Non disponible |     |
+| entities.media.media_url OR extended_entities.media.media_url |     | N/A - voir includes.media.url | Chaîne |
+| entities.media.media_url_https OR extended_entities.media.media_url_https | includes.media.url | expansions=attachments.media_keys&amp;media.fields=url | Chaîne |
+| entities.media.url OR extended_entities.media.url |     |     |     |
+| entities.media.display_url OR extended_entities.media.expanded_url |     |     |     |
+| entities.media.expanded_url |     |     |     |
+| entities.media.media_url_https | includes.media.preview_image_url | expansions=attachments.media_keys&amp;media.fields=preview_image_url | Chaîne |
+| extended_entities | data.attachments | tweet_fields=attachments | Objet |
+| extended_entities | data.attachments.media_keys | tweet.fields=attachments | Tableau d’objets |
+| Non disponible | data.attachments.poll_ids | tweet.fields=attachments | Tableau d’objets |
+| extended_entities.media.sizes.thumb.w |     | Non disponible |     |
+| extended_entities.media.sizes.thumb.h |     | Non disponible |     |
+| extended_entities.media.sizes.thumb.resize |     | Non disponible |     |
+| extended_entities.media.sizes.large.w | includes.media.height | expansions=attachments.media_keys&amp;media.fields=height |     |
+| extended_entities.media.sizes.large.h | includes.media.width | expansions=attachments.media_keys&amp;media.fields=width |     |
+| extended_entities.media.sizes.large.resize | Non disponible | Non disponible |     |
+| extended_entities.media.sizes.small.w | Non disponible | Non disponible |     |
+| extended_entities.media.sizes.small.h | Non disponible | Non disponible |     |
+| extended_entities.media.sizes.small.resize | Non disponible | Non disponible |     |
+| extended_entities.media.sizes.medium.w | Non disponible | Non disponible |     |
+| extended_entities.media.sizes.medium.h | Non disponible | Non disponible |     |
+| extended_entities.media.sizes.medium.resize | Non disponible | Non disponible |     |
+| extended_entities.media.media_url_https | includes.media.preview_image_url | expansions=attachments.media_keys&amp;media.fields=preview_image_url | Chaîne |
+| extended_entities.media.video_info.aspect_ratio | Non disponible | Non disponible |     |
+| extended_entities.media.variants | Non disponible | Non disponible |     |
+| extended_entities.media.variants.bitrate | Non disponible | Non disponible |     |
+| extended_entities.media.variants.content_type | Non disponible | Non disponible |     |
+| extended_entities.media.variants.url | Non disponible | Non disponible |     |
+| extended_entities.media.video_info.duration_millis | includes.media.duration_ms | expansions=attachments.media_keys&amp;media.fields=duration_ms | Entier |
+| Non disponible | includes.media.public_metrics | expansions=attachments.media_keys&amp;media.fields=public_metrics | Objet |
+| Non disponible | includes.media.public_metrics.view_count | expansions=attachments.media_keys&amp;media.fields=public_metrics | Entier |
+| Non disponible | includes.media.non_public_metrics | expansions=attachments.media_keys&amp;media.fields=non_public_metrics | Objet |
+| Non disponible | includes.media.non_public_metrics.playback_0_count | expansions=attachments.media_keys&amp;media.fields=non_public_metrics | Entier |
+| Non disponible | includes.media.non_public_metrics.playback_25_count | expansions=attachments.media_keys&amp;media.fields=non_public_metrics | Entier |
+| Non disponible | includes.media.non_public_metrics.playback_50_count | expansions=attachments.media_keys&amp;media.fields=non_public_metrics | Entier |
+| Non disponible | includes.media.non_public_metrics.playback_75_count | expansions=attachments.media_keys&amp;media.fields=non_public_metrics | Entier |
+| Non disponible | includes.media.non_public_metrics.playback_100_count | expansions=attachments.media_keys&amp;media.fields=non_public_metrics | Entier |
+| Non disponible | includes.media.organic_metrics | expansions=attachments.media_keys&amp;media.fields=organic_metrics | Objet |
+| Non disponible | includes.media.organic_metrics.playback_0_count | expansions=attachments.media_keys&amp;media.fields=organic_metrics | Entier |
+| Non disponible | includes.media.organic_metrics.playback_25_count | expansions=attachments.media_keys&amp;media.fields=organic_metrics | Entier |
+| Non disponible | includes.media.organic_metrics.playback_50_count | expansions=attachments.media_keys&amp;media.fields=organic_metrics | Entier |
+| Non disponible | includes.media.organic_metrics.playback_75_count | expansions=attachments.media_keys&amp;media.fields=organic_metrics | Entier |
+| Non disponible | includes.media.organic_metrics.playback_100_count | expansions=attachments.media_keys&amp;media.fields=organic_metrics | Int |
+| Non disponible | includes.media.organic_metrics.view_count | expansions=attachments.media_keys&amp;media.fields=organic_metrics | Int |
+| Non disponible | includes.media.promoted_metric | expansions=attachments.media_keys&amp;media.fields=promoted_metrics | Object |
+| Non disponible | includes.media.promoted_metric.playback_0_count | expansions=attachments.media_keys&amp;media.fields=promoted_metrics | Int |
+| Non disponible | includes.media.promoted_metric.playback_25_count | expansions=attachments.media_keys&amp;media.fields=promoted_metrics | Int |
+| Non disponible | includes.media.promoted_metric.playback_50_count | expansions=attachments.media_keys&amp;media.fields=promoted_metrics | Int |
+| Non disponible | includes.media.promoted_metric.playback_75_count | expansions=attachments.media_keys&amp;media.fields=promoted_metrics | Int |
+| Non disponible | includes.media.promoted_metric.playback_100_count | expansions=attachments.media_keys&amp;media.fields=promoted_metrics | Int |
+| Non disponible | includes.media.promoted_metrics.view_count | expansions=attachments.media_keys&amp;media.fields=promoted_metrics | Int |
+
+<div id="place-object">
+  #### Objet Place
+</div>
+
+|     |     |     |     |
+| :--- | :--- | :--- | :--- |
+| **Format natif enrichi** | **Format Twitter v2** | **Paramètres v2 requis** | **Type dans v2** |
+| place | includes.places | expansions=geo.place_id | Tableau d’objets |
+| place.id | includes.places.id | expansions=geo.place_id | Chaîne |
+| place.url | Non disponible | Non disponible |     |
+| place.id.place_type | includes.places.place_type | expansions=geo.place_id&amp;place.fields=place_type | Chaîne |
+| place.id.name | includes.places.name | expansions=geo.place_id&amp;place.fields=name | Chaîne |
+| place.id.full_name | includes.places.full_name | expansions=geo.place_id | Chaîne |
+| place.id.country_code | includes.places.country_code | expansions=geo.place_id&amp;place.fields=country_code | Chaîne |
+| place.id.country | includes.places.country | expansions=geo.place_id&amp;place.fields=country | Chaîne |
+| place.id.contained_within | includes.places.contained_within | expansions=geo.place_id&amp;place.fields=contained_within | Tableau |
+| place.id.bounding_box.type | includes.places.geo.type | expansions=geo.place_id&amp;place.fields=place_type | Chaîne |
+| place.id.bounding_box.coordinates | includes.places.geo.bbox | expansions=geo.place_id&amp;place.fields=geo | Tableau |
+| place.id.attributes | includes.places.properties | expansions=geo.place_id&amp;place.fields=geo | Objet |
+
+<div id="poll-object">
+  #### Objet poll
+</div>
+
+|     |     |     |     |
+| :--- | :--- | :--- | :--- |
+| **Format enrichi natif** | **Format Twitter v2** | **Paramètres v2 requis** | **Type dans v2** |
+| entities.polls | includes.polls | expansions=attachments.poll_ids | Tableau d’objets |
+| Non disponible | includes.polls.id | expansions=attachments.poll_ids | Chaîne |
+| entities.poll.options | includes.polls.options | expansions=attachments.poll_ids | Tableau d’objets |
+| entities.polls.options.position | includes.polls.options.position | expansions=attachments.poll_ids | Entier |
+| entities.polls.options.text | includes.polls.options.label | expansions=attachments.poll_ids | Chaîne |
+| Non disponible | includes.polls.options.votes | expansions=attachments.poll_ids | Entier |
+| Non disponible | includes.polls.voting_status | expansions=attachments.poll_ids&amp;poll.fields=voting_status | Chaîne |
+| entities.polls.duration_minutes | includes.polls.duration_minutes | expansions=attachments.poll_ids&amp;poll.fields=duration_minutes | Entier |
+| entities.polls.end_datetime | includes.polls.end_datetime | expansions=attachments.poll_ids&amp;poll.fields=end_datetime | Date (ISO 8601) |
+
+<div id="migrating-from-activity-streams-data-format-to-v2">
+  ### Migration du format de données Activity Streams vers v2
+</div>
+
+Le format de données Activity Streams est disponible avec nos produits [Enterprise](/fr/x-api/enterprise-gnip-2.0/enterprise-gnip).
+
+Le format de données Activity Streams a été mis à jour afin d’inclure les métadonnées des Tweets modifiés. Pour en savoir plus sur les métadonnées de modification de Tweet, consultez la page [Principes de base des Tweets modifiés](/fr/x-api/enterprise-gnip-2.0/fundamentals/edit-tweets).
+
+Si vous utilisez les endpoints standard v1.1, veuillez consulter le [guide de migration de la version standard v1.1 vers v2](/fr/x-api/migrate/overview). Si vous utilisez les endpoints Premium, ou le format Native Enriched pour Enterprise, veuillez consulter le [guide de migration de Native Enriched vers v2](/fr/x-api/migrate/data-format-migration#migrating-from-native-enriched-data-format-to-v2).
+
+X API v2 introduit de nouveaux schémas JSON pour les objets [post](/fr/x-api/fundamentals/data-dictionary#tweet) et [user](/fr/x-api/fundamentals/data-dictionary#user).
+
+* Au niveau racine du JSON, le format Activity Streams renvoie des objets Tweet dans un tableau results, tandis que X API v2 renvoie un tableau data.
+* Au lieu de faire référence aux « activités » Retweeted et Quoted, le JSON de X API v2 fait référence aux Tweets Retweeted et Quoted.
+* Au lieu d’utiliser à la fois favorites (dans l’objet Tweet) et favourites (dans l’objet user), X API v2 utilise le terme like.
+* X adopte la convention selon laquelle les valeurs JSON sans valeur (par exemple null) ne sont pas incluses dans la charge utile. Les attributs de Tweet et de user ne sont inclus que s’ils ont des valeurs non nulles.
+* Tous les champs id dans v2 seront de type chaîne.
+   
+
+En plus des changements apportés au nouveau format JSON, nous avons également introduit un nouvel ensemble de champs dans l’objet Tweet, notamment :
+
+* conversation_id
+* reply_settings
+* alt_text sur les médias
+* Deux nouveaux champs [annotations](/fr/x-api/fundamentals/post-annotations), à savoir context et entities
+* Plusieurs nouveaux champs [metrics](/fr/x-api/fundamentals/metrics)
+* Plusieurs nouveaux champs [polls](/fr/x-api/fundamentals/data-dictionary#poll)
+   
+
+De nombreux champs hérités et obsolètes sont supprimés ou remplacés :
+
+* display_text_range
+* generator
+* gnip
+* link
+* objectType
+* provider
+* twitter_entities.symbols remplacé par data.entities.cashtags
+* Certains champs twitter_extended_entities.media et twitter_entities.media
+* twitter_filter_level
+* twitterTimeZone
+* verb
+
+<div id="tweet-object">
+  #### Objet « Tweet »
+</div>
+
+|     |     |     |     |
+| :--- | :--- | :--- | :--- |
+| **Format Activity Streams** | **Format Twitter v2** | **Paramètres v2 requis** | **Type dans v2** |
+| postedTime | data.created_at | tweet.fields=created_at | Date (ISO 8601) |
+| generator | Indisponible | Indisponible |     |
+| generator.link | Indisponible | Indisponible |     |
+| generator.displayName | data.source | tweet.fields=source | Chaîne de caractères |
+| twitter_lang | data.lang | tweet.fields=lang | Chaîne de caractères |
+| Indisponible | data.conversation_id | tweet.fields=conversation_id | Chaîne de caractères |
+| Indisponible | data.reply_settings | tweet.fields=reply_settings | Chaîne de caractères |
+| Indisponible | data.possibly_sensitive | tweet.fields=possibly_sensitive | Booléen |
+| Indisponible | data.withheld | tweet.fields=withheld | Objet |
+| objectType | Indisponible | Indisponible |     |
+| verb | Indisponible | Indisponible |     |
+| provider | Indisponible | Indisponible |     |
+| provider.objectType | Indisponible | Indisponible |     |
+| provider.displayName | Indisponible | Indisponible |     |
+| provider.link | Indisponible | Indisponible |     |
+| link | Indisponible | Indisponible |     |
+| display_text_range | Indisponible | Indisponible |     |
+| object | Indisponible | Indisponible |     |
+| object.objectType | Indisponible | Indisponible |     |
+| object.id | Indisponible | Indisponible |     |
+| object.summary | data.text | default | Chaîne de caractères |
+| object.edit_history | data.edit_history_tweet_ids | default | Tableau |
+| object.edit_controls | data.edit_controls | tweet.fields=edit_controls | Objet |
+| object.editable | data.edit_controls.is_edit_eligible | tweet.fields=edit_controls | Booléen |
+| object.link | Indisponible | Indisponible |     |
+| object.postedTime | data.created_at | tweet.fields=created_at | Date (ISO 8601) |
+| Dérivé de actor.id | data.author_id | tweet.fields=created_at |     |
+| twitter_filter_level | Indisponible | Indisponible |     |
+| Dérivé du nom d’utilisateur dans inReplyTo.link | data.in_reply_to_user_id | tweet.fields=in_reply_to_user_id | Chaîne de caractères |
+| Indisponible | data.referenced_tweets | tweet.fields=referenced_tweets | Tableau d’objets |
+| Indisponible | data.referenced_tweets.type | tweet.fields=referenced_tweets | Chaîne de caractères |
+| Dérivé de inReplyTo.link | data.referenced_tweets.id | tweet.fields=referenced_tweets | Chaîne de caractères |
+| Indisponible | data.attachments | tweet.fields=attachments | Objet |
+| Dérivé de twitter_entities.media.id_str | data.attachments.media_keys | tweet.fields=attachments | Tableau |
+| Indisponible | data.attachments.poll_ids | tweet.fields=attachments | Tableau |
+| twitter_entities | data.entities | tweet.fields=entities | Objet |
+| Indisponible | data.entities.annotations | tweet.fields=entities | Tableau d’objets |
+| Indisponible | data.entities.annotations.start | tweet.fields=entities | Entier |
+| Indisponible | data.entities.annotations.end | tweet.fields=entities | Entier |
+| Indisponible | data.entities.annotations.probability | tweet.fields=entities | Flottant |
+| Indisponible | data.entities.annotations.type | tweet.fields=entities | Chaîne de caractères |
+| Indisponible | data.entities.annotations.normalized_text | tweet.fields=entities | Chaîne de caractères |
+| twitter_entities.urls | data.entities.urls | tweet.fields=entities | Tableau d’objets |
+| twitter_entities.urls.indices[0] | data.entities.urls.start | tweet.fields=entities | Entier |
+| twitter_entities.urls.indices[1] | data.entities.urls.end | tweet.fields=entities | Entier |
+| twitter_entities.urls.url | data.entities.urls.url | tweet.fields=entities | Chaîne de caractères |
+| twitter_entities.urls.expanded_url | data.entities.urls.expanded_url | tweet.fields=entities | Chaîne de caractères |
+| twitter_entities.urls.display_url | data.entities.urls.display_url | tweet.fields=entities | Chaîne de caractères |
+| Indisponible | data.entities.urls.images | tweet.fields=entities | Tableau d’objets |
+| Indisponible | data.entities.urls.images.url | tweet.fields=entities | Chaîne de caractères |
+| Indisponible | data.entities.urls.images.width | tweet.fields=entities | Entier |
+| Indisponible | data.entities.urls.images.height | tweet.fields=entities | Entier |
+| gnip.urls.expanded_status | data.entities.urls.status | tweet.fields=entities | Int |
+| gnip.urls.expanded_url_title | data.entities.urls.title | tweet.fields=entities | String |
+| gnip.urls.expanded_url_description | data.entities.urls.description | tweet.fields=entities | String |
+| gnip.urls.expanded_url | data.entities.urls.unwound_url | tweet.fields=entities | String |
+| twitter_entities.symbols | data.entities.cashtags | tweet.fields=entities | Array of objects |
+| twitter_entities.symbols.indices[0] | data.entities.cashtags.start | tweet.fields=entities | Int |
+| twitter_entities.symbols.indices[1] | data.entities.cashtags.end | tweet.fields=entities | Int |
+| twitter_entities.symbols.text | data.entities.cashtags.tag | tweet.fields=entities | String |
+| twitter_entities.hashtags | data.entities.hashtags | tweet.fields=entities | Array of objects |
+| twitter_entities.hashtags.indices[0] | data.entities.hashtags.start | tweet.fields=entities | Int |
+| twitter_entities.hashtags.indices[1] | data.entities.hashtags.end | tweet.fields=entities | Int |
+| twitter_entities.hashtags.text | data.entities.hashtags.tag | tweet.fields=entities | String |
+| twitter_entities.user_mentions | data.entities.mentions | tweet.fields=entities | Array of objects |
+| twitter_entities.user_mentions.indices[0] | data.entities.mentions.start | tweet.fields=entities | Int |
+| twitter_entities.user_mentions.indices[1] | data.entities.mentions.end | tweet.fields=entities | Int |
+| twitter_entities.user_mentions.screen_name | data.entities.mentions.tag | tweet.fields=entities | String |
+| twitter_entities.user_mentions.id_str | data.entities.mentions.id | tweet.fields=entities | String |
+| twitter_entities.user_mentions.id | Non disponible | Non disponible |     |
+| Non disponible | data.context_annotations | tweet.fields=context_annotations | Tableau d’objets |
+| Non disponible | data.context_annotations.domain | tweet.fields=context_annotations | Objet |
+| Non disponible | data.context_annotations.domain.id | tweet.fields=context_annotations | Chaîne |
+| Non disponible | data.context_annotations.domain.name | tweet.fields=context_annotations | Chaîne |
+| Non disponible | data.context_annotations.domain.description | tweet.fields=context_annotations | Chaîne |
+| Non disponible | data.context_annotations.entity | tweet.fields=context_annotations | Objet |
+| Non disponible | data.context_annotations.entity.id | tweet.fields=context_annotations | Chaîne |
+| Non disponible | data.context_annotations.entity.name | tweet.fields=context_annotations | Chaîne |
+| Non disponible | data.context_annotations.entity.description | tweet.fields=context_annotations | Chaîne |
+| geo | data.geo | tweet.fields=geo | Objet |
+| Dérivé de location.link | data.geo.place_id | tweet.fields=geo | Chaîne |
+| Non disponible | data.public_metrics | tweet.fields=public_metrics | Objet |
+| favoritesCount | data.public_metrics.like_count | tweet.fields=public_metrics | Entier |
+| retweetCount | data.public_metrics.retweet_count | tweet.fields=public_metrics | Entier |
+| Non disponible | data.public_metrics.quote_count | tweet.fields=public_metrics | Entier |
+| Non disponible | data.public_metrics.reply_count | tweet.fields=public_metrics | Entier |
+| Non disponible | data.non_non_public_metrics | tweet.fields=non_public_metrics | Objet |
+| Non disponible | data.non_public_metrics.impression_count | tweet.fields=non_public_metrics | Entier |
+| Non disponible | data.non_public_metrics.url_link_count | tweet.fields=non_public_metrics | Entier |
+| Non disponible | data.non_public_metrics.user_profile_count | tweet.fields=non_public_metrics | Entier |
+| Non disponible | data.organic_metrics | tweet.fields=organic_metrics | Objet |
+| Non disponible | data.organic_metrics.like_count | tweet.fields=organic_metrics | Entier |
+| Non disponible | data.organic_metrics.retweet_count | tweet.fields=organic_metrics | Entier |
+| Non disponible | data.organic_metrics.reply_count | tweet.fields=organic_metrics | Entier |
+| Indisponible | data.organic_metrics.impression_count | tweet.fields=organic_metrics | Int |
+| Indisponible | data.organic_metrics.url_link_count | tweet.fields=organic_metrics | Int |
+| Indisponible | data.organic_metrics.user_profile_count | tweet.fields=organic_metrics | Int |
+| Indisponible | data.promoted_metrics | tweet.fields=promoted_metrics | Object |
+| Indisponible | data.promoted_metrics.like_count | tweet.fields=promoted_metrics | Int |
+| Indisponible | data.promoted_metrics.retweet_count | tweet.fields=promoted_metrics | Int |
+| Indisponible | data.promoted_metrics.reply_count | tweet.fields=promoted_metrics | Int |
+| Indisponible | data.promoted_metrics.impression_count | tweet.fields=promoted_metrics | Int |
+| Indisponible | data.promoted_metrics.url_link_count | tweet.fields=promoted_metrics | Int |
+| Indisponible | data.promoted_metrics.user_profile_count | tweet.fields=promoted_metrics | Int |
+| gnip.profileLocations | Indisponible | Indisponible |     |
+| gnip.profileLocations.address | Indisponible | Indisponible |     |
+| gnip.profileLocations.address.country | Indisponible | Indisponible |     |
+| gnip.profileLocations.address.countryCode | Indisponible | Indisponible |     |
+| gnip.profileLocations.displayName | Indisponible | Indisponible |     |
+| gnip.profileLocations.geo | Indisponible | Indisponible |     |
+| gnip.profileLocations.geo.coordinates | Indisponible | Indisponible |     |
+| gnip.profileLocations.geo.type | Indisponible | Indisponible |     |
+| gnip.profileLocations.objectType | Indisponible | Indisponible |     |
+
+<div id="user-object">
+  #### Objet User
+</div>
+
+|     |     |     |     |
+| :--- | :--- | :--- | :--- |
+| **Format Activity Streams** | **Format Twitter v2** | **Paramètres v2 requis** | **Type dans v2** |
+| actor | includes.users | expansions=author_id | Tableau d’objets |
+| Dérivé de actor.id | includes.users.id | expansions=author_id | Chaîne |
+| actor.displayName | includes.users.name | expansions=author_id | Chaîne |
+| actor.preferredUsername | includes.users.username | expansions=author_id | Chaîne |
+| actor.postedTime | includes.users.created_at | expansions=author_id&amp;user.fields=created_at | Date (ISO 8601) |
+| actor.summary | includes.users.description | expansions=author_id&amp;user.fields=description | Chaîne |
+| Non disponible | includes.users.pinned_tweet_id | expansions=author_id&amp;user.fields=pinned_tweet_id | Chaîne |
+| Non disponible | includes.users.protected | expansions=author_id&amp;user.fields=protected | Booléen |
+| actor.link | Non disponible | Non disponible - à construire à partir de includes.users.username |     |
+| actor.twitterTimeZone | Non disponible | Non disponible - à déduire à partir de Tweet created_at |     |
+| actor.utcOffset | Non disponible | Non disponible - à déduire à partir de Tweet created_at |     |
+| actor.favoritesCount | Non disponible | Non disponible |     |
+| actor.followersCount | includes.users.public_metrics.followers_count | expansions=author_id&amp;user.fields=public_metrics | Entier |
+| actor.friendsCount | includes.users.public_metrics.following_count | expansions=author_id&amp;user.fields=public_metrics | Entier |
+| actor.listedCount | includes.users.public_metrics.listed_count | expansions=author_id&amp;user.fields=public_metrics | Entier |
+| actor.statusesCount | includes.users.public_metrics.tweet_count | expansions=author_id&amp;user.fields=public_metrics | Entier |
+| actor.languages[] | Non disponible | Non disponible - à déduire à partir de Tweet lang |     |
+| actor.location.displayName | includes.users.location | expansions=author_id&amp;user.fields=location | Chaîne |
+| actor.image | includes.users.profile_image_url | expansions=author_id&amp;user.fields=profile_image_url | Chaîne |
+| actor.links | includes.users.url | expansions=author_id&amp;user.fields=url | Chaîne |
+| actor.verified | includes.users.verified | expansions=author_id&amp;user.fields=verified | Booléen |
+| Non disponible | includes.users.withheld | expansions=author_id&amp;user.fields=withheld | Objet |
+| Non disponible | includes.users.entities | expansions=author_id&amp;user.fields=entities | Objet |
+| Non disponible | includes.users.entities.url | expansions=author_id&amp;user.fields=entities | Objet |
+| actor.links | includes.users.entities.url.urls | expansions=author_id&amp;user.fields=entities | Tableau d’objets |
+| Non disponible | includes.users.entities.url.urls.start | expansions=author_id&amp;user.fields=entities | Entier |
+| Non disponible | includes.users.entities.url.urls.end | expansions=author_id&amp;user.fields=entities | Entier |
+| Non disponible | includes.users.entities.url.urls.url | expansions=author_id&amp;user.fields=entities | Chaîne |
+| actor.links.href | includes.users.entities.url.urls.expanded_url | expansions=author_id&amp;user.fields=entities | Chaîne |
+| Non disponible | includes.users.entities.url.urls.display_url | expansions=author_id&amp;user.fields=entities | Chaîne |
+| Non disponible | includes.users.entities.description | expansions=author_id&amp;user.fields=entities | Objet |
+| Non disponible | includes.users.entities.description.hashtags | expansions=author_id&amp;user.fields=entities | Tableau d’objets |
+| Non disponible | includes.users.entities.description.hashtags.start | expansions=author_id&amp;user.fields=entities | Entier |
+| Non disponible | includes.users.entities.description.hashtags.end | expansions=author_id&amp;user.fields=entities | Entier |
+| Non disponible | includes.users.entities.description.hashtags.tag | expansions=author_id&amp;user.fields=entities | Chaîne |
+| Non disponible | includes.users.entities.description.mentions | expansions=author_id&amp;user.fields=entities | Tableau d’objets |
+| Non disponible | includes.users.entities.description.mentions.start | expansions=author_id&amp;user.fields=entities | Entier |
+| Non disponible | includes.users.entities.description.mentions.end | expansions=author_id&amp;user.fields=entities | Entier |
+| Non disponible | includes.users.entities.description.mentions.username | expansions=author_id&amp;user.fields=entities | Chaîne de caractères |
+| Non disponible | includes.users.entities.description.cashtags | expansions=author_id&amp;user.fields=entities | Tableau d’objets |
+| Non disponible | includes.users.entities.description.cashtags.start | expansions=author_id&amp;user.fields=entities | Entier |
+| Non disponible | includes.users.entities.description.cashtags.end | expansions=author_id&amp;user.fields=entities | Entier |
+| Non disponible | includes.users.entities.description.cashtags.tag | expansions=author_id&amp;user.fields=entities | Chaîne de caractères |
+
+<div id="poll-object">
+  #### Objet « Poll »
+</div>
+
+|     |     |     |     |
+| :--- | :--- | :--- | :--- |
+| **Format Activity Streams** | **Format Twitter v2** | **Paramètres v2 requis** | **Type dans v2** |
+| Non disponible | includes.polls | expansions=attachments.poll_ids | Tableau d’objets |
+| Non disponible | includes.polls.id | expansions=attachments.poll_ids | Chaîne |
+| Non disponible | includes.polls.options | expansions=attachments.poll_ids | Tableau d’objets |
+| Non disponible | includes.polls.options.position | expansions=attachments.poll_ids | Entier |
+| Non disponible | includes.polls.options.label | expansions=attachments.poll_ids | Chaîne |
+| Non disponible | includes.polls.options.votes | expansions=attachments.poll_ids | Entier |
+| Non disponible | includes.polls.voting_status | expansions=attachments.poll_ids&amp;poll.fields=voting_status | Chaîne |
+| Non disponible | includes.polls.duration_minutes | expansions=attachments.poll_ids&amp;poll.fields=duration_minutes | Entier |
+| Non disponible | includes.polls.end_datetime | expansions=attachments.poll_ids&amp;poll.fields=end_datetime | Date (ISO 8601) |
+
+<div id="place-object">
+  #### Objet Place
+</div>
+
+|     |     |     |     |
+| :--- | :--- | :--- | :--- |
+| **Format Activity Streams** | **Format Twitter v2** | **Paramètres v2 requis** | **Type dans v2** |
+| location | includes.places | expansions=geo.place_id | tableau d’objets |
+| location.displayName | includes.places.full_name | expansions=geo.place_id | chaîne |
+| Parsed from location.link | includes.places.id | expansions=geo.place_id | chaîne |
+| location.name | includes.places.name | expansions=geo.place_id&amp;place.fields=name | chaîne |
+| location.country_code | includes.places.country | expansions=geo.place_id&amp;place.fields=country | chaîne |
+| location.twitter_place_type | includes.places.place_type | expansions=geo.place_id&amp;place.fields=place_type | chaîne |
+| location.twitter_country_code | includes.places.country_code | expansions=geo.place_id&amp;place.fields=country_code | chaîne |
+| location.geo | includes.places.geo | expansions=geo.place_id&amp;place.fields=geo | objet |
+| location.geo.type | includes.places.geo.type | expansions=geo.place_id&amp;place.fields=geo | chaîne |
+| location.geo.coordinates | includes.places.geo.bbox | expansions=geo.place_id&amp;place.fields=geo | tableau |
+| Non disponible | includes.places.geo.properties | expansions=geo.place_id&amp;place.fields=geo | objet |
+
+<div id="media-object">
+  #### Objet média
+</div>
+
+|     |     |     |     |
+| :--- | :--- | :--- | :--- |
+| **Format Activity Streams** | **Format Twitter v2** | **Paramètres v2 requis** | **Type dans v2** |
+| twitter_entities.media OR twitter_extended_entities.media | includes.media | expansions=attachments.media_keys | Tableau d’objets |
+| twitter_entities.media.id_str OR twitter_extended_entities.media.id_str | includes.media.media_key | expansions=attachments.media_keys | Chaîne |
+| twitter_entities.media.id OR twitter_extended_entities.media.id | Non disponible | Non disponible |     |
+| twitter_entities.media.indices OR twitter_extended_entities.media.indices | Non disponible | Non disponible |     |
+| twitter_entities.media.additional_media_info OR twitter_extended_entities.media.additional_media_info | Non disponible | Non disponible |     |
+| twitter_entities.media.additional_media_info.monetizable OR twitter_extended_entities.media.additional_media_info.monetizable | Non disponible | Non disponible |     |
+| twitter_entities.media.media_url OR twitter_extended_entities.media.media_url | Non disponible | Non disponible |     |
+| twitter_entities.media.media_url_https OR twitter_extended_entities.media.media_url_https | includes.media.preview_image_url | expansions=attachments.media_keys&amp;media.fields=preview_image_url | Chaîne |
+| twitter_entities.media.url OR twitter_extended_entities.media.url | Non disponible | Non disponible |     |
+| twitter_entities.media.display_url OR twitter_extended_entities.media.display_url | Non disponible | Non disponible |     |
+| twitter_entities.media.expanded_url OR twitter_extended_entities.media.expanded_url | Non disponible | Non disponible |     |
+| twitter_entities.media.type OR twitter_extended_entities.media.type | includes.media.type | expansions=attachments.media_keys | Chaîne |
+| twitter_entities.media.sizes OR twitter_extended_entities.media.sizes | Non disponible | Non disponible |     |
+| twitter_entities.media.sizes.thumb OR twitter_extended_entities.media.sizes.thumb | Non disponible | Non disponible |     |
+| twitter_entities.media.sizes.thumb.h OR twitter_extended_entities.media.sizes.thumb.h | Non disponible | Non disponible |     |
+| twitter_entities.media.sizes.thumb.w OR twitter_extended_entities.media.sizes.thumb.w | Non disponible | Non disponible |     |
+| twitter_entities.media.sizes.thumb.resize OR twitter_extended_entities.media.sizes.thumb.resize | Non disponible | Non disponible |     |
+| twitter_entities.media.sizes.small OR twitter_extended_entities.media.sizes.small | Non disponible | Non disponible |     |
+| twitter_entities.media.sizes.small.h OR twitter_extended_entities.media.sizes.small.h | Non disponible | Non disponible |     |
+| twitter_entities.media.sizes.small.w OR twitter_extended_entities.media.sizes.small.w | Non disponible | Non disponible |     |
+| twitter_entities.media.sizes.small.resize OR twitter_extended_entities.media.sizes.small.resize | Non disponible | Non disponible |     |
+| twitter_entities.media.sizes.medium OR twitter_extended_entities.media.sizes.medium | Non disponible | Non disponible |     |
+| twitter_entities.media.sizes.medium.h OR twitter_extended_entities.media.sizes.medium.h | Non disponible | Non disponible |     |
+| twitter_entities.media.sizes.medium.w OR twitter_extended_entities.media.sizes.medium.w | Non disponible | Non disponible |     |
+| twitter_entities.media.sizes.medium.resize OR twitter_extended_entities.media.sizes.medium.resize | Non disponible | Non disponible |     |
+| twitter_entities.media.sizes.large OR twitter_extended_entities.media.sizes.large | Non disponible | Non disponible |     |
+| twitter_entities.media.sizes.large.h OR twitter_extended_entities.media.sizes.large.h | includes.media.height | expansions=attachments.media_keys&amp;media.fields=height | Entier |
+| twitter_entities.media.sizes.large.w OR twitter_extended_entities.media.sizes.large.w | includes.media.width | expansions=attachments.media_keys&amp;media.fields=width | Entier |
+| twitter_entities.media.sizes.large.resize OR twitter_extended_entities.media.sizes.large.resize | Non disponible | Non disponible |     |
+| twitter_extended_entities.media.video_info | Non disponible | Non disponible |     |
+| twitter_extended_entities.media.video_info.aspect_ratio | Non disponible | Non disponible |     |
+| twitter_extended_entities.media.video_info.duration_millis | includes.media.duration_ms | expansions=attachments.media_keys&amp;media.fields=duration_ms | Entier |
+| twitter_extended_entities.media.video_info.variants | Non disponible | Non disponible |     |
+| twitter_extended_entities.media.video_info.variants.bitrate | Non disponible | Non disponible |     |
+| twitter_extended_entities.media.video_info.variants.content_type | Non disponible | Non disponible |     |
+| twitter_extended_entities.media.video_info.variants.url | Non disponible | Non disponible |     |
+| Non disponible | includes.media.alt_text | expansions=attachments.media_keys&amp;media.fields=alt_text | Chaîne |
+| Non disponible | includes.media.public_metrics | expansions=attachments.media_keys&amp;media.fields=public_metrics | Objet |
+| Non disponible | includes.media.public_metrics.view_count | expansions=attachments.media_keys&amp;media.fields=public_metrics | Entier |
+| Non disponible | includes.media.non_public_metrics | expansions=attachments.media_keys&amp;media.fields=non_public_metrics | Objet |
+| Non disponible | includes.media.non_public_metrics.playback_0_count | expansions=attachments.media_keys&amp;media.fields=non_public_metrics | Entier |
+| Non disponible | includes.media.non_public_metrics.playback_25_count | expansions=attachments.media_keys&amp;media.fields=non_public_metrics | Entier |
+| Non disponible | includes.media.non_public_metrics.playback_50_count | expansions=attachments.media_keys&amp;media.fields=non_public_metrics | Entier |
+| Non disponible | includes.media.non_public_metrics.playback_75_count | expansions=attachments.media_keys&amp;media.fields=non_public_metrics | Entier |
+| Non disponible | includes.media.non_public_metrics.playback_100_count | expansions=attachments.media_keys&amp;media.fields=non_public_metrics | Entier |
+| Non disponible | includes.media.organic_metrics | expansions=attachments.media_keys&amp;media.fields=organic_metrics | Objet |
+| Non disponible | includes.media.organic_metrics.playback_0_count | expansions=attachments.media_keys&amp;media.fields=organic_metrics | Entier |
+| Non disponible | includes.media.organic_metrics.playback_25_count | expansions=attachments.media_keys&amp;media.fields=organic_metrics | Entier |
+| Non disponible | includes.media.organic_metrics.playback_50_count | expansions=attachments.media_keys&amp;media.fields=organic_metrics | Entier |
+| Non disponible | includes.media.organic_metrics.playback_75_count | expansions=attachments.media_keys&amp;media.fields=organic_metrics | Entier |
+| Non disponible | includes.media.organic_metrics.playback_100_count | expansions=attachments.media_keys&amp;media.fields=organic_metrics | Entier |
+| Non disponible | includes.media.organic_metrics.view_count | expansions=attachments.media_keys&amp;media.fields=organic_metrics | Entier |
+| Non disponible | includes.media.promoted_metrics | expansions=attachments.media_keys&amp;media.fields=promoted_metrics | Objet |
+| Non disponible | includes.media.promoted_metrics.playback_0_count | expansions=attachments.media_keys&amp;media.fields=promoted_metrics | Entier |
+| Non disponible | includes.media.promoted_metrics.playback_25_count | expansions=attachments.media_keys&amp;media.fields=promoted_metrics | Entier |
+| Non disponible | includes.media.promoted_metrics.playback_50_count | expansions=attachments.media_keys&amp;media.fields=promoted_metrics | Entier |
+| Non disponible | includes.media.promoted_metrics.playback_75_count | expansions=attachments.media_keys&amp;media.fields=promoted_metrics | Int |
+| Non disponible | includes.media.promoted_metrics.playback_100_count | expansions=attachments.media_keys&amp;media.fields=promoted_metrics | Int |
+| Non disponible | includes.media.promoted_metrics.view_count | expansions=attachments.media_keys&amp;media.fields=promoted_metrics | Int |
+
+<div id="matching-rules-object">
+  #### Objet des règles de correspondance
+</div>
+
+|     |     |     |     |
+| :--- | :--- | :--- | :--- |
+| **Format Activity Streams** | **Format Twitter v2** | **Paramètres v2 requis** | **Type dans v2** |
+| gnip.matching_rules | matching_rules | Par défaut dans le flux filtré | Tableau d’objets |
+| gnip.matching_rules.tag | matching_rules.tag | Par défaut dans le flux filtré | Chaîne |
+| gnip.matching_rules.tag.id | Indisponible | Indisponible |     |
+| gnip.matching_rules.tag.id_str | matching_rules.id | Par défaut dans le flux filtré | Chaîne |
+
+<div id="visual-data-format-migration-tool">
+  ### Outil visuel de migration du format de données
+</div>
+
+L’outil visuel de migration du format de données est une application web qui affiche les champs mappés du [format de données X API v1.1](https://developer.x.com/en/docs/x-api/v1/data-dictionary/overview) vers le [format X API v2](/fr/x-api/fundamentals/data-dictionary) pour un Tweet ou un objet utilisateur donné. Vous pouvez fournir un ID de Tweet ou un ID d’utilisateur à l’application pour visualiser ce mapping.
+
+Veuillez noter que vous devrez vous connecter avec votre compte Twitter pour utiliser l’app.
+
+<br />
+
+<Button href="https://visual-data-format-migration-tool.glitch.me/">
+  Essayer l’outil visuel de migration du format de données
+</Button>

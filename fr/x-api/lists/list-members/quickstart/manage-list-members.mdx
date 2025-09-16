@@ -1,0 +1,69 @@
+---
+title: Gérer les membres de liste
+sidebarTitle: Gérer les membres de liste
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+<div id="manage-list-members-quick-start-guide">
+  ### Guide de démarrage rapide pour gérer les membres d’une Liste
+</div>
+
+<Note>
+  **Remarque :** Ce guide part du principe que vous avez suivi les prérequis de la [présentation du démarrage rapide](/fr/x-api/lists/list-members#getting-started-with-the-list-members-endpoint-group).
+</Note>
+
+<div id="steps-to-build-a-manage-list-member-request">
+  ### Étapes pour créer une requête de gestion des membres de liste
+</div>
+
+<div id="step-one-choose-the-list-endpoint-collection-from-postman">
+  #### Première étape : choisir la collection d’endpoints List dans Postman
+</div>
+
+Une fois la collection X API v2 chargée dans Postman, accédez au dossier &quot;List&quot;, sélectionnez le sous-dossier &quot;List members&quot;, puis choisissez &quot;Add a member&quot;.
+ 
+
+<div id="step-two-specify-the-user-to-add">
+  #### Deuxième étape : spécifier l’utilisateur à ajouter
+</div>
+
+Les endpoints de gestion des membres de liste nécessitent deux identifiants : l’ID de la liste et l’ID de l’utilisateur à ajouter. Vous pouvez trouver l’ID de l’utilisateur à l’aide de la [recherche d’utilisateurs](/fr/x-api/users/lookup/introduction) en fournissant un nom d’utilisateur pour obtenir le champ id.
+
+L’ID cible peut être n’importe quel ID d’utilisateur valide. Dans Postman, ouvrez l’onglet « Params » et saisissez votre ID dans la colonne « Value » de la variable de chemin id. Ouvrez l’onglet « Body » et indiquez l’ID de l’utilisateur que vous souhaitez ajouter comme valeur du paramètre user_id. Veillez à ne pas inclure d’espaces avant ou après un ID.
+
+|     |     |     |
+| :--- | :--- | :--- |
+| **Key** | **Value** | **Parameter type** |
+| `id` | L’ID de la liste | path |
+| user_id | L’ID de l’utilisateur cible que vous souhaitez ajouter comme membre | body |
+
+Vous devriez maintenant voir une URL similaire à côté du bouton « Send » :
+
+`https://api.x.com/2/lists/1441162269824405510/members`
+
+Troisième étape : envoyer la requête et examiner la réponse
+
+Une fois tout paramétré, cliquez sur le bouton « Send » et vous recevrez une réponse similaire à l’exemple suivant :
+
+```
+{
+  "data": {
+    "is_member": true
+  }
+}
+```
+
+Si l’objet de réponse contient la valeur true pour la clé is_member, vous avez bien ajouté l’utilisateur en tant que membre de la liste.
+
+Pour supprimer un membre d’une liste, sélectionnez la requête « Remove a member » également située dans le dossier « Lists » de la collection X API v2 chargée dans Postman. Cet endpoint nécessite l’ID de la liste et l’ID de l’utilisateur que vous souhaitez supprimer. Dans l’onglet « Params », saisissez l’ID de la liste comme valeur de la colonne id et l’ID de l’utilisateur à supprimer comme valeur de la colonne user_id.
+
+En cas de suppression réussie, vous recevrez une réponse similaire à l’exemple suivant :
+
+```
+{
+  "data": {
+    "is_member": false
+  }
+}
+```

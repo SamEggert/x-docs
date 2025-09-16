@@ -1,0 +1,104 @@
+---
+title: Bonnes pratiques
+---
+
+import { Button } from "/snippets/fr/button.mdx";
+
+Vos clés et jetons d’API doivent être protégés avec la plus grande vigilance. 
+
+Ces identifiants sont directement liés à votre [application développeur](/fr/resources/fundamentals/developer-apps) ainsi qu’aux comptes X qui vous ont autorisé à effectuer des requêtes en leur nom. Si vos clés sont compromises, des acteurs malveillants pourraient les utiliser pour envoyer des requêtes aux endpoints X au nom de votre application développeur ou de ses utilisateurs autorisés, ce qui pourrait vous amener à atteindre des limites de débit inattendues, à épuiser votre quota d’accès payant, voire à entraîner la suspension de votre application développeur.
+
+Les sections suivantes présentent des pratiques recommandées à prendre en compte lors de la gestion de vos clés et jetons d’API.
+
+<div id="regenerate-api-keys-and-tokens">
+  ## Régénérer des clés et des jetons d’API
+</div>
+
+Si vous pensez que vos clés d’API ont été exposées, vous devez les régénérer en suivant ces étapes :
+
+1. Accédez à la [page « Projects and Apps » du portail développeur](https://developer.x.com/en/portal/projects-and-apps.html).
+2. Cliquez sur l’icône « Keys and tokens » (🗝) à côté de l’application concernée.
+3. Cliquez sur le bouton « Regenerate » à côté de l’ensemble de clés et de jetons que vous souhaitez régénérer.
+
+Si vous préférez régénérer vos Access Tokens ou Bearer Tokens par programmation, vous pouvez le faire en utilisant nos endpoints d’authentification.
+
+* Si vous souhaitez régénérer vos Access Tokens, vous devez invalider vos jetons à l’aide de l’endpoint [POST oauth/invalidate_token](/fr/resources/fundamentals/authentication/api-reference#post-oauth2-invalidate-token), puis régénérer vos jetons via le [flux OAuth en 3 étapes](/fr/resources/fundamentals/authentication/oauth-1-0a/obtaining-user-access-tokens).
+* Si vous souhaitez régénérer votre Bearer Token, vous devez invalider votre jeton à l’aide de l’endpoint [POST oauth2/invalidate_token](/fr/resources/fundamentals/authentication/api-reference#post-oauth2-invalidate-token), puis régénérer votre jeton via l’endpoint [POST oauth2/token](/fr/resources/fundamentals/authentication/api-reference#post-oauth2-token).
+
+<div id="having-a-central-file-for-your-secrets">
+  ## Disposer d’un fichier central pour vos secrets
+</div>
+
+Utiliser un fichier comme .env ou un fichier .yaml pour stocker vos secrets peut être utile, mais assurez-vous d’avoir un fichier .gitignore solide afin d’éviter de les valider par inadvertance dans un dépôt Git. 
+
+<div id="environment-variables">
+  ## Variables d'environnement
+</div>
+
+Écrire du code qui utilise des variables d&#39;environnement peut être utile.
+
+En voici un exemple en Python :
+
+```python
+import os
+
+consumer_key = os.environ.get("CONSUMER_KEY")
+
+consumer_secret = os.environ.get("CONSUMER_SECRET")
+```
+
+Dans votre terminal, vous écririez quelque chose comme :
+
+```bash
+export CONSUMER_KEY='xxxxxxxxxxxxxxxxxxx'
+export CONSUMER_SECRET='xxxxxxxxxxxxxxxxxxxxxxx'
+```
+
+<div id="source-code-and-version-control">
+  ## Code source et gestion de versions
+</div>
+
+Les erreurs de sécurité les plus courantes commises par les développeurs consistent à avoir des clés et des jetons d’API commités dans le code source au sein de systèmes de gestion de versions accessibles comme GitHub et Bitbucket. Nombre de ces dépôts de code sont publics. Cette erreur est si fréquente dans les dépôts publics qu’il existe des bots lucratifs qui aspirent les clés d’API.
+
+* Utilisez des variables d’environnement côté serveur. En stockant les clés d’API dans des variables d’environnement, vous les gardez hors de votre code et de la gestion de versions. Cela vous permet également d’utiliser facilement des clés différentes selon les environnements.
+* Utilisez un fichier de configuration exclu du contrôle de version. Ajoutez le nom du fichier à votre fichier [.gitignore](https://git-scm.com/docs/gitignore) pour empêcher son suivi par la gestion de versions.
+* Si vous retirez les clés d’API de votre code après avoir utilisé la gestion de versions, il est probable qu’elles restent accessibles en consultant les versions précédentes de votre base de code. Régénérez vos clés d’API, comme décrit dans la section suivante.
+
+<div id="databases">
+  ## Bases de données
+</div>
+
+Si vous devez stocker vos jetons d’accès dans une base de données, tenez compte des points suivants :
+
+* Restreignez l’accès à la base de données de sorte que les jetons d’accès ne soient lisibles que par le propriétaire du jeton.
+* Limitez les droits de modification/écriture sur la table dédiée aux jetons d’accès — cela devrait être automatisé via le système de gestion des clés.
+* Chiffrez les jetons d’accès avant de les stocker dans tout système de stockage de données.
+
+<div id="password-management-tools">
+  ## Outils de gestion des mots de passe
+</div>
+
+Les outils de gestion des mots de passe tels que 1Password ou LastPass peuvent être utiles pour conserver vos clés et jetons en lieu sûr. Vous pourriez toutefois éviter de les partager dans un gestionnaire de mots de passe d’équipe partagé.
+
+<div id="web-storage-cookies">
+  ## Stockage web et cookies
+</div>
+
+Il existe deux types de stockage web : LocalStorage et SessionStorage. Ils ont été conçus comme une amélioration par rapport aux cookies, car la capacité de stockage est bien supérieure à celle des cookies. Chaque option présente toutefois des avantages et des inconvénients distincts.
+ 
+
+**Web Storage : LocalStorage**
+
+Tout ce qui est stocké dans le stockage web local est persistant. Autrement dit, les données restent en place jusqu’à leur suppression explicite. Selon les besoins de votre projet, cela peut être un atout. Toutefois, utilisez LocalStorage avec discernement, car toute modification ou tout ajout restera disponible lors de vos visites ultérieures de la page concernée. Nous ne recommandons généralement pas d’utiliser LocalStorage, sauf cas particuliers. Si vous choisissez de l’utiliser, notez qu’il respecte la politique de même origine : les données stockées ne sont accessibles qu’à partir de la même origine. Un bénéfice de performance associé à LocalStorage est la diminution du trafic client-serveur, puisque les données n’ont pas à être renvoyées au serveur à chaque requête HTTP.
+ 
+
+**Web Storage : SessionStorage**
+
+SessionStorage est similaire à LocalStorage, mais la différence clé est qu’il n’est pas persistant. Une fois la fenêtre (ou l’onglet, selon le navigateur) utilisée pour écrire dans SessionStorage fermée, les données sont perdues. Cela permet de restreindre l’accès en lecture à votre jeton pendant une session utilisateur. En termes de sécurité, SessionStorage est généralement préférable à LocalStorage. Comme pour LocalStorage, la prise en charge de la politique de même origine et la réduction du trafic client-serveur s’appliquent également à SessionStorage.
+ 
+
+**Cookies**
+
+Les cookies sont la méthode traditionnelle pour stocker des données de session. Vous pouvez définir une date d’expiration pour chaque cookie, ce qui facilite la révocation et la restriction d’accès. En revanche, le trafic client-serveur augmente avec les cookies, puisque les données sont renvoyées au serveur à chaque requête HTTP. Si vous utilisez des cookies, vous devez vous protéger contre le détournement de session. Par défaut, les cookies sont envoyés en clair via HTTP, ce qui rend leur contenu vulnérable à l’écoute de paquets et/ou aux attaques de type homme du milieu, où des attaquants peuvent modifier votre trafic. Vous devez toujours imposer HTTPS pour protéger vos données en transit. Cela assure la confidentialité, l’intégrité (des données) et l’authentification. Toutefois, si votre application web ou votre site est accessible à la fois en HTTP et en HTTPS, utilisez également l’attribut « Secure » sur le cookie. Cela empêchera des attaquants d’envoyer à un utilisateur des liens vers la version HTTP de votre site et d’écouter la requête HTTP générée.
+ 
+Une autre défense complémentaire contre le détournement de session lors de l’utilisation de cookies consiste à revérifier l’identité de l’utilisateur avant toute action à fort impact. Un autre attribut à envisager pour renforcer la sécurité de vos cookies est « HttpOnly ». Cet attribut indique au navigateur que le cookie concerné ne doit être accessible que par le serveur. Toute tentative d’accès par des scripts côté client sera interdite, ce qui aide à se protéger contre la plupart des attaques de type cross-site scripting (XSS).

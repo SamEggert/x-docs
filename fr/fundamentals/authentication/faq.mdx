@@ -1,0 +1,44 @@
+---
+title: FAQ sur OAuth
+sidebarTitle: FAQ
+---
+
+<div id="general">
+  ## Général
+</div>
+
+<AccordionGroup>
+  <Accordion title="Qu'est-ce qu'OAuth ?">
+    OAuth est un protocole d’authentification qui permet aux utilisateurs d’autoriser une application à agir en leur nom sans partager leur mot de passe. Plus d’informations sont disponibles sur [oauth.net](http://oauth.net/).
+  </Accordion>
+
+  <Accordion title="Comment générer des jetons d’accès ?">
+    Vous devez disposer d’une [application X](/fr/resources/fundamentals/developer-apps) pour générer des jetons d’accès. En savoir plus sur les jetons d’accès [ici](/fr/resources/fundamentals/authentication#oauth-1-0a-2).
+  </Accordion>
+
+  <Accordion title="Comment créer une application X ?">
+    Vous devez disposer d’un [compte développeur](/fr/resources/fundamentals/developer-portal) pour créer une [application X](/fr/resources/fundamentals/developer-apps). Vous pouvez vous inscrire [ici](https://developer.x.com/en/portal/petition/essential/basic-info).
+  </Accordion>
+
+  <Accordion title="Si je possède déjà une application X, comment puis-je consulter et modifier cette application ?">
+    Vous pouvez consulter et modifier votre application depuis le [tableau de bord des applications X](https://developer.x.com/content/developer-twitter/en/apps) si vous êtes connecté à votre compte X sur developer.x.com.
+  </Accordion>
+</AccordionGroup>
+
+<div id="technical">
+  ## Technique
+</div>
+
+<AccordionGroup>
+  <Accordion title="Quelle est la durée de validité d’un jeton d’accès ?">
+    Les jetons d’accès n’expirent pas explicitement. Un jeton d’accès sera invalidé si un utilisateur révoque explicitement une application dans les paramètres de son compte X, ou si X suspend une application. Si une application est suspendue, une mention apparaîtra dans le tableau de bord de l’[app X](/fr/resources/fundamentals/developer-apps) indiquant qu’elle a été suspendue.
+  </Accordion>
+
+  <Accordion title="Que se passe-t-il si un jeton d’accès devient invalide ?">
+    Considérez que le jeton d’accès d’un utilisateur *peut* devenir invalide à tout moment. Le cas échéant, invitez l’utilisateur à réautoriser l’application. Il est important de gérer cette situation de manière fluide pour garantir une bonne expérience utilisateur.
+  </Accordion>
+
+  <Accordion title="La page d’enregistrement de l’application demande un accès lecture/écriture. Qu’est-ce qui est considéré comme une écriture ?">
+    De nombreux utilisateurs autorisent une application à lire leurs informations, mais pas nécessairement à modifier leur profil ou à publier de nouveaux statuts. La mise à jour d’informations via l’API X — qu’il s’agisse du nom, de la localisation ou de l’ajout d’un nouveau statut — nécessite une requête HTTP POST. Toute méthode d’API qui requiert une requête HTTP POST est considérée comme une méthode d’écriture et nécessite un accès en lecture et écriture.
+  </Accordion>
+</AccordionGroup>

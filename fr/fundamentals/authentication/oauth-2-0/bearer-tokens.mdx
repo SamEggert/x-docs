@@ -1,0 +1,66 @@
+---
+title: Utilisation et génération d’un jeton Bearer propre à l’application
+sidebarTitle: Génération et utilisation de jetons Bearer propres à l’application
+---
+
+<div id="using-and-generating-an-app-only-bearer-token">
+  ### Utilisation et génération d’un Bearer Token en mode application uniquement
+</div>
+
+Un Bearer Token permet aux développeurs de disposer d’un point d’entrée plus sécurisé pour utiliser les API X et constitue l’une des fonctionnalités clés d’OAuth 2.0.
+
+L’authentification utilisant un Bearer Token est également appelée authentification « application-only ». Un Bearer Token est un tableau d’octets à format non spécifié que vous générez à l’aide d’un script, par exemple avec une commande curl. Vous pouvez également obtenir un Bearer Token depuis le portail développeur, dans la section Keys and Tokens des paramètres de votre application. Vous trouverez plus d’informations sur cette fonctionnalité dans la [documentation officielle d’OAuth](https://oauth.net/2/bearer-tokens/).
+
+<div id="when-are-they-used">
+  #### Quand sont-ils utilisés ?
+</div>
+
+Les produits nécessitant l&#39;utilisation d&#39;un jeton Bearer sont les suivants :
+
+* [Engagement API](/fr/x-api/enterprise-gnip-2.0/fundamentals/engagement-api)
+* [Account Activity API](/fr/x-api/enterprise-gnip-2.0/fundamentals/account-activity)
+* D&#39;autres API utilisant l&#39;authentification OAuth 2.0 avec jeton Bearer, comme les endpoints v2 et Labs.
+
+<div id="prerequisites">
+  #### Prérequis
+</div>
+
+Vous devez [créer un compte développeur](https://developer.x.com/en/portal/petition/essential/basic-info) et avoir créé une [X App](/fr/resources/fundamentals/developer-apps). Une fois cela fait, vous devrez également récupérer les clés API dans le [portail développeur](/fr/resources/fundamentals/developer-portal). Suivez les étapes ci-dessous :
+
+1. Connectez-vous à votre compte X sur developer.x.com.
+2. Accédez au [tableau de bord des X Apps](https://developer.x.com/content/developer-twitter/en/apps) et ouvrez la X App pour laquelle vous souhaitez générer des jetons d’accès.
+3. Accédez à la page « keys and tokens ».
+4. Vous trouverez sur cette page les clés API, les jetons d’accès utilisateur (Access Tokens) et le Bearer Token.
+
+<div id="how-to-generate-a-bearer-token">
+  ### Comment générer un jeton Bearer
+</div>
+
+Vous pouvez trouver le jeton Bearer de votre application avec le reste de vos « Keys and Tokens ».
+
+Copiez la requête cURL suivante dans votre terminal après avoir remplacé les clés API consommateur ci-dessous, préalablement obtenues à partir de votre [X App](/fr/resources/fundamentals/developer-apps). Notez que les clés API consommateur utilisées sur cette page ont été mises hors service et ne fonctionneront pas pour des requêtes réelles.
+
+* **API key** `<API key>` p. ex. `xvz1evFS4wEEPTGEFPHBog`
+* **API secret key** `<API secret key>` p. ex. `L8qq9PZyRg6ieKGEKhZolGC0vJWLw8iEJ88DRdyOg`
+
+  ```bash
+  curl -u "$API_KEY:$API_SECRET_KEY" \
+  --data 'grant_type=client_credentials' \
+  'https://api.x.com/oauth2/token'
+  ```
+
+Voici un exemple de la requête curl avec vos clés API renseignées :
+
+```bash
+   curl -u 'xvz1evFS4wEEPTGEFPHBog:L8qq9PZyRg6ieKGEKhZolGC0vJWLw8iEJ88DRdyOg' \
+  --data 'grant_type=client_credentials' \
+  'https://api.x.com/oauth2/token'
+```
+
+Voici à quoi ressemble la réponse. Notez qu’il s’agit d’un jeton Bearer mis hors service :
+
+`{"token_type":"bearer","access_token":"AAAAAAAAAAAAAAAAAAAAAMLheAAAAAAA0%2BuSeid%2BULvsea4JtiGRiSDSJSI%3DEUifiRBkKG5E2XzMDjRfl76ZC9Ub0wnz4XsNiRVBChTYbJcE3F"}`
+
+Notre jeton Bearer utilisé pour s’authentifier auprès des ressources avec OAuth 2.0 serait :
+
+`AAAAAAAAAAAAAAAAAAAAAMLheAAAAAAA0%2BuSeid%2BULvsea4JtiGRiSDSJSI%3DEUifiRBkKG5E2XzMDjRfl76ZC9Ub0wnz4XsNiRVBChTYbJcE3F`
