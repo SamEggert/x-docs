@@ -9,2044 +9,1022 @@
   },
   "favicon": "/favicon.png",
   "navigation": {
-    "languages": [
+    "versions": [
       {
-        "versions": [
+        "version": "English",
+        "tabs": [
           {
-            "version": "English",
-            "tabs": [
+            "tab": "Home",
+            "groups": [
               {
-                "tab": "Home",
-                "groups": [
+                "group": "Getting Started",
+                "pages": [
+                  "overview"
+                ]
+              },
+              {
+                "group": "Fundamentals",
+                "pages": [
+                  "fundamentals/developer-apps",
+                  "fundamentals/projects",
+                  "fundamentals/developer-portal",
                   {
-                    "group": "Getting Started",
+                    "group": "Authentication",
+                    "icon": "key",
                     "pages": [
-                      "en/overview"
-                    ]
-                  },
-                  {
-                    "group": "Fundamentals",
-                    "pages": [
-                      "en/fundamentals/developer-apps",
-                      "en/fundamentals/projects",
-                      "en/fundamentals/developer-portal",
+                      "fundamentals/authentication/overview",
                       {
-                        "group": "Authentication",
-                        "icon": "key",
+                        "group": "Guides",
                         "pages": [
-                          "en/fundamentals/authentication/overview",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "en/fundamentals/authentication/guides/log-in-with-x",
-                              "en/fundamentals/authentication/guides/authentication-best-practices",
-                              "en/fundamentals/authentication/guides/tls",
-                              "en/fundamentals/authentication/guides/v2-authentication-mapping"
-                            ]
-                          },
-                          {
-                            "group": "OAuth 1.0a",
-                            "pages": [
-                              "en/fundamentals/authentication/oauth-1-0a/api-key-and-secret",
-                              "en/fundamentals/authentication/oauth-1-0a/obtaining-user-access-tokens",
-                              "en/fundamentals/authentication/oauth-1-0a/authorizing-a-request",
-                              "en/fundamentals/authentication/oauth-1-0a/oauth-echo",
-                              "en/fundamentals/authentication/oauth-1-0a/pin-based-oauth",
-                              "en/fundamentals/authentication/oauth-1-0a/creating-a-signature",
-                              "en/fundamentals/authentication/oauth-1-0a/percent-encoding-parameters"
-                            ]
-                          },
-                          {
-                            "group": "OAuth 2.0",
-                            "pages": [
-                              "en/fundamentals/authentication/oauth-2-0/overview",
-                              "en/fundamentals/authentication/oauth-2-0/application-only",
-                              "en/fundamentals/authentication/oauth-2-0/bearer-tokens",
-                              "en/fundamentals/authentication/oauth-2-0/authorization-code",
-                              "en/fundamentals/authentication/oauth-2-0/user-access-token"
-                            ]
-                          },
-                          "en/fundamentals/authentication/basic-auth",
-                          "en/fundamentals/authentication/faq",
-                          "en/fundamentals/authentication/api-reference"
+                          "fundamentals/authentication/guides/log-in-with-x",
+                          "fundamentals/authentication/guides/authentication-best-practices",
+                          "fundamentals/authentication/guides/tls",
+                          "fundamentals/authentication/guides/v2-authentication-mapping"
                         ]
                       },
-                      "en/fundamentals/counting-characters",
-                      "en/fundamentals/rate-limits",
-                      "en/fundamentals/x-ids",
-                      "en/fundamentals/security"
-                    ]
-                  },
-                  {
-                    "group": "Partners & Customers",
-                    "pages": [
-                      "en/enterprise/partner-directory",
-                      "en/enterprise/customer-directory",
                       {
-                        "group": "Request Access",
+                        "group": "OAuth 1.0a",
                         "pages": [
-                          "en/enterprise/forms/enterprise-api-interest",
-                          "en/enterprise/forms/government-end-user-request"
+                          "fundamentals/authentication/oauth-1-0a/api-key-and-secret",
+                          "fundamentals/authentication/oauth-1-0a/obtaining-user-access-tokens",
+                          "fundamentals/authentication/oauth-1-0a/authorizing-a-request",
+                          "fundamentals/authentication/oauth-1-0a/oauth-echo",
+                          "fundamentals/authentication/oauth-1-0a/pin-based-oauth",
+                          "fundamentals/authentication/oauth-1-0a/creating-a-signature",
+                          "fundamentals/authentication/oauth-1-0a/percent-encoding-parameters"
                         ]
-                      }
+                      },
+                      {
+                        "group": "OAuth 2.0",
+                        "pages": [
+                          "fundamentals/authentication/oauth-2-0/overview",
+                          "fundamentals/authentication/oauth-2-0/application-only",
+                          "fundamentals/authentication/oauth-2-0/bearer-tokens",
+                          "fundamentals/authentication/oauth-2-0/authorization-code",
+                          "fundamentals/authentication/oauth-2-0/user-access-token"
+                        ]
+                      },
+                      "fundamentals/authentication/basic-auth",
+                      "fundamentals/authentication/faq",
+                      "fundamentals/authentication/api-reference"
                     ]
                   },
+                  "fundamentals/counting-characters",
+                  "fundamentals/rate-limits",
+                  "fundamentals/x-ids",
+                  "fundamentals/security"
+                ]
+              },
+              {
+                "group": "Partners & Customers",
+                "pages": [
+                  "enterprise/partner-directory",
+                  "enterprise/customer-directory",
                   {
-                    "group": "Resources",
+                    "group": "Request Access",
                     "pages": [
-                      "en/tools-and-libraries",
-                      "en/tutorials",
-                      "en/api-reference-index",
-                      "en/newsletter"
+                      "enterprise/forms/enterprise-api-interest",
+                      "enterprise/forms/government-end-user-request"
                     ]
                   }
                 ]
               },
               {
-                "tab": "X API",
-                "groups": [
+                "group": "Resources",
+                "pages": [
+                  "tools-and-libraries",
+                  "tutorials",
+                  "api-reference-index",
+                  "newsletter"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "X API",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": [
+                  "x-api/introduction",
                   {
-                    "group": "Overview",
+                    "group": "Getting started",
                     "pages": [
-                      "en/x-api/introduction",
-                      {
-                        "group": "Getting started",
-                        "pages": [
-                          "en/x-api/getting-started/about-x-api",
-                          "en/x-api/getting-started/getting-access",
-                          "en/x-api/getting-started/make-your-first-request",
-                          "en/x-api/getting-started/important-resources"
-                        ]
-                      },
-                      {
-                        "group": "Tools and libraries",
-                        "pages": [
-                          "en/x-api/tools-and-libraries/overview",
-                          "en/x-api/tools-and-libraries/sdks"
-                        ]
-                      },
-                      {
-                        "group": "Migration guide",
-                        "pages": [
-                          "en/x-api/migrate/overview",
-                          "en/x-api/migrate/data-format-migration",
-                          "en/x-api/migrate/x-api-endpoint-map"
-                        ]
-                      },
-                      "en/x-api/what-to-build",
-                      {
-                        "group": "Fundamentals",
-                        "pages": [
-                          "en/x-api/fundamentals/data-dictionary",
-                          "en/x-api/fundamentals/fields",
-                          "en/x-api/fundamentals/expansions",
-                          "en/x-api/fundamentals/post-annotations",
-                          "en/x-api/fundamentals/metrics",
-                          "en/x-api/fundamentals/conversation-id",
-                          "en/x-api/fundamentals/pagination",
-                          "en/x-api/fundamentals/versioning",
-                          "en/x-api/fundamentals/consistency",
-                          "en/x-api/fundamentals/rate-limits",
-                          "en/x-api/fundamentals/post-cap",
-                          "en/x-api/fundamentals/edit-posts",
-                          "en/x-api/fundamentals/response-codes-and-errors"
-                        ]
-                      }
+                      "x-api/getting-started/about-x-api",
+                      "x-api/getting-started/getting-access",
+                      "x-api/getting-started/make-your-first-request",
+                      "x-api/getting-started/important-resources"
                     ]
                   },
                   {
-                    "group": "Posts",
+                    "group": "Tools and libraries",
                     "pages": [
-                      {
-                        "group": "Search",
-                        "pages": [
-                          "en/x-api/posts/search/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              {
-                                "group": "Quickstart",
-                                "pages": [
-                                  "en/x-api/posts/search/quickstart/recent-search",
-                                  "en/x-api/posts/search/quickstart/full-archive-search"
-                                ]
-                              },
-                              {
-                                "group": "Integration guide",
-                                "pages": [
-                                  "en/x-api/posts/search/integrate/overview",
-                                  "en/x-api/posts/search/integrate/build-a-query",
-                                  "en/x-api/posts/search/integrate/paginate"
-                                ]
-                              }
-                            ]
-                          },
-                          "en/x-api/posts/search-all-posts",
-                          "en/x-api/posts/search-recent-posts"
-                        ]
-                      },
-                      {
-                        "group": "Post Counts",
-                        "pages": [
-                          "en/x-api/posts/counts/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              {
-                                "group": "Quickstart",
-                                "pages": [
-                                  "en/x-api/posts/counts/quickstart/recent-tweet-counts",
-                                  "en/x-api/posts/counts/quickstart/full-archive-tweet-counts"
-                                ]
-                              },
-                              {
-                                "group": "Integration guide",
-                                "pages": [
-                                  "en/x-api/posts/counts/integrate/overview",
-                                  "en/x-api/posts/counts/integrate/build-a-query"
-                                ]
-                              }
-                            ]
-                          },
-                          "en/x-api/posts/get-count-of-all-posts",
-                          "en/x-api/posts/get-count-of-recent-posts"
-                        ]
-                      },
-                      {
-                        "group": "Filtered Stream",
-                        "pages": [
-                          "en/x-api/posts/filtered-stream/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "en/x-api/posts/filtered-stream/quickstart",
-                              {
-                                "group": "Integration guide",
-                                "pages": [
-                                  "en/x-api/posts/filtered-stream/integrate/build-a-rule",
-                                  "en/x-api/posts/filtered-stream/integrate/consuming-streaming-data",
-                                  "en/x-api/posts/filtered-stream/integrate/handling-disconnections",
-                                  "en/x-api/posts/filtered-stream/integrate/handling-high-volume-capacity",
-                                  "en/x-api/posts/filtered-stream/integrate/matching-returned-tweets",
-                                  "en/x-api/posts/filtered-stream/integrate/recovery-and-redundancy-features"
-                                ]
-                              }
-                            ]
-                          },
-                          "en/x-api/stream/stream-filtered-posts",
-                          "en/x-api/stream/get-stream-rules",
-                          "en/x-api/stream/get-stream-rule-counts",
-                          "en/x-api/stream/update-stream-rules"
-                        ]
-                      },
-                      {
-                        "group": "Timelines",
-                        "pages": [
-                          "en/x-api/posts/timelines/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              {
-                                "group": "Quickstart",
-                                "pages": [
-                                  "en/x-api/posts/timelines/quickstart/reverse-chron-quickstart",
-                                  "en/x-api/posts/timelines/quickstart/user-mention-quickstart"
-                                ]
-                              },
-                              "en/x-api/posts/timelines/integrate"
-                            ]
-                          },
-                          "en/x-api/users/get-posts",
-                          "en/x-api/users/get-mentions",
-                          "en/x-api/users/get-timeline"
-                        ]
-                      },
-                      {
-                        "group": "Post Lookup",
-                        "pages": [
-                          "en/x-api/posts/lookup/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "en/x-api/posts/lookup/quickstart",
-                              "en/x-api/posts/lookup/integrate"
-                            ]
-                          },
-                          "en/x-api/posts/get-posts-by-ids",
-                          "en/x-api/posts/get-post-by-id"
-                        ]
-                      },
-                      {
-                        "group": "Bookmarks",
-                        "pages": [
-                          "en/x-api/posts/bookmarks/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              {
-                                "group": "Quickstart",
-                                "pages": [
-                                  "en/x-api/posts/bookmarks/quickstart/bookmarks-lookup",
-                                  "en/x-api/posts/bookmarks/quickstart/manage-bookmarks"
-                                ]
-                              },
-                              "en/x-api/posts/bookmarks/integrate"
-                            ]
-                          },
-                          {
-                            "group": "Bookmark Folders",
-                            "pages": [
-                              "en/x-api/users/get-bookmark-folders",
-                              "en/x-api/bookmarks/get-bookmarks-by-folder-id"
-                            ]
-                          },
-                          "en/x-api/users/get-bookmarks",
-                          "en/x-api/users/create-bookmark",
-                          "en/x-api/users/delete-bookmark"
-                        ]
-                      },
-                      {
-                        "group": "Manage Posts",
-                        "pages": [
-                          "en/x-api/posts/manage-tweets/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "en/x-api/posts/manage-tweets/quickstart",
-                              "en/x-api/posts/manage-tweets/integrate"
-                            ]
-                          },
-                          "en/x-api/posts/create-post",
-                          "en/x-api/posts/delete-post"
-                        ]
-                      },
-                      {
-                        "group": "Reposts",
-                        "pages": [
-                          "en/x-api/posts/retweets/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              {
-                                "group": "Quickstart",
-                                "pages": [
-                                  "en/x-api/posts/retweets/quickstart/retweets-lookup",
-                                  "en/x-api/posts/retweets/quickstart/manage-retweets",
-                                  "en/x-api/posts/retweets/quickstart/retweets-of-me"
-                                ]
-                              },
-                              "en/x-api/posts/retweets/integrate"
-                            ]
-                          },
-                          "en/x-api/posts/get-reposted-by",
-                          "en/x-api/users/repost-post",
-                          "en/x-api/users/unrepost-post",
-                          "en/x-api/posts/get-reposts",
-                          "en/x-api/users/get-reposts-of-me"
-                        ]
-                      },
-                      {
-                        "group": "Quotes",
-                        "pages": [
-                          "en/x-api/posts/quote-tweets/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "en/x-api/posts/quote-tweets/quickstart"
-                            ]
-                          },
-                          "en/x-api/posts/get-quoted-posts"
-                        ]
-                      },
-                      {
-                        "group": "Hide replies",
-                        "pages": [
-                          "en/x-api/posts/hide-replies/introduction",
-                          "en/x-api/posts/hide-replies/apps",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "en/x-api/posts/hide-replies/quickstart",
-                              {
-                                "group": "Integration guide",
-                                "pages": [
-                                  "en/x-api/posts/hide-replies/integrate/manage-replies-by-topic",
-                                  "en/x-api/posts/hide-replies/integrate/manage-replies-in-realtime"
-                                ]
-                              }
-                            ]
-                          },
-                          "en/x-api/posts/hide-reply"
-                        ]
-                      }
+                      "x-api/tools-and-libraries/overview",
+                      "x-api/tools-and-libraries/sdks"
                     ]
                   },
                   {
-                    "group": "Users",
+                    "group": "Migration guide",
                     "pages": [
-                      {
-                        "group": "User Lookup",
-                        "pages": [
-                          "en/x-api/users/lookup/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              {
-                                "group": "Quickstart",
-                                "pages": [
-                                  "en/x-api/users/lookup/quickstart/user-lookup",
-                                  "en/x-api/users/lookup/quickstart/authenticated-lookup"
-                                ]
-                              },
-                              "en/x-api/users/lookup/integrate"
-                            ]
-                          },
-                          "en/x-api/users/get-user-by-id",
-                          "en/x-api/users/get-users-by-ids",
-                          "en/x-api/users/get-users-by-usernames",
-                          "en/x-api/users/get-user-by-username",
-                          "en/x-api/users/get-my-user"
-                        ]
-                      },
-                      {
-                        "group": "Search",
-                        "pages": [
-                          "en/x-api/users/search/introduction",
-                          "en/x-api/users/search-users"
-                        ]
-                      },
-                      {
-                        "group": "Follows",
-                        "pages": [
-                          "en/x-api/users/follows/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "en/x-api/users/follows/quickstart"
-                            ]
-                          },
-                          "en/x-api/users/get-followers",
-                          "en/x-api/users/get-following",
-                          "en/x-api/users/follow-user",
-                          "en/x-api/users/unfollow-user"
-                        ]
-                      },
-                      {
-                        "group": "Mutes",
-                        "pages": [
-                          "en/x-api/users/mutes/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              {
-                                "group": "Quickstart",
-                                "pages": [
-                                  "en/x-api/users/mutes/quickstart/manage-mutes-quickstart",
-                                  "en/x-api/users/mutes/quickstart/mutes-lookup"
-                                ]
-                              },
-                              "en/x-api/users/mutes/integrate"
-                            ]
-                          },
-                          "en/x-api/users/mute-user",
-                          "en/x-api/users/unmute-user",
-                          "en/x-api/users/get-muting"
-                        ]
-                      },
-                      {
-                        "group": "Blocks",
-                        "pages": [
-                          "en/x-api/users/blocks/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "en/x-api/users/blocks/quickstart",
-                              "en/x-api/users/blocks/integrate"
-                            ]
-                          },
-                          "en/x-api/users/get-blocking"
-                        ]
-                      }
+                      "x-api/migrate/overview",
+                      "x-api/migrate/data-format-migration",
+                      "x-api/migrate/x-api-endpoint-map"
                     ]
                   },
+                  "x-api/what-to-build",
                   {
-                    "group": "Direct Messages",
+                    "group": "Fundamentals",
                     "pages": [
-                      {
-                        "group": "Manage",
-                        "pages": [
-                          "en/x-api/direct-messages/manage/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "en/x-api/direct-messages/manage/quickstart",
-                              "en/x-api/direct-messages/manage/integrate"
-                            ]
-                          },
-                          "en/x-api/direct-messages/create-dm-conversation",
-                          "en/x-api/direct-messages/delete-dm-event",
-                          "en/x-api/direct-messages/create-dm-message-by-participant-id",
-                          "en/x-api/direct-messages/create-dm-message-by-conversation-id"
-                        ]
-                      },
-                      {
-                        "group": "Lookup",
-                        "pages": [
-                          "en/x-api/direct-messages/lookup/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "en/x-api/direct-messages/lookup/quickstart",
-                              "en/x-api/direct-messages/lookup/integrate"
-                            ]
-                          },
-                          "en/x-api/direct-messages/get-dm-events-for-a-dm-conversation",
-                          "en/x-api/direct-messages/get-dm-events-for-a-dm-conversation-1",
-                          "en/x-api/direct-messages/get-dm-events",
-                          "en/x-api/direct-messages/get-dm-event-by-id"
-                        ]
-                      },
-                      {
-                        "group": "Blocks",
-                        "pages": [
-                          "en/x-api/direct-messages/blocks/introduction",
-                          "en/x-api/users/block-dms",
-                          "en/x-api/users/unblock-dms"
-                        ]
-                      }
+                      "x-api/fundamentals/data-dictionary",
+                      "x-api/fundamentals/fields",
+                      "x-api/fundamentals/expansions",
+                      "x-api/fundamentals/post-annotations",
+                      "x-api/fundamentals/metrics",
+                      "x-api/fundamentals/conversation-id",
+                      "x-api/fundamentals/pagination",
+                      "x-api/fundamentals/versioning",
+                      "x-api/fundamentals/consistency",
+                      "x-api/fundamentals/rate-limits",
+                      "x-api/fundamentals/post-cap",
+                      "x-api/fundamentals/edit-posts",
+                      "x-api/fundamentals/response-codes-and-errors"
                     ]
-                  },
+                  }
+                ]
+              },
+              {
+                "group": "Posts",
+                "pages": [
                   {
-                    "group": "Likes",
+                    "group": "Search",
                     "pages": [
-                      "en/x-api/posts/likes/introduction",
+                      "x-api/posts/search/introduction",
                       {
                         "group": "Guides",
                         "pages": [
                           {
                             "group": "Quickstart",
                             "pages": [
-                              "en/x-api/posts/likes/quickstart/likes-lookup",
-                              "en/x-api/posts/likes/quickstart/manage-likes"
+                              "x-api/posts/search/quickstart/recent-search",
+                              "x-api/posts/search/quickstart/full-archive-search"
+                            ]
+                          },
+                          {
+                            "group": "Integration guide",
+                            "pages": [
+                              "x-api/posts/search/integrate/overview",
+                              "x-api/posts/search/integrate/build-a-query",
+                              "x-api/posts/search/integrate/paginate"
                             ]
                           }
                         ]
                       },
-                      "en/x-api/users/get-liked-posts",
-                      "en/x-api/posts/get-liking-users",
-                      "en/x-api/users/like-post",
-                      "en/x-api/users/unlike-post"
+                      "x-api/posts/search-all-posts",
+                      "x-api/posts/search-recent-posts"
                     ]
                   },
                   {
-                    "group": "Lists",
+                    "group": "Post Counts",
                     "pages": [
-                      {
-                        "group": "Lookup Lists",
-                        "pages": [
-                          "en/x-api/lists/list-lookup/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "en/x-api/lists/list-lookup/quickstart",
-                              "en/x-api/lists/list-lookup/integrate"
-                            ]
-                          },
-                          "en/x-api/lists/get-list-by-id",
-                          "en/x-api/users/get-followed-lists",
-                          "en/x-api/users/get-owned-lists"
-                        ]
-                      },
-                      {
-                        "group": "Lookup List Posts",
-                        "pages": [
-                          "en/x-api/lists/list-tweets/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "en/x-api/lists/list-tweets/quickstart",
-                              "en/x-api/lists/list-tweets/integrate"
-                            ]
-                          },
-                          "en/x-api/lists/get-list-posts"
-                        ]
-                      },
-                      {
-                        "group": "Manage Lists",
-                        "pages": [
-                          "en/x-api/lists/manage-lists/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "en/x-api/lists/manage-lists/quickstart",
-                              "en/x-api/lists/manage-lists/integrate"
-                            ]
-                          },
-                          "en/x-api/lists/create-list",
-                          "en/x-api/lists/update-list",
-                          "en/x-api/lists/delete-list",
-                          "en/x-api/users/follow-list",
-                          "en/x-api/users/unfollow-list"
-                        ]
-                      },
-                      {
-                        "group": "List Members",
-                        "pages": [
-                          "en/x-api/lists/list-members/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              {
-                                "group": "Quickstart",
-                                "pages": [
-                                  "en/x-api/lists/list-members/quickstart/overview",
-                                  "en/x-api/lists/list-members/quickstart/list-members-lookup",
-                                  "en/x-api/lists/list-members/quickstart/manage-list-members"
-                                ]
-                              },
-                              "en/x-api/lists/list-members/integrate"
-                            ]
-                          },
-                          {
-                            "group": "Manage",
-                            "pages": [
-                              "en/x-api/lists/add-list-member",
-                              "en/x-api/lists/remove-list-member"
-                            ]
-                          },
-                          {
-                            "group": "Lookup",
-                            "pages": [
-                              "en/x-api/users/get-list-memberships",
-                              "en/x-api/lists/get-list-followers",
-                              "en/x-api/lists/get-list-members"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "group": "Pinned Lists",
-                        "pages": [
-                          "en/x-api/lists/pinned-lists/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              {
-                                "group": "Quickstart",
-                                "pages": [
-                                  "en/x-api/lists/pinned-lists/quickstart/overview",
-                                  "en/x-api/lists/pinned-lists/quickstart/pinned-list-lookup",
-                                  "en/x-api/lists/pinned-lists/quickstart/manage-pinned-lists"
-                                ]
-                              },
-                              "en/x-api/lists/pinned-lists/integrate"
-                            ]
-                          },
-                          "en/x-api/users/get-pinned-lists",
-                          "en/x-api/users/pin-list",
-                          "en/x-api/users/unpin-list"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "group": "Spaces",
-                    "pages": [
-                      "en/x-api/spaces/introduction",
-                      {
-                        "group": "Spaces Lookup",
-                        "pages": [
-                          "en/x-api/spaces/lookup/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "en/x-api/spaces/lookup/quickstart"
-                            ]
-                          },
-                          "en/x-api/spaces/get-spaces-by-ids",
-                          "en/x-api/spaces/get-spaces-by-creator-ids",
-                          "en/x-api/spaces/get-space-by-id",
-                          "en/x-api/spaces/get-space-posts",
-                          "en/x-api/spaces/get-space-ticket-buyers"
-                        ]
-                      },
-                      {
-                        "group": "Search Spaces",
-                        "pages": [
-                          "en/x-api/spaces/search/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "en/x-api/spaces/search/quickstart"
-                            ]
-                          },
-                          "en/x-api/spaces/search-spaces"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "group": "Communities",
-                    "pages": [
-                      {
-                        "group": "Communities Lookup",
-                        "pages": [
-                          "en/x-api/communities/lookup/introduction",
-                          "en/x-api/communities/get-community-by-id"
-                        ]
-                      },
-                      {
-                        "group": "Search Communities",
-                        "pages": [
-                          "en/x-api/communities/search/introduction",
-                          "en/x-api/communities/search-communities"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "group": "Community Notes",
-                    "pages": [
-                      "en/x-api/community-notes/introduction",
-                      "en/x-api/community-notes/quickstart",
-                      "en/x-api/community-notes/search-for-posts-eligible-for-community-notes",
-                      "en/x-api/community-notes/search-for-community-notes-written",
-                      "en/x-api/community-notes/create-a-community-note",
-                      "en/x-api/community-notes/delete-a-community-note"
-                    ]
-                  },
-                  {
-                    "group": "Trends",
-                    "pages": [
-                      {
-                        "group": "Trends",
-                        "pages": [
-                          "en/x-api/trends/trends-by-woeid/introduction",
-                          "en/x-api/trends/get-trends-by-woeid"
-                        ]
-                      },
-                      {
-                        "group": "Personalized Trends",
-                        "pages": [
-                          "en/x-api/trends/personalized-trends/introduction",
-                          "en/x-api/trends/get-personalized-trends"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "group": "Media",
-                    "pages": [
-                      "en/x-api/media/introduction",
-                      {
-                        "group": "Upload",
-                        "pages": [
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "en/x-api/media/quickstart/best-practices",
-                              "en/x-api/media/quickstart/media-upload-chunked"
-                            ]
-                          },
-                          "en/x-api/media/upload-media",
-                          "en/x-api/media/initialize-media-upload",
-                          "en/x-api/media/append-media-upload",
-                          "en/x-api/media/finalize-media-upload",
-                          "en/x-api/media/get-media-upload-status"
-                        ]
-                      },
-                      {
-                        "group": "Metadata",
-                        "pages": [
-                          "en/x-api/media/create-media-metadata",
-                          "en/x-api/media/create-media-subtitles",
-                          "en/x-api/media/delete-media-subtitles"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "group": "Usage",
-                    "pages": [
-                      "en/x-api/usage/introduction",
-                      "en/x-api/usage/get-usage"
-                    ]
-                  },
-                  {
-                    "group": "Compliance",
-                    "pages": [
-                      {
-                        "group": "Batch Compliance",
-                        "pages": [
-                          "en/x-api/compliance/batch-compliance/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "en/x-api/compliance/batch-compliance/quickstart",
-                              "en/x-api/compliance/batch-compliance/integrate"
-                            ]
-                          },
-                          "en/x-api/compliance/get-compliance-jobs",
-                          "en/x-api/compliance/create-compliance-job",
-                          "en/x-api/compliance/get-compliance-job-by-id"
-                        ]
-                      },
-                      {
-                        "group": "Compliance streams",
-                        "pages": [
-                          "en/x-api/compliance/streams/introduction",
-                          "en/x-api/stream/stream-likes-compliance-data",
-                          "en/x-api/stream/stream-posts-compliance-data",
-                          "en/x-api/stream/stream-users-compliance-data"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "group": "Enterprise v2",
-                    "pages": [
-                      {
-                        "group": "Engagement Metrics",
-                        "pages": [
-                          "en/x-api/posts/get-post-analytics",
-                          "en/x-api/media/get-media-analytics"
-                        ]
-                      },
-                      {
-                        "group": "Account Activity",
-                        "pages": [
-                          "en/x-api/account-activity/introduction",
-                          {
-                            "group": "Migration guide",
-                            "pages": [
-                              "en/x-api/account-activity/migrate/overview"
-                            ]
-                          },
-                          "en/x-api/account-activity/validate-subscription",
-                          "en/x-api/account-activity/delete-subscription",
-                          "en/x-api/account-activity/get-subscription-count",
-                          "en/x-api/account-activity/get-subscriptions",
-                          "en/x-api/account-activity/create-replay-job",
-                          "en/x-api/account-activity/create-subscription"
-                        ]
-                      },
-                      {
-                        "group": "Webhooks",
-                        "pages": [
-                          "en/x-api/webhooks/introduction",
-                          "en/x-api/webhooks/create-webhook",
-                          "en/x-api/webhooks/delete-webhook",
-                          "en/x-api/webhooks/get-webhook",
-                          "en/x-api/webhooks/validate-webhook"
-                        ]
-                      },
-                      {
-                        "group": "Volume Streams",
-                        "pages": [
-                          "en/x-api/posts/volume-streams/introduction",
-                          "en/x-api/stream/stream-all-posts",
-                          "en/x-api/stream/stream-english-posts",
-                          "en/x-api/stream/stream-japanese-posts",
-                          "en/x-api/stream/stream-korean-posts",
-                          "en/x-api/stream/stream-portuguese-posts",
-                          "en/x-api/stream/stream-sampled-posts",
-                          "en/x-api/stream/stream-10-sampled-posts"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "group": "Likes Streams",
-                    "pages": [
-                      "en/x-api/stream/stream-all-likes",
-                      "en/x-api/stream/stream-sampled-likes"
-                    ]
-                  },
-                  {
-                    "group": "GNIP 2.0",
-                    "pages": [
-                      {
-                        "group": "Fundamentals",
-                        "pages": [
-                          "en/x-api/enterprise-gnip-2.0/fundamentals/overview",
-                          "en/x-api/enterprise-gnip-2.0/fundamentals/data-dictionary",
-                          "en/x-api/enterprise-gnip-2.0/fundamentals/data-enrichments",
-                          "en/x-api/enterprise-gnip-2.0/fundamentals/rules-filtering",
-                          "en/x-api/enterprise-gnip-2.0/fundamentals/rate-limits",
-                          "en/x-api/enterprise-gnip-2.0/fundamentals/edit-tweets"
-                        ]
-                      },
-                      "en/x-api/enterprise-gnip-2.0/enterprise-gnip",
-                      "en/x-api/enterprise-gnip-2.0/powertrack-api",
-                      "en/x-api/enterprise-gnip-2.0/fundamentals/decahose-api",
-                      "en/x-api/enterprise-gnip-2.0/fundamentals/account-activity",
-                      "en/x-api/enterprise-gnip-2.0/fundamentals/search-api",
-                      "en/x-api/enterprise-gnip-2.0/fundamentals/engagement-api",
-                      "en/x-api/enterprise-gnip-2.0/fundamentals/firehouse",
-                      "en/x-api/enterprise-gnip-2.0/fundamentals/usage"
-                    ]
-                  }
-                ]
-              },
-              {
-                "tab": "X Ads API",
-                "groups": [
-                  {
-                    "group": "X Ads API",
-                    "pages": [
-                      "en/x-ads-api/introduction",
-                      {
-                        "group": "Getting started",
-                        "pages": [
-                          "en/x-ads-api/getting-started/step-by-step-guide",
-                          "en/x-ads-api/getting-started/increasing-access"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "group": "Fundamentals",
-                    "pages": [
-                      "en/x-ads-api/fundamentals/hierarchy-and-terminology",
-                      "en/x-ads-api/fundamentals/accessing-ads-accounts",
-                      "en/x-ads-api/fundamentals/making-authenticated-requests",
-                      "en/x-ads-api/fundamentals/error-codes-and-responses",
-                      "en/x-ads-api/fundamentals/rate-limiting",
-                      "en/x-ads-api/fundamentals/pagination",
-                      "en/x-ads-api/fundamentals/sorting",
-                      "en/x-ads-api/fundamentals/versioning",
-                      "en/x-ads-api/fundamentals/timezones",
-                      "en/x-ads-api/fundamentals/currency",
-                      "en/x-ads-api/fundamentals/sandbox"
-                    ]
-                  },
-                  {
-                    "group": "Resources",
-                    "pages": [
-                      "en/x-ads-api/tools-and-libraries",
-                      "en/x-ads-api/analytics",
-                      "en/x-ads-api/audiences",
-                      "en/x-ads-api/campaign-management",
-                      "en/x-ads-api/catalog-management",
-                      "en/x-ads-api/creatives"
-                    ]
-                  },
-                  {
-                    "group": "Measurement",
-                    "pages": [
-                      "en/x-ads-api/measurement/mobile-conversions",
-                      "en/x-ads-api/measurement/web-conversions",
-                      "en/x-ads-api/measurement/ab-testing"
-                    ]
-                  }
-                ]
-              },
-              {
-                "tab": "Tutorials",
-                "groups": [
-                  {
-                    "group": "Tutorials",
-                    "pages": [
-                      "en/tutorials/explore-a-users-posts",
-                      "en/tutorials/postman-getting-started",
-                      "en/tutorials/getting-historical-posts-using-the-full-archive-search-endpoint"
-                    ]
-                  }
-                ]
-              },
-              {
-                "tab": "Use Cases",
-                "groups": [
-                  {
-                    "group": "Build for businesses",
-                    "pages": [
-                      "en/use-cases/build-for-business",
-                      "en/use-cases/build-for-consumers",
-                      "en/use-cases/do-research",
-                      "en/use-cases/teach-and-learn",
-                      "en/use-cases/build-for-good",
-                      "en/use-cases/build-for-fun"
-                    ]
-                  }
-                ]
-              },
-              {
-                "tab": "Success Stories",
-                "groups": [
-                  {
-                    "group": "Success Stories",
-                    "pages": [
-                      "en/success-stories"
-                    ]
-                  }
-                ]
-              },
-              {
-                "tab": "Status",
-                "groups": [
-                  {
-                    "group": "Status",
-                    "pages": [
-                      "en/status",
-                      "en/incidents"
-                    ]
-                  }
-                ]
-              },
-              {
-                "tab": "Changelog",
-                "groups": [
-                  {
-                    "group": "Changelog",
-                    "pages": [
-                      "en/changelog"
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "global": {
-          "anchors": [
-            {
-              "anchor": "Developer Portal",
-              "href": "https://developer.x.com/en/portal/petition/essential/basic-info",
-              "icon": "circle-play"
-            },
-            {
-              "anchor": "Forums",
-              "href": "https://devcommunity.x.com",
-              "icon": "messages"
-            },
-            {
-              "anchor": "GitHub",
-              "href": "https://github.com/xdevplatform",
-              "icon": "github"
-            }
-          ]
-        },
-        "language": "en"
-      },
-      {
-        "versions": [
-          {
-            "version": "English",
-            "tabs": [
-              {
-                "tab": "Home",
-                "groups": [
-                  {
-                    "group": "Getting Started",
-                    "pages": [
-                      "fr/overview"
-                    ]
-                  },
-                  {
-                    "group": "Fundamentals",
-                    "pages": [
-                      "fr/fundamentals/developer-apps",
-                      "fr/fundamentals/projects",
-                      "fr/fundamentals/developer-portal",
-                      {
-                        "group": "Authentication",
-                        "icon": "key",
-                        "pages": [
-                          "fr/fundamentals/authentication/overview",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "fr/fundamentals/authentication/guides/log-in-with-x",
-                              "fr/fundamentals/authentication/guides/authentication-best-practices",
-                              "fr/fundamentals/authentication/guides/tls",
-                              "fr/fundamentals/authentication/guides/v2-authentication-mapping"
-                            ]
-                          },
-                          {
-                            "group": "OAuth 1.0a",
-                            "pages": [
-                              "fr/fundamentals/authentication/oauth-1-0a/api-key-and-secret",
-                              "fr/fundamentals/authentication/oauth-1-0a/obtaining-user-access-tokens",
-                              "fr/fundamentals/authentication/oauth-1-0a/authorizing-a-request",
-                              "fr/fundamentals/authentication/oauth-1-0a/oauth-echo",
-                              "fr/fundamentals/authentication/oauth-1-0a/pin-based-oauth",
-                              "fr/fundamentals/authentication/oauth-1-0a/creating-a-signature",
-                              "fr/fundamentals/authentication/oauth-1-0a/percent-encoding-parameters"
-                            ]
-                          },
-                          {
-                            "group": "OAuth 2.0",
-                            "pages": [
-                              "fr/fundamentals/authentication/oauth-2-0/overview",
-                              "fr/fundamentals/authentication/oauth-2-0/application-only",
-                              "fr/fundamentals/authentication/oauth-2-0/bearer-tokens",
-                              "fr/fundamentals/authentication/oauth-2-0/authorization-code",
-                              "fr/fundamentals/authentication/oauth-2-0/user-access-token"
-                            ]
-                          },
-                          "fr/fundamentals/authentication/basic-auth",
-                          "fr/fundamentals/authentication/faq",
-                          "fr/fundamentals/authentication/api-reference"
-                        ]
-                      },
-                      "fr/fundamentals/counting-characters",
-                      "fr/fundamentals/rate-limits",
-                      "fr/fundamentals/x-ids",
-                      "fr/fundamentals/security"
-                    ]
-                  },
-                  {
-                    "group": "Partners & Customers",
-                    "pages": [
-                      "fr/enterprise/partner-directory",
-                      "fr/enterprise/customer-directory",
-                      {
-                        "group": "Request Access",
-                        "pages": [
-                          "fr/enterprise/forms/enterprise-api-interest",
-                          "fr/enterprise/forms/government-end-user-request"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "group": "Resources",
-                    "pages": [
-                      "fr/tools-and-libraries",
-                      "fr/tutorials",
-                      "fr/api-reference-index",
-                      "fr/newsletter"
-                    ]
-                  }
-                ]
-              },
-              {
-                "tab": "X API",
-                "groups": [
-                  {
-                    "group": "Overview",
-                    "pages": [
-                      "fr/x-api/introduction",
-                      {
-                        "group": "Getting started",
-                        "pages": [
-                          "fr/x-api/getting-started/about-x-api",
-                          "fr/x-api/getting-started/getting-access",
-                          "fr/x-api/getting-started/make-your-first-request",
-                          "fr/x-api/getting-started/important-resources"
-                        ]
-                      },
-                      {
-                        "group": "Tools and libraries",
-                        "pages": [
-                          "fr/x-api/tools-and-libraries/overview",
-                          "fr/x-api/tools-and-libraries/sdks"
-                        ]
-                      },
-                      {
-                        "group": "Migration guide",
-                        "pages": [
-                          "fr/x-api/migrate/overview",
-                          "fr/x-api/migrate/data-format-migration",
-                          "fr/x-api/migrate/x-api-endpoint-map"
-                        ]
-                      },
-                      "fr/x-api/what-to-build",
-                      {
-                        "group": "Fundamentals",
-                        "pages": [
-                          "fr/x-api/fundamentals/data-dictionary",
-                          "fr/x-api/fundamentals/fields",
-                          "fr/x-api/fundamentals/expansions",
-                          "fr/x-api/fundamentals/post-annotations",
-                          "fr/x-api/fundamentals/metrics",
-                          "fr/x-api/fundamentals/conversation-id",
-                          "fr/x-api/fundamentals/pagination",
-                          "fr/x-api/fundamentals/versioning",
-                          "fr/x-api/fundamentals/consistency",
-                          "fr/x-api/fundamentals/rate-limits",
-                          "fr/x-api/fundamentals/post-cap",
-                          "fr/x-api/fundamentals/edit-posts",
-                          "fr/x-api/fundamentals/response-codes-and-errors"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "group": "Posts",
-                    "pages": [
-                      {
-                        "group": "Search",
-                        "pages": [
-                          "fr/x-api/posts/search/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              {
-                                "group": "Quickstart",
-                                "pages": [
-                                  "fr/x-api/posts/search/quickstart/recent-search",
-                                  "fr/x-api/posts/search/quickstart/full-archive-search"
-                                ]
-                              },
-                              {
-                                "group": "Integration guide",
-                                "pages": [
-                                  "fr/x-api/posts/search/integrate/overview",
-                                  "fr/x-api/posts/search/integrate/build-a-query",
-                                  "fr/x-api/posts/search/integrate/paginate"
-                                ]
-                              }
-                            ]
-                          },
-                          "fr/x-api/posts/search-all-posts",
-                          "fr/x-api/posts/search-recent-posts"
-                        ]
-                      },
-                      {
-                        "group": "Post Counts",
-                        "pages": [
-                          "fr/x-api/posts/counts/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              {
-                                "group": "Quickstart",
-                                "pages": [
-                                  "fr/x-api/posts/counts/quickstart/recent-tweet-counts",
-                                  "fr/x-api/posts/counts/quickstart/full-archive-tweet-counts"
-                                ]
-                              },
-                              {
-                                "group": "Integration guide",
-                                "pages": [
-                                  "fr/x-api/posts/counts/integrate/overview",
-                                  "fr/x-api/posts/counts/integrate/build-a-query"
-                                ]
-                              }
-                            ]
-                          },
-                          "fr/x-api/posts/get-count-of-all-posts",
-                          "fr/x-api/posts/get-count-of-recent-posts"
-                        ]
-                      },
-                      {
-                        "group": "Filtered Stream",
-                        "pages": [
-                          "fr/x-api/posts/filtered-stream/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "fr/x-api/posts/filtered-stream/quickstart",
-                              {
-                                "group": "Integration guide",
-                                "pages": [
-                                  "fr/x-api/posts/filtered-stream/integrate/build-a-rule",
-                                  "fr/x-api/posts/filtered-stream/integrate/consuming-streaming-data",
-                                  "fr/x-api/posts/filtered-stream/integrate/handling-disconnections",
-                                  "fr/x-api/posts/filtered-stream/integrate/handling-high-volume-capacity",
-                                  "fr/x-api/posts/filtered-stream/integrate/matching-returned-tweets",
-                                  "fr/x-api/posts/filtered-stream/integrate/recovery-and-redundancy-features"
-                                ]
-                              }
-                            ]
-                          },
-                          "fr/x-api/stream/stream-filtered-posts",
-                          "fr/x-api/stream/get-stream-rules",
-                          "fr/x-api/stream/get-stream-rule-counts",
-                          "fr/x-api/stream/update-stream-rules"
-                        ]
-                      },
-                      {
-                        "group": "Timelines",
-                        "pages": [
-                          "fr/x-api/posts/timelines/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              {
-                                "group": "Quickstart",
-                                "pages": [
-                                  "fr/x-api/posts/timelines/quickstart/reverse-chron-quickstart",
-                                  "fr/x-api/posts/timelines/quickstart/user-mention-quickstart"
-                                ]
-                              },
-                              "fr/x-api/posts/timelines/integrate"
-                            ]
-                          },
-                          "fr/x-api/users/get-posts",
-                          "fr/x-api/users/get-mentions",
-                          "fr/x-api/users/get-timeline"
-                        ]
-                      },
-                      {
-                        "group": "Post Lookup",
-                        "pages": [
-                          "fr/x-api/posts/lookup/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "fr/x-api/posts/lookup/quickstart",
-                              "fr/x-api/posts/lookup/integrate"
-                            ]
-                          },
-                          "fr/x-api/posts/get-posts-by-ids",
-                          "fr/x-api/posts/get-post-by-id"
-                        ]
-                      },
-                      {
-                        "group": "Bookmarks",
-                        "pages": [
-                          "fr/x-api/posts/bookmarks/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              {
-                                "group": "Quickstart",
-                                "pages": [
-                                  "fr/x-api/posts/bookmarks/quickstart/bookmarks-lookup",
-                                  "fr/x-api/posts/bookmarks/quickstart/manage-bookmarks"
-                                ]
-                              },
-                              "fr/x-api/posts/bookmarks/integrate"
-                            ]
-                          },
-                          {
-                            "group": "Bookmark Folders",
-                            "pages": [
-                              "fr/x-api/users/get-bookmark-folders",
-                              "fr/x-api/bookmarks/get-bookmarks-by-folder-id"
-                            ]
-                          },
-                          "fr/x-api/users/get-bookmarks",
-                          "fr/x-api/users/create-bookmark",
-                          "fr/x-api/users/delete-bookmark"
-                        ]
-                      },
-                      {
-                        "group": "Manage Posts",
-                        "pages": [
-                          "fr/x-api/posts/manage-tweets/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "fr/x-api/posts/manage-tweets/quickstart",
-                              "fr/x-api/posts/manage-tweets/integrate"
-                            ]
-                          },
-                          "fr/x-api/posts/create-post",
-                          "fr/x-api/posts/delete-post"
-                        ]
-                      },
-                      {
-                        "group": "Reposts",
-                        "pages": [
-                          "fr/x-api/posts/retweets/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              {
-                                "group": "Quickstart",
-                                "pages": [
-                                  "fr/x-api/posts/retweets/quickstart/retweets-lookup",
-                                  "fr/x-api/posts/retweets/quickstart/manage-retweets",
-                                  "fr/x-api/posts/retweets/quickstart/retweets-of-me"
-                                ]
-                              },
-                              "fr/x-api/posts/retweets/integrate"
-                            ]
-                          },
-                          "fr/x-api/posts/get-reposted-by",
-                          "fr/x-api/users/repost-post",
-                          "fr/x-api/users/unrepost-post",
-                          "fr/x-api/posts/get-reposts",
-                          "fr/x-api/users/get-reposts-of-me"
-                        ]
-                      },
-                      {
-                        "group": "Quotes",
-                        "pages": [
-                          "fr/x-api/posts/quote-tweets/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "fr/x-api/posts/quote-tweets/quickstart"
-                            ]
-                          },
-                          "fr/x-api/posts/get-quoted-posts"
-                        ]
-                      },
-                      {
-                        "group": "Hide replies",
-                        "pages": [
-                          "fr/x-api/posts/hide-replies/introduction",
-                          "fr/x-api/posts/hide-replies/apps",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "fr/x-api/posts/hide-replies/quickstart",
-                              {
-                                "group": "Integration guide",
-                                "pages": [
-                                  "fr/x-api/posts/hide-replies/integrate/manage-replies-by-topic",
-                                  "fr/x-api/posts/hide-replies/integrate/manage-replies-in-realtime"
-                                ]
-                              }
-                            ]
-                          },
-                          "fr/x-api/posts/hide-reply"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "group": "Users",
-                    "pages": [
-                      {
-                        "group": "User Lookup",
-                        "pages": [
-                          "fr/x-api/users/lookup/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              {
-                                "group": "Quickstart",
-                                "pages": [
-                                  "fr/x-api/users/lookup/quickstart/user-lookup",
-                                  "fr/x-api/users/lookup/quickstart/authenticated-lookup"
-                                ]
-                              },
-                              "fr/x-api/users/lookup/integrate"
-                            ]
-                          },
-                          "fr/x-api/users/get-user-by-id",
-                          "fr/x-api/users/get-users-by-ids",
-                          "fr/x-api/users/get-users-by-usernames",
-                          "fr/x-api/users/get-user-by-username",
-                          "fr/x-api/users/get-my-user"
-                        ]
-                      },
-                      {
-                        "group": "Search",
-                        "pages": [
-                          "fr/x-api/users/search/introduction",
-                          "fr/x-api/users/search-users"
-                        ]
-                      },
-                      {
-                        "group": "Follows",
-                        "pages": [
-                          "fr/x-api/users/follows/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "fr/x-api/users/follows/quickstart"
-                            ]
-                          },
-                          "fr/x-api/users/get-followers",
-                          "fr/x-api/users/get-following",
-                          "fr/x-api/users/follow-user",
-                          "fr/x-api/users/unfollow-user"
-                        ]
-                      },
-                      {
-                        "group": "Mutes",
-                        "pages": [
-                          "fr/x-api/users/mutes/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              {
-                                "group": "Quickstart",
-                                "pages": [
-                                  "fr/x-api/users/mutes/quickstart/manage-mutes-quickstart",
-                                  "fr/x-api/users/mutes/quickstart/mutes-lookup"
-                                ]
-                              },
-                              "fr/x-api/users/mutes/integrate"
-                            ]
-                          },
-                          "fr/x-api/users/mute-user",
-                          "fr/x-api/users/unmute-user",
-                          "fr/x-api/users/get-muting"
-                        ]
-                      },
-                      {
-                        "group": "Blocks",
-                        "pages": [
-                          "fr/x-api/users/blocks/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "fr/x-api/users/blocks/quickstart",
-                              "fr/x-api/users/blocks/integrate"
-                            ]
-                          },
-                          "fr/x-api/users/get-blocking"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "group": "Direct Messages",
-                    "pages": [
-                      {
-                        "group": "Manage",
-                        "pages": [
-                          "fr/x-api/direct-messages/manage/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "fr/x-api/direct-messages/manage/quickstart",
-                              "fr/x-api/direct-messages/manage/integrate"
-                            ]
-                          },
-                          "fr/x-api/direct-messages/create-dm-conversation",
-                          "fr/x-api/direct-messages/delete-dm-event",
-                          "fr/x-api/direct-messages/create-dm-message-by-participant-id",
-                          "fr/x-api/direct-messages/create-dm-message-by-conversation-id"
-                        ]
-                      },
-                      {
-                        "group": "Lookup",
-                        "pages": [
-                          "fr/x-api/direct-messages/lookup/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "fr/x-api/direct-messages/lookup/quickstart",
-                              "fr/x-api/direct-messages/lookup/integrate"
-                            ]
-                          },
-                          "fr/x-api/direct-messages/get-dm-events-for-a-dm-conversation",
-                          "fr/x-api/direct-messages/get-dm-events-for-a-dm-conversation-1",
-                          "fr/x-api/direct-messages/get-dm-events",
-                          "fr/x-api/direct-messages/get-dm-event-by-id"
-                        ]
-                      },
-                      {
-                        "group": "Blocks",
-                        "pages": [
-                          "fr/x-api/direct-messages/blocks/introduction",
-                          "fr/x-api/users/block-dms",
-                          "fr/x-api/users/unblock-dms"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "group": "Likes",
-                    "pages": [
-                      "fr/x-api/posts/likes/introduction",
+                      "x-api/posts/counts/introduction",
                       {
                         "group": "Guides",
                         "pages": [
                           {
                             "group": "Quickstart",
                             "pages": [
-                              "fr/x-api/posts/likes/quickstart/likes-lookup",
-                              "fr/x-api/posts/likes/quickstart/manage-likes"
+                              "x-api/posts/counts/quickstart/recent-tweet-counts",
+                              "x-api/posts/counts/quickstart/full-archive-tweet-counts"
+                            ]
+                          },
+                          {
+                            "group": "Integration guide",
+                            "pages": [
+                              "x-api/posts/counts/integrate/overview",
+                              "x-api/posts/counts/integrate/build-a-query"
                             ]
                           }
                         ]
                       },
-                      "fr/x-api/users/get-liked-posts",
-                      "fr/x-api/posts/get-liking-users",
-                      "fr/x-api/users/like-post",
-                      "fr/x-api/users/unlike-post"
+                      "x-api/posts/get-count-of-all-posts",
+                      "x-api/posts/get-count-of-recent-posts"
                     ]
                   },
                   {
-                    "group": "Lists",
+                    "group": "Filtered Stream",
                     "pages": [
+                      "x-api/posts/filtered-stream/introduction",
                       {
-                        "group": "Lookup Lists",
+                        "group": "Guides",
                         "pages": [
-                          "fr/x-api/lists/list-lookup/introduction",
+                          "x-api/posts/filtered-stream/quickstart",
                           {
-                            "group": "Guides",
+                            "group": "Integration guide",
                             "pages": [
-                              "fr/x-api/lists/list-lookup/quickstart",
-                              "fr/x-api/lists/list-lookup/integrate"
-                            ]
-                          },
-                          "fr/x-api/lists/get-list-by-id",
-                          "fr/x-api/users/get-followed-lists",
-                          "fr/x-api/users/get-owned-lists"
-                        ]
-                      },
-                      {
-                        "group": "Lookup List Posts",
-                        "pages": [
-                          "fr/x-api/lists/list-tweets/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "fr/x-api/lists/list-tweets/quickstart",
-                              "fr/x-api/lists/list-tweets/integrate"
-                            ]
-                          },
-                          "fr/x-api/lists/get-list-posts"
-                        ]
-                      },
-                      {
-                        "group": "Manage Lists",
-                        "pages": [
-                          "fr/x-api/lists/manage-lists/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "fr/x-api/lists/manage-lists/quickstart",
-                              "fr/x-api/lists/manage-lists/integrate"
-                            ]
-                          },
-                          "fr/x-api/lists/create-list",
-                          "fr/x-api/lists/update-list",
-                          "fr/x-api/lists/delete-list",
-                          "fr/x-api/users/follow-list",
-                          "fr/x-api/users/unfollow-list"
-                        ]
-                      },
-                      {
-                        "group": "List Members",
-                        "pages": [
-                          "fr/x-api/lists/list-members/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              {
-                                "group": "Quickstart",
-                                "pages": [
-                                  "fr/x-api/lists/list-members/quickstart/overview",
-                                  "fr/x-api/lists/list-members/quickstart/list-members-lookup",
-                                  "fr/x-api/lists/list-members/quickstart/manage-list-members"
-                                ]
-                              },
-                              "fr/x-api/lists/list-members/integrate"
-                            ]
-                          },
-                          {
-                            "group": "Manage",
-                            "pages": [
-                              "fr/x-api/lists/add-list-member",
-                              "fr/x-api/lists/remove-list-member"
-                            ]
-                          },
-                          {
-                            "group": "Lookup",
-                            "pages": [
-                              "fr/x-api/users/get-list-memberships",
-                              "fr/x-api/lists/get-list-followers",
-                              "fr/x-api/lists/get-list-members"
+                              "x-api/posts/filtered-stream/integrate/build-a-rule",
+                              "x-api/posts/filtered-stream/integrate/consuming-streaming-data",
+                              "x-api/posts/filtered-stream/integrate/handling-disconnections",
+                              "x-api/posts/filtered-stream/integrate/handling-high-volume-capacity",
+                              "x-api/posts/filtered-stream/integrate/matching-returned-tweets",
+                              "x-api/posts/filtered-stream/integrate/recovery-and-redundancy-features"
                             ]
                           }
                         ]
                       },
-                      {
-                        "group": "Pinned Lists",
-                        "pages": [
-                          "fr/x-api/lists/pinned-lists/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              {
-                                "group": "Quickstart",
-                                "pages": [
-                                  "fr/x-api/lists/pinned-lists/quickstart/overview",
-                                  "fr/x-api/lists/pinned-lists/quickstart/pinned-list-lookup",
-                                  "fr/x-api/lists/pinned-lists/quickstart/manage-pinned-lists"
-                                ]
-                              },
-                              "fr/x-api/lists/pinned-lists/integrate"
-                            ]
-                          },
-                          "fr/x-api/users/get-pinned-lists",
-                          "fr/x-api/users/pin-list",
-                          "fr/x-api/users/unpin-list"
-                        ]
-                      }
+                      "x-api/stream/stream-filtered-posts",
+                      "x-api/stream/get-stream-rules",
+                      "x-api/stream/get-stream-rule-counts",
+                      "x-api/stream/update-stream-rules"
                     ]
                   },
                   {
-                    "group": "Spaces",
+                    "group": "Timelines",
                     "pages": [
-                      "fr/x-api/spaces/introduction",
+                      "x-api/posts/timelines/introduction",
                       {
-                        "group": "Spaces Lookup",
+                        "group": "Guides",
                         "pages": [
-                          "fr/x-api/spaces/lookup/introduction",
                           {
-                            "group": "Guides",
+                            "group": "Quickstart",
                             "pages": [
-                              "fr/x-api/spaces/lookup/quickstart"
+                              "x-api/posts/timelines/quickstart/reverse-chron-quickstart",
+                              "x-api/posts/timelines/quickstart/user-mention-quickstart"
                             ]
                           },
-                          "fr/x-api/spaces/get-spaces-by-ids",
-                          "fr/x-api/spaces/get-spaces-by-creator-ids",
-                          "fr/x-api/spaces/get-space-by-id",
-                          "fr/x-api/spaces/get-space-posts",
-                          "fr/x-api/spaces/get-space-ticket-buyers"
+                          "x-api/posts/timelines/integrate"
+                        ]
+                      },
+                      "x-api/users/get-posts",
+                      "x-api/users/get-mentions",
+                      "x-api/users/get-timeline"
+                    ]
+                  },
+                  {
+                    "group": "Post Lookup",
+                    "pages": [
+                      "x-api/posts/lookup/introduction",
+                      {
+                        "group": "Guides",
+                        "pages": [
+                          "x-api/posts/lookup/quickstart",
+                          "x-api/posts/lookup/integrate"
+                        ]
+                      },
+                      "x-api/posts/get-posts-by-ids",
+                      "x-api/posts/get-post-by-id"
+                    ]
+                  },
+                  {
+                    "group": "Bookmarks",
+                    "pages": [
+                      "x-api/posts/bookmarks/introduction",
+                      {
+                        "group": "Guides",
+                        "pages": [
+                          {
+                            "group": "Quickstart",
+                            "pages": [
+                              "x-api/posts/bookmarks/quickstart/bookmarks-lookup",
+                              "x-api/posts/bookmarks/quickstart/manage-bookmarks"
+                            ]
+                          },
+                          "x-api/posts/bookmarks/integrate"
                         ]
                       },
                       {
-                        "group": "Search Spaces",
+                        "group": "Bookmark Folders",
                         "pages": [
-                          "fr/x-api/spaces/search/introduction",
+                          "x-api/users/get-bookmark-folders",
+                          "x-api/bookmarks/get-bookmarks-by-folder-id"
+                        ]
+                      },
+                      "x-api/users/get-bookmarks",
+                      "x-api/users/create-bookmark",
+                      "x-api/users/delete-bookmark"
+                    ]
+                  },
+                  {
+                    "group": "Manage Posts",
+                    "pages": [
+                      "x-api/posts/manage-tweets/introduction",
+                      {
+                        "group": "Guides",
+                        "pages": [
+                          "x-api/posts/manage-tweets/quickstart",
+                          "x-api/posts/manage-tweets/integrate"
+                        ]
+                      },
+                      "x-api/posts/create-post",
+                      "x-api/posts/delete-post"
+                    ]
+                  },
+                  {
+                    "group": "Reposts",
+                    "pages": [
+                      "x-api/posts/retweets/introduction",
+                      {
+                        "group": "Guides",
+                        "pages": [
                           {
-                            "group": "Guides",
+                            "group": "Quickstart",
                             "pages": [
-                              "fr/x-api/spaces/search/quickstart"
+                              "x-api/posts/retweets/quickstart/retweets-lookup",
+                              "x-api/posts/retweets/quickstart/manage-retweets",
+                              "x-api/posts/retweets/quickstart/retweets-of-me"
                             ]
                           },
-                          "fr/x-api/spaces/search-spaces"
+                          "x-api/posts/retweets/integrate"
+                        ]
+                      },
+                      "x-api/posts/get-reposted-by",
+                      "x-api/users/repost-post",
+                      "x-api/users/unrepost-post",
+                      "x-api/posts/get-reposts",
+                      "x-api/users/get-reposts-of-me"
+                    ]
+                  },
+                  {
+                    "group": "Quotes",
+                    "pages": [
+                      "x-api/posts/quote-tweets/introduction",
+                      {
+                        "group": "Guides",
+                        "pages": [
+                          "x-api/posts/quote-tweets/quickstart"
+                        ]
+                      },
+                      "x-api/posts/get-quoted-posts"
+                    ]
+                  },
+                  {
+                    "group": "Hide replies",
+                    "pages": [
+                      "x-api/posts/hide-replies/introduction",
+                      "x-api/posts/hide-replies/apps",
+                      {
+                        "group": "Guides",
+                        "pages": [
+                          "x-api/posts/hide-replies/quickstart",
+                          {
+                            "group": "Integration guide",
+                            "pages": [
+                              "x-api/posts/hide-replies/integrate/manage-replies-by-topic",
+                              "x-api/posts/hide-replies/integrate/manage-replies-in-realtime"
+                            ]
+                          }
+                        ]
+                      },
+                      "x-api/posts/hide-reply"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Users",
+                "pages": [
+                  {
+                    "group": "User Lookup",
+                    "pages": [
+                      "x-api/users/lookup/introduction",
+                      {
+                        "group": "Guides",
+                        "pages": [
+                          {
+                            "group": "Quickstart",
+                            "pages": [
+                              "x-api/users/lookup/quickstart/user-lookup",
+                              "x-api/users/lookup/quickstart/authenticated-lookup"
+                            ]
+                          },
+                          "x-api/users/lookup/integrate"
+                        ]
+                      },
+                      "x-api/users/get-user-by-id",
+                      "x-api/users/get-users-by-ids",
+                      "x-api/users/get-users-by-usernames",
+                      "x-api/users/get-user-by-username",
+                      "x-api/users/get-my-user"
+                    ]
+                  },
+                  {
+                    "group": "Search",
+                    "pages": [
+                      "x-api/users/search/introduction",
+                      "x-api/users/search-users"
+                    ]
+                  },
+                  {
+                    "group": "Follows",
+                    "pages": [
+                      "x-api/users/follows/introduction",
+                      {
+                        "group": "Guides",
+                        "pages": [
+                          "x-api/users/follows/quickstart"
+                        ]
+                      },
+                      "x-api/users/get-followers",
+                      "x-api/users/get-following",
+                      "x-api/users/follow-user",
+                      "x-api/users/unfollow-user"
+                    ]
+                  },
+                  {
+                    "group": "Mutes",
+                    "pages": [
+                      "x-api/users/mutes/introduction",
+                      {
+                        "group": "Guides",
+                        "pages": [
+                          {
+                            "group": "Quickstart",
+                            "pages": [
+                              "x-api/users/mutes/quickstart/manage-mutes-quickstart",
+                              "x-api/users/mutes/quickstart/mutes-lookup"
+                            ]
+                          },
+                          "x-api/users/mutes/integrate"
+                        ]
+                      },
+                      "x-api/users/mute-user",
+                      "x-api/users/unmute-user",
+                      "x-api/users/get-muting"
+                    ]
+                  },
+                  {
+                    "group": "Blocks",
+                    "pages": [
+                      "x-api/users/blocks/introduction",
+                      {
+                        "group": "Guides",
+                        "pages": [
+                          "x-api/users/blocks/quickstart",
+                          "x-api/users/blocks/integrate"
+                        ]
+                      },
+                      "x-api/users/get-blocking"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Direct Messages",
+                "pages": [
+                  {
+                    "group": "Manage",
+                    "pages": [
+                      "x-api/direct-messages/manage/introduction",
+                      {
+                        "group": "Guides",
+                        "pages": [
+                          "x-api/direct-messages/manage/quickstart",
+                          "x-api/direct-messages/manage/integrate"
+                        ]
+                      },
+                      "x-api/direct-messages/create-dm-conversation",
+                      "x-api/direct-messages/delete-dm-event",
+                      "x-api/direct-messages/create-dm-message-by-participant-id",
+                      "x-api/direct-messages/create-dm-message-by-conversation-id"
+                    ]
+                  },
+                  {
+                    "group": "Lookup",
+                    "pages": [
+                      "x-api/direct-messages/lookup/introduction",
+                      {
+                        "group": "Guides",
+                        "pages": [
+                          "x-api/direct-messages/lookup/quickstart",
+                          "x-api/direct-messages/lookup/integrate"
+                        ]
+                      },
+                      "x-api/direct-messages/get-dm-events-for-a-dm-conversation",
+                      "x-api/direct-messages/get-dm-events-for-a-dm-conversation-1",
+                      "x-api/direct-messages/get-dm-events",
+                      "x-api/direct-messages/get-dm-event-by-id"
+                    ]
+                  },
+                  {
+                    "group": "Blocks",
+                    "pages": [
+                      "x-api/direct-messages/blocks/introduction",
+                      "x-api/users/block-dms",
+                      "x-api/users/unblock-dms"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Likes",
+                "pages": [
+                  "x-api/posts/likes/introduction",
+                  {
+                    "group": "Guides",
+                    "pages": [
+                      {
+                        "group": "Quickstart",
+                        "pages": [
+                          "x-api/posts/likes/quickstart/likes-lookup",
+                          "x-api/posts/likes/quickstart/manage-likes"
                         ]
                       }
                     ]
                   },
+                  "x-api/users/get-liked-posts",
+                  "x-api/posts/get-liking-users",
+                  "x-api/users/like-post",
+                  "x-api/users/unlike-post"
+                ]
+              },
+              {
+                "group": "Lists",
+                "pages": [
                   {
-                    "group": "Communities",
+                    "group": "Lookup Lists",
                     "pages": [
+                      "x-api/lists/list-lookup/introduction",
                       {
-                        "group": "Communities Lookup",
+                        "group": "Guides",
                         "pages": [
-                          "fr/x-api/communities/lookup/introduction",
-                          "fr/x-api/communities/get-community-by-id"
+                          "x-api/lists/list-lookup/quickstart",
+                          "x-api/lists/list-lookup/integrate"
+                        ]
+                      },
+                      "x-api/lists/get-list-by-id",
+                      "x-api/users/get-followed-lists",
+                      "x-api/users/get-owned-lists"
+                    ]
+                  },
+                  {
+                    "group": "Lookup List Posts",
+                    "pages": [
+                      "x-api/lists/list-tweets/introduction",
+                      {
+                        "group": "Guides",
+                        "pages": [
+                          "x-api/lists/list-tweets/quickstart",
+                          "x-api/lists/list-tweets/integrate"
+                        ]
+                      },
+                      "x-api/lists/get-list-posts"
+                    ]
+                  },
+                  {
+                    "group": "Manage Lists",
+                    "pages": [
+                      "x-api/lists/manage-lists/introduction",
+                      {
+                        "group": "Guides",
+                        "pages": [
+                          "x-api/lists/manage-lists/quickstart",
+                          "x-api/lists/manage-lists/integrate"
+                        ]
+                      },
+                      "x-api/lists/create-list",
+                      "x-api/lists/update-list",
+                      "x-api/lists/delete-list",
+                      "x-api/users/follow-list",
+                      "x-api/users/unfollow-list"
+                    ]
+                  },
+                  {
+                    "group": "List Members",
+                    "pages": [
+                      "x-api/lists/list-members/introduction",
+                      {
+                        "group": "Guides",
+                        "pages": [
+                          {
+                            "group": "Quickstart",
+                            "pages": [
+                              "x-api/lists/list-members/quickstart/overview",
+                              "x-api/lists/list-members/quickstart/list-members-lookup",
+                              "x-api/lists/list-members/quickstart/manage-list-members"
+                            ]
+                          },
+                          "x-api/lists/list-members/integrate"
                         ]
                       },
                       {
-                        "group": "Search Communities",
+                        "group": "Manage",
                         "pages": [
-                          "fr/x-api/communities/search/introduction",
-                          "fr/x-api/communities/search-communities"
+                          "x-api/lists/add-list-member",
+                          "x-api/lists/remove-list-member"
+                        ]
+                      },
+                      {
+                        "group": "Lookup",
+                        "pages": [
+                          "x-api/users/get-list-memberships",
+                          "x-api/lists/get-list-followers",
+                          "x-api/lists/get-list-members"
                         ]
                       }
                     ]
                   },
                   {
-                    "group": "Community Notes",
+                    "group": "Pinned Lists",
                     "pages": [
-                      "fr/x-api/community-notes/introduction",
-                      "fr/x-api/community-notes/quickstart",
-                      "fr/x-api/community-notes/search-for-posts-eligible-for-community-notes",
-                      "fr/x-api/community-notes/search-for-community-notes-written",
-                      "fr/x-api/community-notes/create-a-community-note",
-                      "fr/x-api/community-notes/delete-a-community-note"
+                      "x-api/lists/pinned-lists/introduction",
+                      {
+                        "group": "Guides",
+                        "pages": [
+                          {
+                            "group": "Quickstart",
+                            "pages": [
+                              "x-api/lists/pinned-lists/quickstart/overview",
+                              "x-api/lists/pinned-lists/quickstart/pinned-list-lookup",
+                              "x-api/lists/pinned-lists/quickstart/manage-pinned-lists"
+                            ]
+                          },
+                          "x-api/lists/pinned-lists/integrate"
+                        ]
+                      },
+                      "x-api/users/get-pinned-lists",
+                      "x-api/users/pin-list",
+                      "x-api/users/unpin-list"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Spaces",
+                "pages": [
+                  "x-api/spaces/introduction",
+                  {
+                    "group": "Spaces Lookup",
+                    "pages": [
+                      "x-api/spaces/lookup/introduction",
+                      {
+                        "group": "Guides",
+                        "pages": [
+                          "x-api/spaces/lookup/quickstart"
+                        ]
+                      },
+                      "x-api/spaces/get-spaces-by-ids",
+                      "x-api/spaces/get-spaces-by-creator-ids",
+                      "x-api/spaces/get-space-by-id",
+                      "x-api/spaces/get-space-posts",
+                      "x-api/spaces/get-space-ticket-buyers"
                     ]
                   },
+                  {
+                    "group": "Search Spaces",
+                    "pages": [
+                      "x-api/spaces/search/introduction",
+                      {
+                        "group": "Guides",
+                        "pages": [
+                          "x-api/spaces/search/quickstart"
+                        ]
+                      },
+                      "x-api/spaces/search-spaces"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Communities",
+                "pages": [
+                  {
+                    "group": "Communities Lookup",
+                    "pages": [
+                      "x-api/communities/lookup/introduction",
+                      "x-api/communities/get-community-by-id"
+                    ]
+                  },
+                  {
+                    "group": "Search Communities",
+                    "pages": [
+                      "x-api/communities/search/introduction",
+                      "x-api/communities/search-communities"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Community Notes",
+                "pages": [
+                  "x-api/community-notes/introduction",
+                  "x-api/community-notes/quickstart",
+                  "x-api/community-notes/search-for-posts-eligible-for-community-notes",
+                  "x-api/community-notes/search-for-community-notes-written",
+                  "x-api/community-notes/create-a-community-note",
+                  "x-api/community-notes/delete-a-community-note"
+                ]  
+              },
+              {
+                "group": "Trends",
+                "pages": [
                   {
                     "group": "Trends",
                     "pages": [
-                      {
-                        "group": "Trends",
-                        "pages": [
-                          "fr/x-api/trends/trends-by-woeid/introduction",
-                          "fr/x-api/trends/get-trends-by-woeid"
-                        ]
-                      },
-                      {
-                        "group": "Personalized Trends",
-                        "pages": [
-                          "fr/x-api/trends/personalized-trends/introduction",
-                          "fr/x-api/trends/get-personalized-trends"
-                        ]
-                      }
+                      "x-api/trends/trends-by-woeid/introduction",
+                      "x-api/trends/get-trends-by-woeid"
                     ]
                   },
                   {
-                    "group": "Media",
+                    "group": "Personalized Trends",
                     "pages": [
-                      "fr/x-api/media/introduction",
-                      {
-                        "group": "Upload",
-                        "pages": [
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "fr/x-api/media/quickstart/best-practices",
-                              "fr/x-api/media/quickstart/media-upload-chunked"
-                            ]
-                          },
-                          "fr/x-api/media/upload-media",
-                          "fr/x-api/media/initialize-media-upload",
-                          "fr/x-api/media/append-media-upload",
-                          "fr/x-api/media/finalize-media-upload",
-                          "fr/x-api/media/get-media-upload-status"
-                        ]
-                      },
-                      {
-                        "group": "Metadata",
-                        "pages": [
-                          "fr/x-api/media/create-media-metadata",
-                          "fr/x-api/media/create-media-subtitles",
-                          "fr/x-api/media/delete-media-subtitles"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "group": "Usage",
-                    "pages": [
-                      "fr/x-api/usage/introduction",
-                      "fr/x-api/usage/get-usage"
-                    ]
-                  },
-                  {
-                    "group": "Compliance",
-                    "pages": [
-                      {
-                        "group": "Batch Compliance",
-                        "pages": [
-                          "fr/x-api/compliance/batch-compliance/introduction",
-                          {
-                            "group": "Guides",
-                            "pages": [
-                              "fr/x-api/compliance/batch-compliance/quickstart",
-                              "fr/x-api/compliance/batch-compliance/integrate"
-                            ]
-                          },
-                          "fr/x-api/compliance/get-compliance-jobs",
-                          "fr/x-api/compliance/create-compliance-job",
-                          "fr/x-api/compliance/get-compliance-job-by-id"
-                        ]
-                      },
-                      {
-                        "group": "Compliance streams",
-                        "pages": [
-                          "fr/x-api/compliance/streams/introduction",
-                          "fr/x-api/stream/stream-likes-compliance-data",
-                          "fr/x-api/stream/stream-posts-compliance-data",
-                          "fr/x-api/stream/stream-users-compliance-data"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "group": "Enterprise v2",
-                    "pages": [
-                      {
-                        "group": "Engagement Metrics",
-                        "pages": [
-                          "fr/x-api/posts/get-post-analytics",
-                          "fr/x-api/media/get-media-analytics"
-                        ]
-                      },
-                      {
-                        "group": "Account Activity",
-                        "pages": [
-                          "fr/x-api/account-activity/introduction",
-                          {
-                            "group": "Migration guide",
-                            "pages": [
-                              "fr/x-api/account-activity/migrate/overview"
-                            ]
-                          },
-                          "fr/x-api/account-activity/validate-subscription",
-                          "fr/x-api/account-activity/delete-subscription",
-                          "fr/x-api/account-activity/get-subscription-count",
-                          "fr/x-api/account-activity/get-subscriptions",
-                          "fr/x-api/account-activity/create-replay-job",
-                          "fr/x-api/account-activity/create-subscription"
-                        ]
-                      },
-                      {
-                        "group": "Webhooks",
-                        "pages": [
-                          "fr/x-api/webhooks/introduction",
-                          "fr/x-api/webhooks/create-webhook",
-                          "fr/x-api/webhooks/delete-webhook",
-                          "fr/x-api/webhooks/get-webhook",
-                          "fr/x-api/webhooks/validate-webhook"
-                        ]
-                      },
-                      {
-                        "group": "Volume Streams",
-                        "pages": [
-                          "fr/x-api/posts/volume-streams/introduction",
-                          "fr/x-api/stream/stream-all-posts",
-                          "fr/x-api/stream/stream-english-posts",
-                          "fr/x-api/stream/stream-japanese-posts",
-                          "fr/x-api/stream/stream-korean-posts",
-                          "fr/x-api/stream/stream-portuguese-posts",
-                          "fr/x-api/stream/stream-sampled-posts",
-                          "fr/x-api/stream/stream-10-sampled-posts"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "group": "Likes Streams",
-                    "pages": [
-                      "fr/x-api/stream/stream-all-likes",
-                      "fr/x-api/stream/stream-sampled-likes"
-                    ]
-                  },
-                  {
-                    "group": "GNIP 2.0",
-                    "pages": [
-                      {
-                        "group": "Fundamentals",
-                        "pages": [
-                          "fr/x-api/enterprise-gnip-2.0/fundamentals/overview",
-                          "fr/x-api/enterprise-gnip-2.0/fundamentals/data-dictionary",
-                          "fr/x-api/enterprise-gnip-2.0/fundamentals/data-enrichments",
-                          "fr/x-api/enterprise-gnip-2.0/fundamentals/rules-filtering",
-                          "fr/x-api/enterprise-gnip-2.0/fundamentals/rate-limits",
-                          "fr/x-api/enterprise-gnip-2.0/fundamentals/edit-tweets"
-                        ]
-                      },
-                      "fr/x-api/enterprise-gnip-2.0/enterprise-gnip",
-                      "fr/x-api/enterprise-gnip-2.0/powertrack-api",
-                      "fr/x-api/enterprise-gnip-2.0/fundamentals/decahose-api",
-                      "fr/x-api/enterprise-gnip-2.0/fundamentals/account-activity",
-                      "fr/x-api/enterprise-gnip-2.0/fundamentals/search-api",
-                      "fr/x-api/enterprise-gnip-2.0/fundamentals/engagement-api",
-                      "fr/x-api/enterprise-gnip-2.0/fundamentals/firehouse",
-                      "fr/x-api/enterprise-gnip-2.0/fundamentals/usage"
+                      "x-api/trends/personalized-trends/introduction",
+                      "x-api/trends/get-personalized-trends"
                     ]
                   }
                 ]
               },
               {
-                "tab": "X Ads API",
-                "groups": [
+                "group": "Media",
+                "pages": [
+                  "x-api/media/introduction",
                   {
-                    "group": "X Ads API",
+                    "group": "Upload",
                     "pages": [
-                      "fr/x-ads-api/introduction",
                       {
-                        "group": "Getting started",
+                        "group": "Guides",
                         "pages": [
-                          "fr/x-ads-api/getting-started/step-by-step-guide",
-                          "fr/x-ads-api/getting-started/increasing-access"
+                          "x-api/media/quickstart/best-practices",
+                          "x-api/media/quickstart/media-upload-chunked"
                         ]
-                      }
+                      },
+                      "x-api/media/upload-media",
+                      "x-api/media/initialize-media-upload",
+                      "x-api/media/append-media-upload",
+                      "x-api/media/finalize-media-upload",
+                      "x-api/media/get-media-upload-status"
                     ]
                   },
+                  {
+                    "group": "Metadata",
+                    "pages": [
+                      "x-api/media/create-media-metadata",
+                      "x-api/media/create-media-subtitles",
+                      "x-api/media/delete-media-subtitles"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Usage",
+                "pages": [
+                  "x-api/usage/introduction",
+                  "x-api/usage/get-usage"
+                ]
+              },
+              {
+                "group": "Compliance",
+                "pages": [
+                  {
+                    "group": "Batch Compliance",
+                    "pages": [
+                      "x-api/compliance/batch-compliance/introduction",
+                      {
+                        "group": "Guides",
+                        "pages": [
+                          "x-api/compliance/batch-compliance/quickstart",
+                          "x-api/compliance/batch-compliance/integrate"
+                        ]
+                      },
+                      "x-api/compliance/get-compliance-jobs",
+                      "x-api/compliance/create-compliance-job",
+                      "x-api/compliance/get-compliance-job-by-id"
+                    ]
+                  },
+                  {
+                    "group": "Compliance streams",
+                    "pages": [
+                      "x-api/compliance/streams/introduction",
+                      "x-api/stream/stream-likes-compliance-data",
+                      "x-api/stream/stream-posts-compliance-data",
+                      "x-api/stream/stream-users-compliance-data"
+                    ]
+                  }
+                
+                ]
+              },
+              {
+                "group": "Enterprise v2",
+                "pages": [
+              {
+                "group": "Engagement Metrics",
+                "pages": [
+                  "x-api/posts/get-post-analytics",
+                  "x-api/media/get-media-analytics"
+                ]
+              },
+              {
+                "group": "Account Activity",
+                "pages": [
+                  "x-api/account-activity/introduction",
+                  {
+                    "group": "Migration guide",
+                    "pages": [
+                       "x-api/account-activity/migrate/overview"  
+                    ]
+                  },
+                  "x-api/account-activity/validate-subscription",
+                  "x-api/account-activity/delete-subscription",
+                  "x-api/account-activity/get-subscription-count",
+                  "x-api/account-activity/get-subscriptions",
+                  "x-api/account-activity/create-replay-job",
+                  "x-api/account-activity/create-subscription"
+                ]
+              },
+              {
+                "group": "Webhooks",
+                  "pages": [
+                    "x-api/webhooks/introduction",
+                    "x-api/webhooks/create-webhook",
+                    "x-api/webhooks/delete-webhook",
+                    "x-api/webhooks/get-webhook",
+                    "x-api/webhooks/validate-webhook"
+                  ]
+              },
+              {
+                    "group": "Volume Streams",
+                    "pages": [
+                      "x-api/posts/volume-streams/introduction",
+                      "x-api/stream/stream-all-posts",
+                      "x-api/stream/stream-english-posts",
+                      "x-api/stream/stream-japanese-posts",
+                      "x-api/stream/stream-korean-posts",
+                      "x-api/stream/stream-portuguese-posts",
+                      "x-api/stream/stream-sampled-posts",
+                      "x-api/stream/stream-10-sampled-posts"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Likes Streams",
+                "pages": [
+                  "x-api/stream/stream-all-likes",
+                  "x-api/stream/stream-sampled-likes"
+                ]
+              },
+              {
+                "group": "GNIP 2.0",
+                "pages": [
                   {
                     "group": "Fundamentals",
                     "pages": [
-                      "fr/x-ads-api/fundamentals/hierarchy-and-terminology",
-                      "fr/x-ads-api/fundamentals/accessing-ads-accounts",
-                      "fr/x-ads-api/fundamentals/making-authenticated-requests",
-                      "fr/x-ads-api/fundamentals/error-codes-and-responses",
-                      "fr/x-ads-api/fundamentals/rate-limiting",
-                      "fr/x-ads-api/fundamentals/pagination",
-                      "fr/x-ads-api/fundamentals/sorting",
-                      "fr/x-ads-api/fundamentals/versioning",
-                      "fr/x-ads-api/fundamentals/timezones",
-                      "fr/x-ads-api/fundamentals/currency",
-                      "fr/x-ads-api/fundamentals/sandbox"
+                      "x-api/enterprise-gnip-2.0/fundamentals/overview",
+                      "x-api/enterprise-gnip-2.0/fundamentals/data-dictionary",
+                      "x-api/enterprise-gnip-2.0/fundamentals/data-enrichments",
+                      "x-api/enterprise-gnip-2.0/fundamentals/rules-filtering",
+                      "x-api/enterprise-gnip-2.0/fundamentals/rate-limits",
+                      "x-api/enterprise-gnip-2.0/fundamentals/edit-tweets"
                     ]
                   },
+                  "x-api/enterprise-gnip-2.0/enterprise-gnip",
+                  "x-api/enterprise-gnip-2.0/powertrack-api",
+                  "x-api/enterprise-gnip-2.0/fundamentals/decahose-api",
+                  "x-api/enterprise-gnip-2.0/fundamentals/account-activity",
+                  "x-api/enterprise-gnip-2.0/fundamentals/search-api",
+                  "x-api/enterprise-gnip-2.0/fundamentals/engagement-api",
+                  "x-api/enterprise-gnip-2.0/fundamentals/firehouse",
+                  "x-api/enterprise-gnip-2.0/fundamentals/usage"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "X Ads API",
+            "groups": [
+              {
+                "group": "X Ads API",
+                "pages": [
+                  "x-ads-api/introduction",
                   {
-                    "group": "Resources",
+                    "group": "Getting started",
                     "pages": [
-                      "fr/x-ads-api/tools-and-libraries",
-                      "fr/x-ads-api/analytics",
-                      "fr/x-ads-api/audiences",
-                      "fr/x-ads-api/campaign-management",
-                      "fr/x-ads-api/catalog-management",
-                      "fr/x-ads-api/creatives"
-                    ]
-                  },
-                  {
-                    "group": "Measurement",
-                    "pages": [
-                      "fr/x-ads-api/measurement/mobile-conversions",
-                      "fr/x-ads-api/measurement/web-conversions",
-                      "fr/x-ads-api/measurement/ab-testing"
+                      "x-ads-api/getting-started/step-by-step-guide",
+                      "x-ads-api/getting-started/increasing-access"
                     ]
                   }
                 ]
               },
               {
-                "tab": "Tutorials",
-                "groups": [
-                  {
-                    "group": "Tutorials",
-                    "pages": [
-                      "fr/tutorials/explore-a-users-posts",
-                      "fr/tutorials/postman-getting-started",
-                      "fr/tutorials/getting-historical-posts-using-the-full-archive-search-endpoint"
-                    ]
-                  }
+                "group": "Fundamentals",
+                "pages": [
+                  "x-ads-api/fundamentals/hierarchy-and-terminology",
+                  "x-ads-api/fundamentals/accessing-ads-accounts",
+                  "x-ads-api/fundamentals/making-authenticated-requests",
+                  "x-ads-api/fundamentals/error-codes-and-responses",
+                  "x-ads-api/fundamentals/rate-limiting",
+                  "x-ads-api/fundamentals/pagination",
+                  "x-ads-api/fundamentals/sorting",
+                  "x-ads-api/fundamentals/versioning",
+                  "x-ads-api/fundamentals/timezones",
+                  "x-ads-api/fundamentals/currency",
+                  "x-ads-api/fundamentals/sandbox"
                 ]
               },
               {
-                "tab": "Use Cases",
-                "groups": [
-                  {
-                    "group": "Build for businesses",
-                    "pages": [
-                      "fr/use-cases/build-for-business",
-                      "fr/use-cases/build-for-consumers",
-                      "fr/use-cases/do-research",
-                      "fr/use-cases/teach-and-learn",
-                      "fr/use-cases/build-for-good",
-                      "fr/use-cases/build-for-fun"
-                    ]
-                  }
+                "group": "Resources",
+                "pages": [
+                  "x-ads-api/tools-and-libraries",
+                  "x-ads-api/analytics",
+                  "x-ads-api/audiences",
+                  "x-ads-api/campaign-management",
+                  "x-ads-api/catalog-management",
+                  "x-ads-api/creatives"
                 ]
               },
               {
-                "tab": "Success Stories",
-                "groups": [
-                  {
-                    "group": "Success Stories",
-                    "pages": [
-                      "fr/success-stories"
-                    ]
-                  }
+                "group": "Measurement",
+                "pages": [
+                  "x-ads-api/measurement/mobile-conversions",
+                  "x-ads-api/measurement/web-conversions",
+                  "x-ads-api/measurement/ab-testing"
                 ]
-              },
+              }
+            ]
+          },
+          {
+            "tab": "Tutorials",
+            "groups": [
               {
-                "tab": "Status",
-                "groups": [
-                  {
-                    "group": "Status",
-                    "pages": [
-                      "fr/status",
-                      "fr/incidents"
-                    ]
-                  }
+                "group": "Tutorials",
+                "pages": [
+                  "tutorials/explore-a-users-posts",
+                  "tutorials/postman-getting-started",
+                  "tutorials/getting-historical-posts-using-the-full-archive-search-endpoint"
                 ]
-              },
+              }
+            ]
+          },
+          {
+            "tab": "Use Cases",
+            "groups": [
               {
-                "tab": "Changelog",
-                "groups": [
-                  {
-                    "group": "Changelog",
-                    "pages": [
-                      "fr/changelog"
-                    ]
-                  }
+                "group": "Build for businesses",
+                "pages": [
+                  "use-cases/build-for-business",
+                  "use-cases/build-for-consumers",
+                  "use-cases/do-research",
+                  "use-cases/teach-and-learn",
+                  "use-cases/build-for-good",
+                  "use-cases/build-for-fun"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Success Stories",
+            "groups": [
+              {
+                "group": "Success Stories",
+                "pages": [
+                  "success-stories"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Status",
+            "groups": [
+              {
+                "group": "Status",
+                "pages": [
+                  "status",
+                  "incidents"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Changelog",
+            "groups": [
+              {
+                "group": "Changelog",
+                "pages": [
+                  "changelog"
                 ]
               }
             ]
           }
-        ],
-        "global": {
-          "anchors": [
-            {
-              "anchor": "Developer Portal",
-              "href": "https://developer.x.com/en/portal/petition/essential/basic-info",
-              "icon": "circle-play"
-            },
-            {
-              "anchor": "Forums",
-              "href": "https://devcommunity.x.com",
-              "icon": "messages"
-            },
-            {
-              "anchor": "GitHub",
-              "href": "https://github.com/xdevplatform",
-              "icon": "github"
-            }
-          ]
-        },
-        "language": "fr"
+        ]
       }
-    ]
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Developer Portal",
+          "href": "https://developer.x.com/en/portal/petition/essential/basic-info",
+          "icon": "circle-play"
+        },
+        {
+          "anchor": "Forums",
+          "href": "https://devcommunity.x.com",
+          "icon": "messages"
+        },
+        {
+          "anchor": "GitHub",
+          "href": "https://github.com/xdevplatform",
+          "icon": "github"
+        }
+      ]
+    }
   },
   "logo": {
     "light": "/logo/light.svg",
