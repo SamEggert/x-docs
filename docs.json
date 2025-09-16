@@ -9,10 +9,7 @@
   },
   "favicon": "/favicon.png",
   "navigation": {
-    "versions": [
-      {
-        "version": "English",
-        "tabs": [
+    "tabs": [
           {
             "tab": "Home",
             "groups": [
@@ -798,7 +795,6 @@
                       "x-api/stream/stream-users-compliance-data"
                     ]
                   }
-                
                 ]
               },
               {
@@ -1004,8 +1000,7 @@
             ]
           }
         ]
-      }
-    ],
+    },
     "global": {
       "anchors": [
         {
