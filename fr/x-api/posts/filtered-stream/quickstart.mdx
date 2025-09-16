@@ -1,0 +1,203 @@
+---
+title: Guide de démarrage rapide
+sidebarTitle: Démarrage rapide
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+<div id="getting-started-with-the-filtered-stream-endpoints">
+  ## Prise en main des endpoints de flux filtré
+</div>
+
+Ce guide de démarrage rapide vous aidera à effectuer votre première requête vers le groupe d’endpoints de flux filtré à l’aide d’une requête cURL. cURL est un outil en ligne de commande qui permet d’effectuer des requêtes avec une configuration minimale.
+
+Si vous souhaitez voir des exemples de code dans différents langages, veuillez consulter notre dépôt GitHub [X API v2 sample code](https://github.com/xdevplatform/Twitter-API-v2-sample-code).
+
+<Note>
+  **Prérequis**
+
+  Pour suivre ce guide, vous devez disposer d’un ensemble de [keys and tokens](/fr/resources/fundamentals/authentication) pour authentifier votre requête. Vous pouvez générer ces keys and tokens en suivant ces étapes :
+
+  * [Sign up for a developer account](https://developer.x.com/en/apply-for-access) et obtenir l’approbation.
+  * Créez un [Project](/fr/resources/fundamentals/projects) et une [developer App](/fr/resources/fundamentals/developer-apps) associée dans le portail développeur.
+  * Accédez à la page “Keys and tokens” de votre App pour générer les identifiants requis. Veillez à conserver tous les identifiants dans un emplacement sécurisé.
+</Note>
+
+<div id="steps-to-build-a-filtered-stream-request-using-curl">
+  ### Étapes pour créer une requête de flux filtré avec cURL
+</div>
+
+**Première étape : Créer une règle**
+
+Les règles se composent d’un ou de plusieurs [opérateurs](/fr/x-api/posts/filtered-stream#building-rules-for-filtered-stream) combinés à l’aide de logique booléenne et de parenthèses pour définir quels Posts seront transmis à votre flux. Dans ce guide, nous filtrerons le flux pour trouver des Posts contenant à la fois le mot-clé « cat » et des images. Voici notre règle :
+
+```cat has:images
+```
+
+**Deuxième étape : Ajouter une étiquette à votre règle**
+
+Vous pouvez ajouter plusieurs règles simultanément à votre flux. Lorsque vous ouvrez votre connexion de streaming, les Posts correspondant à l’une de ces règles passeront par la même connexion. Pour savoir quel Post correspond à quelle règle, vous pouvez transmettre une étiquette avec votre requête de création de règle. Chaque Post correspondant à cette règle inclura alors un champ tag dans la charge utile du Post indiquant la règle correspondante. Pour cette règle, nous allons attribuer l’étiquette suivante :
+
+```cats with images
+```
+
+**Troisième étape : Ajouter votre règle au flux**
+
+Cet endpoint nécessite d’inclure un corps application/json dans la requête, contenant votre règle et son étiquette. Vous remarquerez également que nous avons inclus la valeur de la règle et l’étiquette dans un objet add puisque nous cherchons à ajouter cette règle au flux. Ce corps JSON ressemblera à ceci :
+
+```json
+{
+  "add": [
+    {
+      "value": "cat has:images",
+      "tag": "cats with images"
+    }
+  ]
+}
+```
+
+Maintenant que vous avez configuré ce corps JSON, vous pouvez l’ajouter à une requête cURL, qui ressemblera à ce qui suit. Cette requête n’est pas encore prête, veuillez donc attendre avant de la soumettre jusqu’à une étape ultérieure.
+
+```json
+curl -X POST 'https://api.x.com/2/tweets/search/stream/rules' \
+-H "Content-type: application/json" \
+-H "Authorization: Bearer $APP_ACCESS_TOKEN" -d \
+'{
+  "add": [
+    {"value": "cat has:images", "tag": "cats with images"}
+  ]
+}'`
+```
+
+**Quatrième étape : Authentifier votre requête**
+
+Étant donné que les endpoints des règles de flux filtré nécessitent l’[authentification OAuth 2.0 App-Only](/fr/resources/fundamentals/authentication#app-only-authentication-and-oauth-2-0-bearer-token), vous devez remplacer $APP_ACCESS_TOKEN dans la commande cURL de l’étape trois par le [App Access Token](/fr/resources/fundamentals/authentication#using-and-generating-an-app-only-bearer-token) généré lors des prérequis.
+
+**Cinquième étape : Ajouter votre règle au flux**
+
+Exécutez ensuite votre requête cURL pour ajouter la règle à votre flux. Copiez-collez la commande cURL dans votre interface en ligne de commande et appuyez sur « Return ».
+
+Si votre requête cURL aboutit, vous recevrez une réponse contenant des informations sur la value, le tag et l’id (identifiant unique de votre règle). Cette réponse ressemblera à ceci :
+
+```json
+{
+  "data": [
+    {
+      "value": "cat has:images",
+      "tag": "cats with images",
+      "id": "1273026480692322304"
+    }
+  ],
+  "meta": {
+    "sent": "2020-06-16T22:55:39.356Z",
+    "summary": {
+      "created": 1,
+      "not_created": 0,
+      "valid": 1,
+      "invalid": 0
+    }
+  }
+}
+```
+
+Vous pouvez vérifier que votre règle a bien été ajoutée en envoyant la requête GET suivante à l’endpoint des règles, en veillant de nouveau à remplacer $APP_ACCESS_TOKEN par votre jeton. Cette requête renverra la liste complète de toutes les règles ajoutées à votre flux.
+
+```bash
+curl -X GET 'https://api.x.com/2/tweets/search/stream/rules' \
+-H "Authorization: Bearer $APP_ACCESS_TOKEN"
+```
+
+Si votre requête cURL a réussi, vous devriez recevoir ce qui suit :
+
+```json
+{
+	"data": [{
+		"id": "1273028376882589696",
+		"value": "cat has:images",
+		"tag": "cats with images"
+	}],
+	"meta": {
+		"sent": "2020-06-16T23:14:06.498Z"
+	}
+}
+```
+
+**Sixième étape : Identifier et préciser les champs que vous souhaitez récupérer**
+
+Si vous vous connectez au flux après l’étape cinq, vous recevrez dans votre réponse les champs par défaut de l’[objet Post](/fr/x-api/fundamentals/data-dictionary#tweet) : id, text et edit_history_tweet_ids. Si vous souhaitez recevoir des champs supplémentaires au-delà de ceux-ci, vous devrez les spécifier dans votre requête à l’aide des paramètres [field](/fr/x-api/fundamentals/fields) et/ou [expansion](/fr/x-api/fundamentals/expansions).
+
+Pour cet exercice, nous allons demander trois ensembles de champs différents provenant d’objets distincts :
+
+1. Le champ supplémentaire tweet.created_at dans les objets Post principaux.
+2. Les champs par défaut de l’[objet user](/fr/x-api/fundamentals/data-dictionary#user) des auteurs associés pour les Posts retournés : id, name et username
+3. Le champ supplémentaire user.created_at dans les objets user associés.
+    
+
+Pour demander ces champs, vous devrez transmettre ce qui suit dans votre requête :
+
+|     |     |     |
+| :--- | :--- | :--- |
+| Key | Value | Returned fields |
+| tweet.fields | created_at | tweets.created_at |
+| expansions | author_id | includes.users.id, includes.users.name, includes.users.username |
+| user.fields | created_at | includes.users.created_at |
+
+Maintenant que vous le savez, vous pouvez assembler l’URL de votre requête pour vous connecter au flux, qui ressemblera à ceci :
+
+```bash
+https://api.x.com/2/tweets/search/stream?tweet.fields=created_at&expansions=author_id&user.fields=created_at
+```
+
+**Étape sept : connexion au flux et examen de la réponse**
+
+Maintenant que votre règle est en place et que vous avez précisé les champs que vous souhaitez recevoir, vous êtes prêt à vous connecter au flux, qui livrera des objets Post correspondant à la règle que vous avez soumise. Voici à quoi ressemble la commande cURL une fois que vous avez ajouté l’URL de l’étape six à votre requête :
+ 
+
+```bash
+curl -X GET -H "Authorization: Bearer $APP_ACCESS_TOKEN" "https://api.x.com/2/tweets/search/stream?tweet.fields=created_at&expansions=author_id&user.fields=created_at"
+```
+
+Encore une fois, cette requête doit être authentifiée à l’aide d’OAuth 2.0 App-Only. Assurez-vous donc de remplacer $APP_ACCESS_TOKEN par vos identifiants avant de la copier-coller dans votre outil de ligne de commande.
+
+Une fois connecté au flux filtré, vous commencerez à recevoir des Posts correspondant à vos règles au format JSON suivant :
+ 
+
+```json
+{
+  "data": [
+    {
+      "author_id": "2244994945",
+      "created_at": "2022-09-14T19:00:55.000Z",
+      "id": "1228393702244134912",
+      "edit_history_tweet_ids": ["1228393702244134912"],
+      "text": "What did the developer write in their Valentine’s card?\n  \nwhile(true) {\n    I = Love(You);  \n}"
+    },
+    {
+      "author_id": "2244994945",
+      "created_at": "2022-09-12T17:09:56.000Z",
+      "id": "1227640996038684673",
+       "edit_history_tweet_ids": ["1227640996038684673"],
+      "text": "Doctors: Googling stuff online does not make you a doctor\n\nDevelopers: https://t.co/mrju5ypPkb"
+    },
+    {
+      "author_id": "2244994945",
+      "created_at": "2022-09-27T20:26:41.000Z",
+      "id": "1199786642791452673",
+      "edit_history_tweet_ids": ["1199786642791452673"],
+      "text": "C#"
+    }
+  ],
+  "includes": {
+    "users": [
+      {
+        "created_at": "2013-12-14T04:35:55.000Z",
+        "id": "2244994945",
+        "name": "Twitter Dev",
+        "username": "TwitterDev"
+      }
+    ]
+  }
+}
+```
+
+Si vous souhaitez fermer votre connexion, vous pouvez appuyer sur Ctrl+C dans votre outil de ligne de commande sur Mac ou Windows pour interrompre la connexion, ou simplement fermer la fenêtre. 

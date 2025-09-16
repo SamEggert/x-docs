@@ -1,0 +1,129 @@
+---
+title: Projets
+icon: folder-open
+---
+
+<div id="introduction">
+  ## Introduction
+</div>
+
+Les projets vous permettent d’organiser votre travail en fonction de la manière dont vous comptez utiliser l’API X, afin de gérer efficacement votre accès à l’API et de suivre votre utilisation. Chaque projet peut contenir une ou plusieurs [applications](/fr/resources/fundamentals/developer-apps) selon votre niveau d’accès (décrit plus loin sur cette page). Vous utiliserez ces applications pour générer des informations d’[authentification](/fr/resources/fundamentals/authentication) telles que des [clés et secrets d’API](/fr/resources/fundamentals/authentication#api-key-and-secret), des [jetons d’accès](/fr/resources/fundamentals/authentication#obtaining-access-tokens-using-3-legged-oauth-flow) utilisateur et un [jeton d’accès d’application](/fr/resources/fundamentals/authentication#bearer-token-also-known-as-app-only).
+
+Bien que vous puissiez utiliser ces clés et jetons depuis n’importe quelle application pour accéder à l’API X ou à l’API X Ads (vous devez [demander un accès supplémentaire](/fr/x-ads-api/getting-started/step-by-step-guide) pour utiliser l’API Ads), vous devez utiliser des clés et jetons issus d’une application associée à un projet pour pouvoir utiliser les endpoints de la [X API v2](/fr/x-api/introduction).
+
+Si vous avez un compte développeur, vous pouvez consulter et gérer vos projets sur la page [Projects &amp; Apps](https://developer.x.com/en/portal/projects-and-apps) dans le portail développeur. [Inscrivez-vous](https://developer.x.com/en/portal/petition/essential/basic-info) si vous n’en avez pas déjà un.
+
+<div id="projects-and-x-api-access-levels">
+  ### Projets et niveaux d'accès à l'API X
+</div>
+
+À l&#39;heure actuelle, quatre niveaux d&#39;accès différents sont appliqués au niveau du projet :
+
+* Free
+* Basic
+* Pro
+* Enterprise
+
+Pour en savoir plus sur ce que propose chacun de ces niveaux d&#39;accès, veuillez consulter la page [about X API](/fr/x-api/getting-started/about-x-api).
+
+Vous ne pouvez avoir qu&#39;un seul projet avec l&#39;offre Free, Basic ou Pro.
+
+Voici quelques différences spécifiques aux projets :
+
+<div id="free">
+  #### Gratuit
+</div>
+
+Ce niveau d’accès est proposé à toute personne qui s’est [inscrite](https://developer.twitter.com/en/portal/petition/essential/basic-info) pour obtenir un compte développeur.
+
+Nombre d’applications dans ce projet : 1
+[Plafond de consommation de Tweets](/fr/x-api/fundamentals/post-cap) : 1 500 Tweets par mois
+
+Méthodes d’authentification :
+
+* [OAuth 2.0 avec PKCE](/fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-2)
+* Application seule
+
+<div id="basic">
+  #### Basic
+</div>
+
+Ce niveau d’accès est proposé à toute personne ayant souscrit à l’offre Basic via le portail développeur.
+
+Nombre d’applications dans ce projet : 2
+[Plafond de consommation de Tweets](/fr/x-api/fundamentals/post-cap) : 10 000 Tweets par mois
+Méthodes d’authentification :
+
+* [OAuth 2.0 avec PKCE](/fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-2)
+* [OAuth 1.0a](/fr/resources/fundamentals/authentication#oauth-1-0a-2)
+* Application uniquement
+
+<div id="pro">
+  #### Pro
+</div>
+
+Ce niveau d&#39;accès est disponible pour toute personne ayant souscrit l&#39;offre Pro via le portail développeur.
+
+Nombre d’applications dans ce projet : 3
+[Plafond de consommation de Tweets](/fr/x-api/fundamentals/post-cap) : 1 million de Tweets par mois
+
+Méthodes d’authentification :
+
+* [OAuth 2.0 avec PKCE](/fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-2)
+* [OAuth 1.0a](/fr/resources/fundamentals/authentication#oauth-1-0a-2)
+* App only
+
+<div id="enterprise">
+  #### Enterprise
+</div>
+
+Ce niveau d’accès est proposé à toute personne ayant demandé l’offre Enterprise, approuvée par notre équipe, et ayant signé un contrat mensuel à renouvellement automatique via un account manager X. [Postulez ici](https://docs.google.com/forms/d/e/1FAIpQLScO3bczKWO2jFHyVZJUSEGfdyfFaqt2MvmOfl_aJp0KxMqtDA/viewform).
+
+Nombre d’apps dans ce projet : 3+
+[Plafond de consommation de Tweets](/fr/x-api/fundamentals/post-cap) : 50+ millions de Tweets par mois
+
+Méthodes d’authentification :
+
+* [OAuth 2.0 avec PKCE](/fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-2)
+* [OAuth 1.0a](/fr/resources/fundamentals/authentication#oauth-1-0a-2)
+* App only
+
+<div id="tweet-caps-and-projects">
+  ### Plafonds de Tweets et Projets
+</div>
+
+Les plafonds de consommation de Tweets s’appliquent au niveau du Projet et limitent le volume de Tweets que vous pouvez récupérer depuis certains endpoints de l’API X v2 au cours d’un mois donné.
+
+En savoir plus sur les [plafonds de Tweets](/fr/x-api/fundamentals/post-cap).
+
+<div id="configuring-projects">
+  ### Configuration des projets
+</div>
+
+<div id="creating-a-project">
+  #### Création d’un projet
+</div>
+
+Pour créer un projet, cliquez sur « New Project » dans votre [tableau de bord](https://developer.twitter.com/en/portal/dashboard) ou sur la page [Projects &amp; Apps](https://developer.twitter.com/en/portal/projects-and-apps) du portail développeur. Cette option n’apparaît que si vous n’avez pas encore créé de projet. Il vous sera demandé de fournir un nom de projet, une description et un cas d’usage. Il vous sera également demandé de créer une nouvelle application ou de connecter une application autonome existante.
+
+<div id="creating-or-connecting-an-app-for-your-project">
+  #### Créer ou connecter une application à votre projet
+</div>
+
+Si votre projet n’inclut pas d’application, vous pouvez en ajouter une en cliquant sur le nom du projet dans le tableau de bord. À partir de là, vous pouvez soit créer une nouvelle application, soit sélectionner une application autonome existante à connecter à votre projet. C’est dans l’application que vous pouvez générer les clés et les jetons d’authentification mentionnés au début de ce guide.
+
+<div id="editing-a-project">
+  #### Modification d’un projet
+</div>
+
+Pour modifier un projet, cliquez sur le nom de votre projet depuis le tableau de bord ou la page Projets et applications dans le portail développeur. Vous verrez alors les détails de votre projet et pourrez sélectionner « Modifier » pour effectuer des changements.
+
+<div id="standalone-apps">
+  ### Applications autonomes
+</div>
+
+Les applications autonomes sont des applications qui existent en dehors de la structure de projet. Les identifiants d’authentification associés à ces applications autonomes peuvent permettre d’effectuer des requêtes réussies vers les API standard v1.1, premium v1.1, enterprise de X, ou vers l’API X Ads. Les applications autonomes échoueront lorsqu’elles tenteront d’envoyer des requêtes vers les points de terminaison de l’API X v2, à moins de les rattacher à un projet.
+
+Si vous avez créé une application avant août 2020, elle sera visible dans la section « Standalone Apps » du portail développeur sous [Projects &amp; Apps](https://developer.twitter.com/en/portal/projects-and-apps). Vous serez limité à dix applications au total, y compris celles rattachées à votre projet.
+
+Si vous faites partie d’un compte d’équipe, vous verrez les applications que vous possédez sous Standalone Apps. Si un membre de votre équipe possède une application faisant partie d’un projet, vous pourrez voir le nom de l’application et les informations sur son propriétaire, mais vous ne pourrez pas modifier ses paramètres, accéder à ses clés et jetons, ni régénérer ses clés et jetons. Contactez le propriétaire de l’application pour toute modification.

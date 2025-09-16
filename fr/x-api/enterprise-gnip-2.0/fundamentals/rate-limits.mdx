@@ -1,0 +1,43 @@
+---
+title: "Limites de taux : Enterprise"
+---
+
+<div id="overview">
+  ## Aperçu
+</div>
+
+Chaque jour, des dizaines de milliers de développeurs envoient des requêtes à l’API X. Pour gérer le volume considérable de ces requêtes, des limites sont imposées au nombre de requêtes pouvant être effectuées. Ces limites nous aident à fournir une API fiable et évolutive sur laquelle notre communauté de développeurs s’appuie.
+
+Le nombre maximal de requêtes autorisées est défini sur un intervalle de temps, c’est‑à‑dire une période ou fenêtre donnée. Si un endpoint a une limite de 900 requêtes/15 minutes, jusqu’à 900 requêtes peuvent être effectuées sur n’importe quel intervalle de 15 minutes. 
+
+<div id="enterprise-rate-limits-per-window">
+  ### Limites de débit Enterprise par fenêtre
+</div>
+
+| Produit | Endpoint | Limite de débit |
+| :--- | :--- | :--- |
+| PowerTrack API | Endpoint de streaming | 60 requêtes par minute |
+| Rules endpoint | 60 requêtes par minute agrégées sur tous les endpoints /rules |
+| Replay endpoint | 5 requêtes par 5 minutes |
+| Historical PowerTrack API |     | 60 jobs peuvent être créés par jour (UTC). |
+|     | 30 jobs peuvent être créés par heure. |
+|     | 2 jobs peuvent être estimés simultanément. |
+|     | 2 jobs peuvent être exécutés simultanément. |
+| Decahose API |     | 10 requêtes par minute |
+| Streaming likes API |     | 10 requêtes par minute |
+| Firehose API |     | 10 requêtes par minute |
+| Account Activity API | POST account_activity/webhooks | 15 requêtes par 15 minutes |
+| GET account_activity/webhooks | 15 requêtes par 15 minutes |
+| PUT account_activity/webhooks/:webhook_id | 15 requêtes par 15 minutes |
+| POST account_activity/webhooks/:webhook_id/subscriptions/all | 500 requêtes par 15 minutes |
+| GET account_activity/subscriptions/count | 15 requêtes par 15 minutes |
+| GET account_activity/webhooks/:webhook_id/subscriptions/all | 500 requêtes par 15 minutes |
+| GET account_activity/webhooks/:webhook_id/subscriptions/all/list | 50 requêtes par 15 minutes |
+| DELETE account_activity/webhooks/:webhook_id | 15 requêtes par 15 minutes |
+| DELETE /account_activity/webhooks/:webhook_id/subscriptions/:user_id/all.json | 500 requêtes par 15 minutes |
+| Replay | 5 requêtes par 15 minutes |
+| Search API |     | La limite par minute varie selon le contrat |
+|     | 20 requêtes par seconde agrégées soit sur les endpoints 30 day data et counts, soit sur les endpoints full-archive data et counts |
+| Engagement API |     | La limite par minute varie selon le contrat |
+| Compliance Firehose API |     | 10 requêtes par minute |
+| Usage API |     | 2 requêtes par minute |

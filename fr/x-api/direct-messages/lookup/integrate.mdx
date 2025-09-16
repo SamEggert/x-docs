@@ -1,0 +1,194 @@
+---
+title: Guide d’intégration
+sidebarTitle: Guide d’intégration
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+Les endpoints Direct Messages v2 introduisent les conversations et les événements de conversation comme objets centraux de l’API X et distinguent les conversations 1‑1 et de groupe. Les conversations 1‑1 comptent toujours deux, et seulement deux, participants, tandis que les conversations de groupe peuvent en compter deux ou plus, avec des appartenances susceptibles d’évoluer.   
+
+Cette page présente plusieurs outils et concepts clés dont vous devez tenir compte lors de l’intégration des endpoints de recherche Direct Messages dans votre système. Nous avons divisé la page en deux sections :
+
+* Concepts clés
+  * [Conversations Direct Message](#direct-message-conversations)
+  * [ID de conversation et d’événement partagés entre v1.1 et v2](#shared-conversation-and-event-ids)
+  * [Champs et expansions des événements Direct Message](#direct-message-event-fields-and-expansions)
+  * [Types d’événements de conversation](#conversation-event-types)
+  * [Authentification](#authentication)
+  * [Developer portal, Projects, and Apps](#developer-portal-projects-and-apps)
+  * [Limites de débit](#rate-limits)
+  * [Pagination](#pagination)
+* [Outils utiles](#helpful-tools)
+
+<div id="key-concepts">
+  ### Concepts clés
+</div>
+
+<div id="direct-message-conversations">
+  ### Conversations de Messages Privés
+</div>
+
+Tous les Messages Privés font partie d’une conversation de Messages Privés. Ces conversations peuvent être en tête‑à‑tête ou de groupe. Cette version fournit les endpoints essentiels pour créer des Messages Privés et récupérer les événements associés aux conversations de Messages Privés. Toutes les conversations possèdent un dm_conversation_id unique, et les événements qui composent une conversation ont chacun un dm_event_id unique.  
+
+Les endpoints de recherche de Messages Privés fournissent des méthodes pour récupérer les événements associés aux conversations. Ces endpoints GET sont utilisés pour récupérer les messages qui composent une conversation et, pour les conversations de groupe, permettent d’identifier qui a rejoint ou quitté ces conversations.
+
+Cette première version de la recherche de Messages Privés inclut trois méthodes GET :
+
+* **GET /2/dm_conversations/with/:participant_id/dm_events** - Récupère les événements de Messages Privés associés à une conversation en tête‑à‑tête. Le paramètre de chemin :participant_id est l’ID utilisateur numérique du compte en conversation avec l’utilisateur authentifié qui effectue cette requête.  
+
+* **GET /2/dm_conversations/:dm_conversation_id/dm_events** - Récupère les événements de Messages Privés associés à un ID de conversation spécifique, tel qu’indiqué par le paramètre de chemin :dm_conversation_id. Les IDs de conversations en tête‑à‑tête et de groupe sont pris en charge.  
+
+* **GET /2/dm_events** - Récupère les événements de Messages Privés associés à l’utilisateur authentifié, y compris les conversations en tête‑à‑tête et de groupe. Les événements datant jusqu’à 30 jours sont disponibles.  
+
+Tous ces endpoints GET prennent en charge la récupération de dm_events par type d’événement via le paramètre de requête event_types. Actuellement, trois types d’événements de conversation sont pris en charge :
+
+* **MessageCreate** - Créé lorsqu’un nouveau Message Privé est envoyé. Cet objet d’événement peut inclure l’heure et le texte du message, ainsi que l’ID du compte de l’expéditeur, et les IDs de la conversation et de l’événement. 
+
+* **ParticipantsJoin** - Créé lorsqu’un nouveau participant rejoint une conversation de groupe. Cet objet dm_event inclut l’ID du participant qui rejoint, ainsi que l’horodatage created_at et le sender_id de l’événement « invite ». 
+
+* **ParticipantsLeave** - Créé lorsqu’un participant quitte une conversation. Cet objet d’événement inclut l’ID du participant qui part, ainsi que l’heure de l’événement. 
+
+Pour plus d’informations, consultez les [références de l’API de recherche de Messages Privés](/fr/x-api/direct-messages/get-dm-events-for-a-dm-conversation).
+
+<div id="shared-conversation-and-event-ids-across-v11-and-v2">
+  ### Identifiants de conversation et d’événement partagés entre v1.1 et v2
+</div>
+
+Un point important à retenir est que les identifiants de conversation et d’événement sont communs aux versions v1.1 et v2 de la plateforme X. Cela signifie que les deux versions peuvent être utilisées conjointement. Par exemple, les endpoints Direct Messages v1.1 proposent des méthodes pour récupérer un événement unique et pour supprimer des événements, fonctionnalités qui ne sont pas encore disponibles avec v2. Étant donné que les identifiants sont partagés entre v1.1 et v2, vous pouvez effectuer des requêtes v1.1 à partir d’identifiants fournis par v2, ou en vous référant aux identifiants de conversation affichés dans les URL de conversation de l’application X.  
+
+<div id="direct-message-event-fields-and-expansions">
+  ### Champs et expansions des événements de Messages privés
+</div>
+
+L’API X v2 permet aux utilisateurs de sélectionner précisément les données qu’ils souhaitent récupérer depuis l’API à l’aide d’un ensemble d’outils appelés champs et expansions. Par exemple, les endpoints de recherche de Messages privés prennent en charge les champs dm_events suivants :
+
+* id, event_type et text sont les valeurs par défaut pour les événements MessageCreate.
+
+* id, event_type et participant_ids sont les valeurs par défaut pour les événements ParticipantsJoin et ParticipantsLeave.
+
+* dm_conversation_id et created_at sont disponibles pour tous les événements.
+
+* attachments et referenced_tweets sont disponibles pour les événements MessageCreate.
+
+* sender_id est disponible pour les événements MessageCreate et ParticipantsJoin.
+
+* participant_ids est disponible pour les événements ParticipantsJoin et ParticipantsLeave.
+
+De plus, les endpoints de recherche de Messages privés prennent en charge les [expansions](/fr/x-api/fundamentals/expansions) suivantes :
+
+* sender_id - Développe l’objet User associé à la personne qui a envoyé le message ou qui a invité quelqu’un à la conversation.
+
+* referenced_tweets.id - Développe l’objet Post si le texte du Message privé inclut un lien vers un Post.
+
+* attachments.media_keys - Développe l’objet Media si le Message privé inclut une pièce jointe média.
+
+* participant_ids - Développe l’objet User associé à la personne qui a rejoint ou quitté une conversation de groupe.
+
+Comme les expansions incluent des objets Posts, Users et Media, vous pouvez également utiliser les paramètres de requête tweet.fields, user.fields et media.fields. Consultez notre guide sur [l’utilisation des champs et des expansions](/fr/x-api/fundamentals/data-dictionary#how-to-use-fields-and-expansions) pour en savoir plus.
+
+<div id="conversation-event-types">
+  ### Types d’événements de conversation
+</div>
+
+Vous trouverez ci-dessous des objets JSON d’exemple pour les types d’événements de Messages privés : MessageCreate, ParticipantsJoin et ParticipantsLeave.
+
+Champs disponibles de l’objet dm_event : id, text, event_type, dm_conversation_id, created_at, sender_id, attachments, referenced_tweets, participant_ids. Consultez la section Fields and Expansion pour plus de détails sur la sélection de ces champs dans vos requêtes.
+
+Exemple d’événement MessageCreate :
+
+Avec tous les champs dm_event spécifiés, voici la réponse pour un simple Message privé textuel :
+
+`{
+    "text": "Hi everyone.",
+    "sender_id": "944480690",
+    "dm_conversation_id": "1578398451921985538",
+    "id": "1582838499983564806",
+    "event_type": "MessageCreate",
+    "created_at": "2022-10-19T20:58:00.000Z"
+}`
+
+Exemple d’événement ParticipantsJoin :
+
+Avec tous les champs dm_event spécifiés, voici la réponse pour l’arrivée d’un participant dans une conversation :
+
+`{
+    "participant_ids": [
+        "944480690"
+    ],
+    "sender_id": "17200003",
+    "dm_conversation_id": "1578398451921985538",
+    "id": "1582835469712138240",
+    "event_type": "ParticipantsJoin",
+    "created_at": "2022-10-19T20:45:58.000Z"
+}`
+
+Exemple d’événement ParticipantsLeave :
+
+Avec tous les champs dm_event spécifiés, voici la réponse pour le départ d’un participant d’une conversation :
+
+`{
+    "participant_ids": [
+        "944480690"
+    ],
+    "dm_conversation_id": "1578398451921985538",
+    "id": "1582838535115067392",
+    "event_type": "ParticipantsLeave",
+    "created_at": "2022-10-19T20:58:09.000Z"
+    }`
+
+<div id="authentication">
+  ### Authentification
+</div>
+
+Tous les endpoints de X API v2 exigent que vous authentifiiez vos requêtes avec un ensemble d’identifiants, également appelés clés et jetons. Tous les Messages privés sont confidentiels et nécessitent une autorisation utilisateur pour y accéder.
+
+Ces endpoints de Messages privés nécessitent l’utilisation de [OAuth 2.0 Authorization Flow with PKCE](/fr/x-api/posts/manage-tweets) ou du [contexte utilisateur 1.0a](/fr/resources/fundamentals/authentication), ce qui signifie que vous devez utiliser un ensemble de clés API et de jetons d’accès utilisateur pour effectuer une requête avec succès. Les jetons d’accès doivent être associés à l’utilisateur pour le compte duquel vous effectuez la requête. Si vous souhaitez générer un ensemble de jetons d’accès pour un autre utilisateur, celui-ci doit autoriser ou authentifier votre application via le [flux OAuth à 3 étapes](/fr/resources/fundamentals/authentication#obtaining-access-tokens-using-3-legged-oauth-flow).
+
+Veuillez noter que le contexte utilisateur OAuth peut être délicat à utiliser. Si vous n’êtes pas familier avec cette méthode d’authentification, nous vous recommandons d’utiliser une [bibliothèque](/fr/x-api/tools-and-libraries/overview) ou un outil comme Postman pour authentifier correctement vos requêtes.
+
+[OAuth 2.0 Authorization Code with PKCE](fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-2) permet un contrôle accru de la portée d’une application et des flux d’autorisation sur plusieurs appareils. OAuth 2.0 vous permet de choisir des portées granulaires spécifiques qui vous confèrent des autorisations précises au nom d’un utilisateur. Les endpoints de recherche de Messages privés requièrent ces portées : dm.read, post.read, user.read
+
+Pour activer OAuth 2.0 dans votre application, vous devez l’activer dans les paramètres d’authentification de votre application, dans la section des paramètres de l’application du portail développeur.
+
+<div id="developer-portal-projects-and-developer-apps">
+  ### Portail développeur, Projets et applications développeur
+</div>
+
+Pour obtenir un ensemble d’identifiants d’authentification compatibles avec les endpoints de l’API X v2, vous devez disposer d’un compte développeur approuvé, configurer un Projet dans ce compte et créer une application développeur au sein de ce Projet. Vous pourrez ensuite retrouver vos clés et jetons dans votre application développeur. 
+
+<div id="rate-limits">
+  ### Limites de taux
+</div>
+
+Chaque jour, des dizaines de milliers de développeurs envoient des requêtes à l’API X. Pour gérer le volume important de ces requêtes, des limites de taux sont appliquées à chaque endpoint afin de restreindre le nombre de requêtes que vous pouvez effectuer au nom de votre application ou d’un utilisateur authentifié.
+
+Les endpoints de recherche de Messages privés sont soumis à des limites au niveau utilisateur, ce qui signifie que l’utilisateur authentifié pour lequel vous effectuez la requête ne peut effectuer qu’un certain nombre de requêtes avec votre application X. La limite est de 300 requêtes par tranche de 15 minutes pour les méthodes GET. Ces limites sont partagées entre tous les endpoints GET. 
+
+<div id="pagination">
+  ### Pagination
+</div>
+
+Ces endpoints utilisent la pagination afin de renvoyer les réponses rapidement. Lorsque le nombre de résultats dépasse ce qui peut être envoyé dans une seule réponse (jusqu’à 100 événements), vous devrez paginer. Utilisez le paramètre max_results pour définir le nombre de résultats renvoyés par page, et le paramètre pagination_token pour récupérer la page de résultats suivante. Pour en savoir plus, consultez notre [guide sur la pagination](/fr/x-api/fundamentals/pagination).
+
+**Outils utiles**
+
+Voici quelques outils que nous vous encourageons à explorer lorsque vous travaillez avec les endpoints de recherche de Direct Messages :
+
+****Postman****
+
+Postman est un excellent outil pour tester un endpoint. Chaque requête Postman inclut tous les paramètres de chemin et de corps afin de vous aider à comprendre rapidement ce qui est disponible. Pour en savoir plus sur nos collections Postman, veuillez consulter la page [Utiliser Postman](/fr/tutorials/postman-getting-started).
+
+****Exemples de code****
+
+Des exemples de code Python pour les endpoints v2 Direct Messages sont disponibles dans notre dépôt [X API v2 sample code GitHub](https://github.com/xdevplatform/Twitter-API-v2-sample-code). Le dossier &quot;Manage-Direct-Messages&quot; contient des exemples pour les méthodes POST, et le dossier &quot;Direct-Messages-lookup&quot; contient des exemples pour les méthodes GET.
+
+****XDev Software Development Kits (SDKs)****
+
+Ces [bibliothèques](/fr/x-api/tools-and-libraries/overview) sont en cours de mise à jour pour les endpoints v2 Direct Messages et devraient être prêtes bientôt :
+
+* [X API Java SDK](https://github.com/xdevplatform/twitter-api-java-sdk) - SDK Java officiel pour l’API X v2
+* [X API TypeScript/JavaScript SDK](https://github.com/xdevplatform/twitter-api-typescript-sdk) - SDK TS/JS officiel pour l’API X v2
+
+**Bibliothèques tierces**
+
+Un nombre croissant de [bibliothèques tierces](/fr/x-api/tools-and-libraries/overview#community-tools-and-libraries-for-v2) sont développées par notre communauté. Ces bibliothèques sont conçues pour vous aider à démarrer, et plusieurs devraient bientôt prendre en charge les endpoints v2 Direct Messages. Vous pouvez trouver une bibliothèque compatible avec les endpoints v2 en recherchant la balise de version appropriée.

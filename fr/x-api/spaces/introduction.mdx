@@ -1,0 +1,80 @@
+---
+title: Introduction
+sidebarTitle: Introduction
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+La page suivante décrit les points de terminaison Spaces inclus dans l’API X. Pour en savoir plus sur Spaces en général, veuillez consulter [help.x.com](https://help.x.com/en/using-twitter/spaces).
+
+Spaces permet l’expression et l’interaction via des conversations audio en direct. Les points de terminaison Spaces fournissent les outils pour créer de nouvelles fonctionnalités autour de Spaces. Vous pouvez utiliser ces points de terminaison pour rechercher des Spaces en direct ou programmés, ou pour créer des expériences de découverte afin d’offrir à vos utilisateurs des moyens de trouver des Spaces susceptibles de les intéresser.
+
+Nous vous encourageons à faire preuve de créativité pour aller au‑delà de la manière dont nous avons conçu Spaces. Avec ces points de terminaison, vous pouvez créer des expériences qui suggèrent des Spaces aux auditeurs en fonction des mots‑clés présents dans le titre, ou qui mettent en avant des comptes hébergeant des Spaces en direct ou à venir et suivis par un utilisateur ; vous pouvez également aider les hôtes à mieux comprendre les performances de leurs Spaces et à obtenir davantage d’informations sur leur audience.
+
+<div id="important-resources">
+  ### Ressources importantes
+</div>
+
+Les ressources suivantes vous aideront à démarrer et à intégrer les endpoints Spaces :
+
+* [Obtenir l’accès à X API v2](/fr/x-api/getting-started/getting-access)
+* [Dictionnaire de données des Spaces](/fr/x-api/fundamentals/data-dictionary#space)
+* [Effectuer votre première requête à un endpoint Spaces](/fr/x-api/spaces/lookup/introduction)
+
+   
+
+<div id="whats-currently-available">
+  #### Fonctionnalités disponibles
+</div>
+
+|     |     |
+| :--- | :--- |
+| **Recherche de Spaces** | [Recherche par ID de Space unique](/fr/x-api/spaces/space-lookup-by-space-id)<br /><br />[Recherche par plusieurs IDs de Space](/fr/x-api/spaces/space-lookup-up-space-ids)<br /><br />[Recherche par ID du créateur](/fr/x-api/spaces/space-lookup-by-their-creators)<br /><br />[Récupérer la liste des utilisateurs ayant acheté un billet](/fr/x-api/spaces/retrieve-the-list-of-users-who-purchased-a-ticket-to-the-given-space) |
+| **Recherche de Spaces** | [Rechercher des Spaces à l&#39;aide d&#39;un mot-clé](/fr/x-api/spaces/search-for-spaces) |
+
+<div id="understanding-the-lifecycle-of-spaces">
+  #### Comprendre le cycle de vie des Spaces
+</div>
+
+Contrairement aux autres ressources de la X Developer Platform, les Spaces ont un cycle de vie défini. Ils peuvent être programmés jusqu’à 14 jours avant la date de début prévue et deviennent indisponibles une fois terminés. Un hôte peut également annuler un Space programmé à tout moment avant son démarrage.
+
+Les Spaces sont accessibles lorsqu’ils sont en direct ; une fois terminés, ils ne sont plus récupérables via les endpoints Spaces, et un message d’erreur est renvoyé pour indiquer cette situation.
+
+Lorsque votre application gère des données de Spaces, vous êtes responsable de retourner les informations les plus à jour et de supprimer les données qui ne sont plus disponibles sur la plateforme. Le [Spaces lookup endpoint](/fr/x-api/spaces/lookup/introduction) peut vous aider à vous assurer que vous respectez les attentes et l’intention de vos utilisateurs.
+ 
+
+<div id="roles-in-spaces">
+  ### Rôles dans Spaces
+</div>
+
+Ces endpoints reflètent le fonctionnement des Spaces dans l’application X. Dans les Spaces, les utilisateurs X peuvent avoir des rôles spécifiques selon la manière dont ils interagissent avec un Space et y participent.
+ 
+
+<div id="creator-or-primary-host">
+  ### Créateur (ou hôte principal)
+</div>
+
+L’hôte principal est l’utilisateur qui a créé un Espace et le propriétaire de l’Espace lui‑même. Actuellement, un Espace ne peut avoir qu’un seul hôte ; l’hôte principal est donc l’unique hôte. Dans le [dictionnaire de données des Spaces](/fr/x-api/fundamentals/data-dictionary#space), les informations sur l’hôte principal figurent dans le champ creator_id, qui peut être développé en un [objet user](/fr/x-api/fundamentals/data-dictionary#user).
+ 
+
+<div id="hosts">
+  ### Hôtes
+</div>
+
+Les hôtes principaux peuvent nommer un ou plusieurs utilisateurs comme co‑hôtes. Dans le dictionnaire de données Spaces, ces hôtes apparaissent sous la forme de `host_ids`, que l’on peut développer en une liste d’objets utilisateur. La désignation d’hôte peut évoluer au cours d’un Space, et les métadonnées renvoyées par ces endpoints refléteront l’état au moment de la requête.
+
+Votre application identifiera l’hôte principal en vérifiant la valeur `creator_id`, et les co‑hôtes en vérifiant les valeurs `host_ids`.
+ 
+
+<div id="speaker">
+  ### Intervenant
+</div>
+
+Les intervenants sont des utilisateurs autorisés à parler dans l’Espace. À tout moment, il peut n’y avoir aucun intervenant comme plusieurs, et un Espace peut compter jusqu’à 10 intervenants (hôtes compris). Dans le dictionnaire de données d’un Espace, les intervenants sont retournés dans la liste speaker_ids, que vous pouvez développer en une liste d’objets utilisateur.
+ 
+
+<div id="listener">
+  ### Auditeur
+</div>
+
+Un Auditeur peut écouter un Space, réagir à tout moment à l’aide des réactions prédéfinies et demander à devenir intervenant (si les Hôtes l’autorisent dans les paramètres du Space). Les informations sur les Auditeurs ne seront renvoyées que sous forme de décompte agrégé des participants (Hôtes inclus) dans le champ participant_count.

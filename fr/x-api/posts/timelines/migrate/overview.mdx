@@ -1,0 +1,114 @@
+---
+title: Aperçu
+sidebarTitle: Aperçu
+---
+
+<div id="comparing-x-apis-timelines-endpoints">
+  ## Comparaison des endpoints de chronologies de l'API X
+</div>
+
+Les endpoints de chronologie antéchronologique v2, de chronologie des publications d’un utilisateur et de chronologie des mentions d’un utilisateur remplacent respectivement les endpoints [v1.1 statuses/home_timeline](https://developer.x.com/en/docs/twitter-api/v1/tweets/timelines/api-reference/get-statuses-home_timeline), [v1.1 statuses/user_timeline](https://developer.x.com/en/docs/twitter-api/v1/tweets/timelines/api-reference/get-statuses-user_timeline.html) et [v1.1 statuses/mentions_timeline](https://developer.x.com/en/docs/twitter-api/v1/tweets/timelines/api-reference/get-statuses-mentions_timeline.html). Si vous avez du code, des applications ou des outils qui utilisent une version plus ancienne de cet endpoint et envisagez de migrer vers l’endpoint plus récent X API v2, ce guide est pour vous. Pour un guide de migration plus détaillé, voir [Migration de Standard v1.1 vers X API v2](/fr/x-api/posts/timelines/migrate/standard-to-twitter-api-v2).
+
+Cette page contient trois tableaux de comparaison :
+
+* Chronologie d’accueil antéchronologique
+* Chronologie des publications d’un utilisateur
+* Chronologie des mentions d’un utilisateur
+
+<div id="reverse-chronological-home-timeline">
+  ### Fil d’accueil en ordre antéchronologique
+</div>
+
+Les tableaux suivants comparent les endpoints de la timeline d’accueil standard v1.1 et de l’API X v2 :
+
+|     |     |     |
+| :--- | :--- | :--- |
+| **Description** | **Version standard v1.1** | **X API v2** |
+| Documentation | [Référence de l’API](https://developer.x.com/en/docs/twitter-api/v1/tweets/timelines/api-reference/get-statuses-home_timeline) | [Référence de l’API](https://developer.x.com/x-api/posts/timelines#user-mention-timeline-3) |
+| Méthodes HTTP prises en charge | `GET` | `GET` |
+| Domaine hôte | `https://api.x.com` | `https://api.x.com` |
+| Chemins d’endpoint | `/1.1/statuses/home_timeline.json` | `/2/users/:id/timelines/reverse_chronological` |
+| Paramètres requis | `user_id` ou `screen_name` | ID utilisateur défini comme paramètre de chemin :id |
+| Authentification | Contexte utilisateur OAuth 1.0a | Contexte utilisateur OAuth 1.0a<br /><br />[Flux de code d’autorisation OAuth 2.0 avec PKCE](/fr/resources/fundamentals/authenticationoauth-2-0/authorization-code) |
+| Limites de débit/limites de volume | 15 requêtes par fenêtre de 15 minutes avec le contexte utilisateur OAuth 1.0a<br /><br />Plafond de requêtes : 100 000 sur une période de 24 heures. | 180 requêtes par fenêtre de 15 minutes <br /><br />[Plafond de publications](/fr/x-api/fundamentals/post-cap) :<br /><br />500 000 avec l’accès Essential<br /><br />2 millions avec l’accès Elevated<br /><br />10 millions avec l’accès Academic Research |
+| Publications par réponse (par défaut) | 15  | 100 |
+| Nombre maximal de publications par réponse | 800 | Cet endpoint renvoie toutes les publications créées sur une timeline au cours des 7 derniers jours, ainsi que les 800 plus récentes, quelle que soit leur date de création. |
+| Fournit l’historique des modifications des publications | ✔   | ✔   |
+| Publications historiques disponibles | Les 800 publications les plus récentes, y compris les Retweets | Les 3 200 publications les plus récentes, y compris les Retweets |
+| Options de navigation de la timeline | since_id (exclusif) utilisé pour le sondage des mises à jour<br /><br />`max_id` (inclusif) | `start_time`<br /><br />`end_time`<br /><br />`since_id` (exclusif) utilisé pour le sondage des mises à jour <br /><br />`until_id` (exclusif) |
+| Paramètres optionnels pour affiner les résultats | `count`<br /><br />`exclude_replies`<br /><br />`include_rts`<br /><br />`trim_user`<br /><br />`tweet_mode`<br /><br />`since_id`<br /><br />`max_id` | `max_results`<br /><br />`exclude` (retweets, replies)<br /><br />`tweet.fields`<br /><br />`user.fields`<br /><br />`place.fields`<br /><br />`media.fields`<br /><br />`poll.fields`<br /><br />`expansions`<br /><br />`start_time`<br /><br />`end_time`<br /><br />`since_id`<br /><br />`until_id` |
+| Prend en charge la demande et la réception d’[annotations](/fr/x-api/fundamentals/post-annotations) | N/A | Si les annotations sont incluses dans `tweet.fields`, les résultats seront annotés avec des données d’annotation déduites du texte de la publication, telles que « Genre musical » et « Folk » ou « Musicien » et « Dolly Parton ». |
+| Prend en charge la demande et la réception de [métriques](/fr/x-api/fundamentals/metrics) spécifiques aux publications | N/A | Si les métriques sont incluses dans `tweet.fields`, les résultats comprendront des `public_metrics` par publication, notamment `retweet_count`, `reply_count`, `quote_count` et `like_count`, ainsi que des `non_public_metrics`, dont `impression_count`, `user_profile_clicks`, `url_link_clicks`.<br /><br />Métriques média supplémentaires, comme `view_count`, et métriques de lecture vidéo.<br /><br />Des `organic_metrics` et `promoted_metrics` supplémentaires sont disponibles avec le contexte utilisateur pour les publications promues. |
+| Prend en charge la demande et la réception de [conversation_id](/fr/x-api/fundamentals/conversation-id) | N/A | Renvoie un champ `conversation_id` dont la valeur représente la première publication d’un fil de réponses, afin de vous aider à suivre les conversations. |
+| Format JSON des posts | [Format de données Standard v1.1](https://developer.x.com/en/docs/twitter-api/v1/data-dictionary/overview.html) | Format [X API v2](/fr/x-api/fundamentals/data-dictionary) (déterminé par les paramètres de requête fields et expansions, non rétrocompatible avec les formats v1.1)<br /><br />Pour en savoir plus sur la migration du format Standard v1.1 vers le format X API v2, veuillez consulter notre [guide de migration des formats de données](/fr/x-api/migrate/data-format-migration). |
+| Ordre des résultats | Inverse chronologique | Inverse chronologique |
+| Pagination des résultats | N/A — navigation obligatoire par ID de post | Les résultats peuvent être parcourus vers l’avant ou l’arrière à l’aide d’un pagination_token |
+| Nécessite l’utilisation d’identifiants d’une [application développeur](/fr/resources/fundamentals/developer-apps) associée à un [projet](/fr/resources/fundamentals/projects) |     | ✔   |
+
+<div id="user-post-timeline">
+  ### Fil de publication de l’utilisateur
+</div>
+
+Les tableaux suivants comparent les endpoints de fil de publication utilisateur des versions standard v1.1 et X API v2 :
+
+|     |     |     |
+| :--- | :--- | :--- |
+| **Description** | **Standard v1.1** | **X API v2** |
+| Documentation | [Référence de l’API](https://developer.x.com/en/docs/twitter-api/v1/tweets/timelines/api-reference/get-statuses-user_timeline.html) | [Référence de l’API](/fr/x-api/posts/user-posts-timeline-by-user-id) |
+| Méthodes HTTP prises en charge | GET | GET |
+| Domaine hôte | https://api.x.com | https://api.x.com |
+| Chemins d’endpoint | /1.1/statuses/user_timeline.json | /2/users/:id/tweets |
+| Paramètres requis | user_id ou screen_name | ID utilisateur défini comme paramètre de chemin :id |
+| Authentification | Contexte utilisateur OAuth 1.0a<br /><br />OAuth 2.0 App-Only | Contexte utilisateur OAuth 1.0a<br /><br />OAuth 2.0 App-Only<br /><br />Code d’autorisation OAuth 2.0 avec PKCE |
+| Limites de requêtes/limites de volume | 900 requêtes par 15 min avec le contexte utilisateur OAuth 1.0a<br /><br />1500 requêtes par 15 min avec OAuth 2.0 App-Only<br /><br />Plafond de requêtes : 100 000 sur une période de 24 heures. | 900 requêtes par fenêtre de 15 minutes avec le contexte utilisateur OAuth 1.0a<br /><br />1500 requêtes par fenêtre de 15 minutes avec OAuth 2.0 App-Only<br /><br />[Plafond de Posts](/fr/x-api/fundamentals/post-cap) :  <br />500 000 avec l’accès Essential  <br />2 millions avec l’accès Elevated  <br />10 millions avec l’accès Academic Research |
+| Nombre de Posts par réponse (par défaut) | 15  | 10  |
+| Nombre maximal de Posts par réponse | 200 | 100 |
+| Posts historiques disponibles | Les 3 200 Posts les plus récents, y compris les Retweets | Les 3 200 Posts les plus récents, y compris les Retweets |
+| Options de navigation de la timeline | since_id (exclusif) utilisé pour l’interrogation des mises à jour<br /><br />max_id (inclusif) | start_time<br /><br />end_time<br /><br />since_id (exclusif) utilisé pour l’interrogation des mises à jour<br /><br />until_id (exclusif) |
+| Paramètres optionnels pour affiner les résultats | count  <br />exclude_replies  <br />include_rts  <br />trim_user  <br />tweet_mode  <br />since_id  <br />max_id | max_results  <br />exclude(retweets,replies)  <br />tweet.fields  <br />user.fields  <br />place.fields  <br />media.fields  <br />poll.fields  <br />expansions  <br />start_time  <br />end_time  <br />since_id  <br />until_id |
+| Prise en charge de la demande et de la réception d’[annotations](/fr/x-api/fundamentals/post-annotations) | N/A | Renvoie des résultats de Posts avec des données d’annotation déduites à partir du texte du Post, telles que « Music Genre » et « Folk Music » ou « Musician » et « Dolly Parton » |
+| Prise en charge de la demande et de la réception de [métriques](/fr/x-api/fundamentals/metrics) spécifiques aux Posts | N/A | Renvoie des résultats de Posts avec les public_metrics disponibles par Post, notamment retweet_count, reply_count, quote_count et like_count.  <br />  <br />Disponible avec le contexte utilisateur OAuth 1.0a :  <br />Métriques non_publiques supplémentaires, notamment impression_count, user_profile_clicks, url_link_clicks.<br /><br />Métriques médias supplémentaires telles que view_count et des métriques de lecture vidéo.<br /><br />organic_metrics et promoted_metrics supplémentaires disponibles avec le contexte utilisateur OAuth 1.0a pour les Posts sponsorisés. |
+| Prise en charge de la demande et de la réception de [conversation_id](/fr/x-api/fundamentals/conversation-id) | N/A | Renvoie un champ conversation_id dont la valeur représente le premier Post publié dans un fil de réponses afin de vous aider à suivre les conversations. |
+| Format JSON des Posts | [Format de données Standard v1.1](/fr/x-api/fundamentals/data-dictionary) | format [X API v2](/fr/x-api/fundamentals/data-dictionary) (déterminé par les paramètres de requête fields et expansions, non rétrocompatible avec les formats v1.1)<br /><br />Pour en savoir plus sur la migration du format Standard v1.1 vers le format X API v2, consultez notre [guide de migration des formats de données](/fr/x-api/migrate/data-format-migration). |
+| Ordre des résultats | Inverse chronologique | Inverse chronologique |
+| Pagination des résultats | N/A — utilisation obligatoire de la navigation par ID de Post | Les résultats peuvent être parcourus vers l’avant ou l’arrière à l’aide d’un pagination_token |
+| Nécessite l’utilisation d’identifiants provenant d’une [application développeur](/fr/resources/fundamentals/developer-apps) associée à un [projet](/fr/resources/fundamentals/projects) |     | ✔   |
+| Fournit l’historique des modifications du Post | ✔   | ✔   |
+
+ 
+
+<div id="user-mention-timeline">
+  ### Chronologie des mentions d’utilisateurs
+</div>
+
+Les tableaux suivants comparent les endpoints de la chronologie des mentions d’utilisateurs de la version standard v1.1 et de l’API X v2
+
+|     |     |     |
+| :--- | :--- | :--- |
+| **Description** | **Standard v1.1** | **X API v2** |
+| Documentation | [Référence de l’API](https://developer.x.com/en/docs/twitter-api/v1/tweets/timelines/api-reference/get-statuses-mentions_timeline.html) | [Référence de l’API](/fr/x-api/posts/user-mention-timeline-by-user-id) |
+| Méthodes HTTP prises en charge | GET | GET |
+| Domaine hôte | https://api.x.com | https://api.x.com |
+| Chemins d’endpoint | /1.1/statuses/mentions_timeline.json | /2/users/:id/mentions |
+| Paramètres requis | aucun paramètre requis | ID utilisateur défini comme paramètre de chemin :id |
+| Authentification | OAuth 1.0a Contexte utilisateur | OAuth 1.0a Contexte utilisateur<br /><br />OAuth 2.0 App-Only<br /><br />OAuth 2.0 Authorization Code with PKCE |
+| Limites de débit de requêtes par défaut | 75 requêtes par 15 min avec OAuth 1.0a Contexte utilisateur<br /><br />Plafond de 100 000 requêtes sur une période de 24 heures. | 180 requêtes par fenêtre de 15 minutes avec OAuth 1.0a Contexte utilisateur<br /><br />450 requêtes par fenêtre de 15 minutes avec OAuth 2.0 App-Only<br /><br />[Plafond de publications](/fr/x-api/fundamentals/post-cap) :<br /><br />500 000 avec l’accès Essential  <br />2 millions avec l’accès Elevated  <br />10 millions avec l’accès Academic Research |
+| Publications par réponse par défaut | 15  | 10  |
+| Nombre maximal de publications par réponse | 200 | 100 |
+| Publications historiques disponibles | Les 800 publications les plus récentes | Les 800 publications les plus récentes |
+| Options de navigation de la timeline | since_id (exclusif) utilisé pour l’interrogation des mises à jour<br /><br />max_id (inclusif) | start_time<br /><br />end_time<br /><br />since_id (exclusif) utilisé pour l’interrogation des mises à jour<br /><br />until_id (exclusif) |
+| Paramètres optionnels pour affiner les résultats | count  <br />trim_user  <br />include_entities  <br />tweet_mode  <br />since_id  <br />max_id | max_results  <br />tweet.fields  <br />user.fields  <br />place.fields  <br />media.fields  <br />poll.fields  <br />expansions  <br />start_time  <br />end_time  <br />since_id  <br />until_id |
+| Prend en charge la demande et la réception d’[annotations](/fr/x-api/fundamentals/post-annotations) | N/A | Renvoie des résultats de publications avec des données d’annotation déduites à partir du texte de la publication, telles que « Music Genre » et « Folk Music » ou « Musician » et « Dolly Parton » |
+| Prend en charge la demande et la réception de [métriques](/fr/x-api/fundamentals/metrics) spécifiques à la publication | N/A | Renvoie des résultats de publications avec les public_metrics disponibles par publication, y compris retweet_count, reply_count, quote_count et like_count.  <br />  <br />Disponible avec OAuth 1.0a Contexte utilisateur :  <br />des non_public_metrics supplémentaires, y compris impression_count, user_profile_clicks, url_link_clicks. <br /><br />Des métriques média supplémentaires telles que view_count et des métriques de lecture vidéo.<br /><br />Des organic_metrics et promoted_metrics supplémentaires disponibles avec OAuth 1.0a Contexte utilisateur pour les publications promues |
+| Prend en charge la demande et la réception de [conversation_id](/fr/x-api/fundamentals/conversation-id) | N/A | Renvoie un champ conversation_id où la valeur représente la première publication publiée dans un fil de réponses pour vous aider à suivre les conversations. |
+| Format JSON de la publication | [Format de données Standard v1.1](/fr/x-api/fundamentals/data-dictionary) | [Format X API v2](/fr/x-api/fundamentals/data-dictionary) (déterminé par les paramètres de requête fields et expansions, non rétrocompatible avec les formats v1.1)<br /><br />Pour en savoir plus sur la migration du format Standard v1.1 vers le format X API v2, consultez notre [guide de migration des formats de données](/fr/x-api/migrate/data-format-migration). |
+| Ordre des résultats | Inverse chronologique | Inverse chronologique |
+| Paramètres de requête pour la pagination | N/A : utiliser la navigation par ID de publication | Les résultats peuvent être parcourus en avant ou en arrière à l’aide de pagination_token |
+| Nécessite l’utilisation d’identifiants d’une [application développeur](/fr/resources/fundamentals/developer-apps) associée à un [projet](/fr/resources/fundamentals/projects) |     | ✔   |
+| Fournit l’historique des modifications de publication | ✔   | ✔   |
+
+**Autres ressources de migration**
+
+[Recherche de posts : Standard v1.1 vers X API v2](/fr/x-api/posts/lookup/migrate/standard-to-twitter-api-v2 "Recherche de posts : Standard v1.1 vers X API v2")
+
+[Hub de migration de l’API X](/fr/x-api/migrate/overview)

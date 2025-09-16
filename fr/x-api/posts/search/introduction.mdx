@@ -1,0 +1,106 @@
+---
+title: Introduction
+sidebarTitle: Introduction
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+La recherche de Posts est une fonctionnalité essentielle pour faire remonter les conversations sur X autour d’un sujet ou d’un événement précis. Bien que cette fonctionnalité existe dans X, ces endpoints offrent davantage de flexibilité et de puissance pour filtrer et ingérer des Posts, afin de vous permettre de trouver plus facilement des données pertinentes pour vos recherches, de créer des applications d’écoute quasi en temps réel, ou plus généralement d’explorer, d’analyser et/ou d’agir sur des Posts liés à un sujet d’intérêt.
+
+Nous proposons deux endpoints qui vous permettent de rechercher des Posts : la recherche récente et la recherche sur l’archive complète. Ces deux endpoints REST partagent une conception et des fonctionnalités communes, notamment l’utilisation d’une requête de recherche unique pour filtrer des Posts autour d’un sujet précis. Ces requêtes sont construites avec un ensemble d’opérateurs qui correspondent à des attributs du Post et de l’utilisateur, tels que des mots-clés, des hashtags et des URL. Les opérateurs peuvent être combinés au sein de requêtes à l’aide de logique booléenne et de parenthèses pour affiner le comportement de correspondance.
+
+Les endpoints de recherche récente et de recherche sur l’archive complète fournissent tous deux des métadonnées d’édition de Post. Tous les objets pour les Posts créés depuis le 29 septembre 2022 incluent des métadonnées d’édition, même si le Post n’a jamais été modifié. Chaque fois qu’un Post est modifié, un nouvel ID de Post est créé. L’historique des modifications d’un Post est consigné dans un tableau d’ID de Post, en commençant par l’ID d’origine.
+
+Ces endpoints renvoient toujours la version la plus récente, ainsi que tout l’historique des éditions. Tout Post collecté après la fenêtre d’édition de 30 minutes représentera sa version finale. Pour en savoir plus sur les métadonnées d’édition, consultez la page [Principes de base de l’édition de Posts](/fr/x-api/fundamentals/edit-posts).
+
+Une fois votre requête configurée et la réception de Posts commencée, ces endpoints permettent de parcourir les résultats à la fois par plages temporelles et par plages d’ID de Post. Cela répond à deux cas d’usage courants :
+
+* **Récupérer de l’historique** : les requêtes portent sur une période donnée, sans se concentrer sur l’aspect temps réel des données. Une seule requête est effectuée et toutes les données correspondantes sont livrées avec pagination si nécessaire. Il s’agit du mode par défaut de Search Posts.
+* **Polling** ou **écoute** : les requêtes sont effectuées selon le mode « y a‑t‑il de nouveaux Posts depuis ma dernière requête ? ». Elles sont effectuées en continu et, généralement, le cas d’usage se concentre sur une écoute quasi en temps réel des Posts d’intérêt.
+
+De nombreux opérateurs et limites de requête sont réservés à l’[Enterprise access](/fr/x-api/getting-started/about-x-api), ce qui signifie que vous devez utiliser des clés et des jetons provenant d’une App au sein d’un [Project](/fr/resources/fundamentals/projects) disposant de l’Enterprise access pour bénéficier des fonctionnalités supplémentaires. Vous pouvez en savoir plus à ce sujet dans les sections d’endpoint ci‑dessous.
+
+Les Posts renvoyés par les endpoints de recherche récente et de recherche sur l’archive complète sont pris en compte dans le [plafond mensuel de Posts](/fr/x-api/fundamentals/post-cap).
+
+**Configuration du compte**
+
+Pour accéder à ces endpoints, vous aurez besoin de :
+
+* D’un [developer account](https://developer.x.com/en/portal/petition/essential/basic-info) approuvé.
+* De vous authentifier à l’aide des clés et des jetons d’une [developer App](/fr/resources/fundamentals/developer-apps) située au sein d’un [Project](/fr/resources/fundamentals/projects).
+
+Pour en savoir plus sur l’accès aux endpoints X API v2, consultez notre [guide de démarrage](/fr/x-api/getting-started/getting-access).
+
+<div id="recent-search">
+  ## Recherche récente
+</div>
+
+Le point de terminaison de recherche récente vous permet d’accéder de manière programmatique aux Posts publics filtrés publiés au cours de la dernière semaine. Il est accessible à tous les développeurs disposant d’un compte développeur et utilisant des clés et des jetons d’une [App](/fr/resources/fundamentals/developer-apps) au sein d’un [Project](/fr/resources/fundamentals/projects).
+
+Vous pouvez authentifier vos requêtes avec [OAuth 1.0a User Context](/fr/resources/fundamentals/authentication), [OAuth 2.0 App-Only](/fr/resources/fundamentals/authentication#app-only-authentication-and-oauth-2-0-bearer-token) ou [OAuth 2.0 Authorization Code with PKCE](fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-2). Cependant, si vous souhaitez recevoir des métriques privées, ou une répartition des métriques organiques et sponsorisées dans les résultats de vos Posts, vous devrez utiliser OAuth 1.0a User Context ou OAuth 2.0 Authorization Code with PKCE et transmettre des Access Tokens utilisateur associés à l’utilisateur qui a publié le contenu concerné.
+
+Ce point de terminaison peut renvoyer jusqu’à 100 Posts par requête dans l’ordre antéchronologique, et des jetons de [pagination](/fr/x-api/posts/search/integrate/paginate) sont fournis pour parcourir de grands ensembles de Posts correspondants.
+
+Lorsque vous utilisez un Project avec accès régulier, vous pouvez utiliser l’ensemble de base des [operators](/fr/x-api/posts/search/integrate/build-a-query) et formuler des requêtes jusqu’à 512 caractères. Lorsque vous utilisez un Project avec accès Enterprise, vous avez accès à des opérateurs supplémentaires. Les Projects avec accès Enterprise peuvent formuler des requêtes jusqu’à 4096 caractères.
+
+En savoir plus sur les [niveaux d’accès](/fr/x-api/getting-started/about-x-api).
+
+<div id="full-archive-search">
+  ## Recherche dans l’archive complète
+</div>
+
+Le point de terminaison de recherche v2 dans l’archive complète est uniquement disponible pour les Projets disposant d’un accès [Pro](/fr/x-api/getting-started/about-x-api "Pro") ou [Enterprise](/fr/x-api/getting-started/about-x-api). Il vous permet d’accéder de façon programmatique aux Publications publiques de l’archive complète, depuis la première Publication en mars 2006, selon votre requête de recherche.
+
+Vous pouvez authentifier vos requêtes vers ce point de terminaison avec [OAuth 2.0 App-Only](/fr/resources/fundamentals/authentication#app-only-authentication-and-oauth-2-0-bearer-token). Le [jeton d’accès d’application](/fr/resources/fundamentals/authentication#using-and-generating-an-app-only-bearer-token) doit provenir d’une application au sein d’un Projet ayant l’accès Pro ou Enterprise. Comme vous ne pouvez pas effectuer de requêtes au nom d’autres utilisateurs (OAuth 1.0a User Context ou OAuth 2.0 Authorization Code avec PKCE) avec ce point de terminaison, vous ne pourrez pas récupérer de [métriques](/fr/x-api/fundamentals/metrics) privées.
+
+Ce point de terminaison peut renvoyer jusqu’à 500 Publications par requête dans l’ordre antéchronologique, et des jetons de [pagination](/fr/x-api/posts/search/integrate/paginate) sont fournis pour parcourir de grands ensembles de Publications correspondantes.
+
+Remarque : si vous demandez des [annotations](/fr/x-api/fundamentals/post-annotations) via le paramètre tweet.fields, le paramètre max_results est actuellement limité à une valeur maximale de 100. Cela peut évoluer à l’avenir ; tenez compte de cette limitation.
+
+Étant donné que ce point de terminaison n’est disponible que pour les personnes approuvées pour un accès Pro et Enterprise, vous avez accès à l’ensemble des [opérateurs](/fr/x-api/posts/search/integrate/build-a-query) de recherche et pouvez formuler des requêtes jusqu’à 1 024 caractères.
+
+<Button href="/fr/x-api/posts/search/quickstart/full-archive-search">
+  Démarrage rapide
+</Button>
+
+<br />
+
+<Button href="https://github.com/xdevplatform/Twitter-API-v2-sample-code">
+  Exemples de code
+</Button>
+
+<br />
+
+<Button href="https://github.com/xdevplatform/search-tweets-python">
+  Client Python de recherche de Publications
+</Button>
+
+<br />
+
+<Button href="https://github.com/xdevplatform/search-tweets-ruby">
+  Client Ruby de recherche de Publications
+</Button>
+
+<br />
+
+<Button href="https://app.getpostman.com/run-collection/9956214-784efcda-ed4c-4491-a4c0-a26470a67400">
+  Exécuter dans Postman
+</Button>
+
+<br />
+
+<Button href="https://developer.x.com/apitools/api?endpoint=/2/tweets/search/recent&method=get">
+  Essayer avec API Explorer
+</Button>
+
+<br />
+
+<br />
+
+Ressources associées
+
+[Apprenez à utiliser Postman pour effectuer des requêtes](/fr/tutorials/postman-getting-started)
+
+[Résoudre une erreur](https://developer.x.com/en/support/x-api)
+
+[Consulter la page de référence de l’API](/fr/x-api/posts/recent-search)

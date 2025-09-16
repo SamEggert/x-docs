@@ -1,0 +1,102 @@
+---
+title: Guide d’intégration
+sidebarTitle: Guide d’intégration
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+Cette page contient des informations sur plusieurs outils et concepts clés à connaître lorsque vous intégrez les endpoints de gestion des Posts à votre système. Nous avons scindé la page en plusieurs sections :
+
+* [Outils utiles](#helpful)
+* Concepts clés
+* [Authentification](#authentication)
+* [Portail développeur, Projets et Applications](#portal)
+* [Limites de débit](#limits)
+* [Libellés de source](#source)[](#source)[](#source)
+* [Paramètres du profil](#settings)
+* [Ajout de médias à un Post](#media)
+
+<div id="helpful-tools">
+  ## Outils utiles
+</div>
+
+Avant d’aborder certains concepts clés qui vous aideront à intégrer ce point de terminaison, nous vous recommandons de vous familiariser avec :
+
+<div id="postman">
+  ### Postman
+</div>
+
+Postman est un excellent outil pour tester un endpoint. Chaque requête Postman inclut tous les paramètres de chemin et de corps afin de vous aider à comprendre rapidement ce qui est disponible. Pour en savoir plus sur nos collections Postman, consultez notre page [&quot;Utilisation de Postman&quot;](/fr/tutorials/postman-getting-started). 
+ 
+
+<div id="code-samples">
+  ### Exemples de code
+</div>
+
+Vous souhaitez configurer cet endpoint avec du code dans votre langage préféré ? Nous proposons plusieurs exemples de code que vous pouvez utiliser comme point de départ sur notre [page GitHub](https://github.com/xdevplatform/Twitter-API-v2-sample-code).
+ 
+
+<div id="third-party-libraries">
+  ### Bibliothèques tierces
+</div>
+
+Profitez de l’une des [bibliothèques tierces](/fr/x-api/tools-and-libraries/overview) de notre communauté pour vous aider à démarrer. Vous pouvez trouver une bibliothèque compatible avec les points de terminaison v2 en recherchant l’étiquette de version appropriée.
+ 
+
+<div id="key-concepts">
+  ## Concepts clés
+</div>
+
+<div id="authentication">
+  ### Authentification
+</div>
+
+Tous les endpoints de l’API X v2 exigent que vous authentifiiez vos requêtes à l’aide d’un ensemble d’identifiants, également appelés clés et jetons.
+
+Ces endpoints spécifiques nécessitent l’utilisation du [contexte utilisateur OAuth 1.0a](/fr/resources/fundamentals/authentication), ce qui signifie que vous devez utiliser un ensemble de clés API et de jetons d’accès utilisateur pour effectuer une requête avec succès. Les jetons d’accès doivent être associés à l’utilisateur pour le compte duquel vous effectuez la requête. Si vous souhaitez générer un ensemble de jetons d’accès pour un autre utilisateur, celui-ci doit autoriser ou authentifier votre application en utilisant le [flux OAuth à 3 étapes](/fr/resources/fundamentals/authentication#obtaining-access-tokens-using-3-legged-oauth-flow).
+
+Veuillez noter qu’OAuth 1.0a peut être difficile à utiliser. Si vous n’êtes pas familier avec cette méthode d’authentification, nous vous recommandons d’utiliser une [bibliothèque](/fr/x-api/tools-and-libraries/overview), un outil comme Postman, ou OAuth 2.0 pour authentifier vos requêtes.
+
+Le flux [OAuth 2.0 Authorization Code avec PKCE](/fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-2) offre un meilleur contrôle sur le périmètre d’une application et sur les flux d’autorisation multi-appareils. OAuth 2.0 vous permet de choisir des périmètres (scopes) fins et spécifiques qui vous confèrent des autorisations précises au nom d’un utilisateur.
+
+Pour activer OAuth 2.0 dans votre application, vous devez l’activer dans les paramètres d’authentification de votre application, situés dans la section Paramètres de l’application du portail développeur.
+
+<div id="developer-portal-projects-and-developer-apps">
+  ### Portail développeur, Projets et Apps développeur
+</div>
+
+Pour obtenir un ensemble d’identifiants d’authentification compatibles avec les endpoints de l’API X v2, vous devez disposer d’un [compte développeur](/fr/resources/fundamentals/developer-portal), configurer un [Projet](/fr/resources/fundamentals/projects) dans ce compte et créer une [App développeur](/fr/resources/fundamentals/developer-apps) au sein de ce Projet. Vous pourrez ensuite trouver vos clés et jetons dans votre App développeur. 
+ 
+
+<div id="rate-limits">
+  ### Limites de débit
+</div>
+
+Chaque jour, des milliers de développeurs envoient des requêtes à l’API X. Pour gérer l’important volume de ces requêtes, des [limites de débit](https://developer.x.com/x-api/fundamentals/rate-limits) sont appliquées à chaque endpoint afin de restreindre le nombre de requêtes que vous pouvez effectuer au nom de votre application ou d’un utilisateur authentifié.
+
+Ces endpoints sont limités au niveau utilisateur, ce qui signifie que l’utilisateur authentifié pour lequel vous effectuez la requête ne peut appeler l’endpoint qu’un certain nombre de fois, quel que soit l’App développeur utilisé. Il existe une limite de 200 requêtes par 15 minutes pour la méthode POST. La méthode DELETE est limitée à 50 requêtes par 15 minutes. En outre, une limite de [300 requêtes par 3 heures](https://blog.x.com/developer/en_us/topics/tools/2018/new-developer-requirements-to-protect-our-platform) s’applique, y compris pour les Posts créés via manage Posts ou manage Retweets.
+ 
+
+<div id="source-labels">
+  ### Libellés de source
+</div>
+
+Le nom de votre application et l’URL de votre site seront affichés comme [libellé de source](https://help.x.com/en/using-twitter/how-to-tweet#source-labels) dans les métadonnées de tout Post créé de manière programmatique par votre application. Si vous modifiez le cas d’usage d’une application X, veillez à le mettre à jour dans ces paramètres afin de respecter les [Developer Terms](https://developer.x.com/content/developer-twitter/en/developer-terms/agreement-and-policy).
+ 
+
+<div id="profile-settings">
+  ### Paramètres du profil
+</div>
+
+Vous ne pouvez ajouter une localisation aux Posts que si la géolocalisation est activée dans les paramètres de votre profil. Si la géolocalisation n’est pas activée, vous pouvez tout de même inclure un paramètre de localisation dans le corps de votre requête, mais il ne sera pas associé à votre Post. Il en va de même pour l’identification d’utilisateurs sur les images. Si l’utilisateur que vous identifiez n’a pas activé l’identification sur les photos, son nom n’apparaîtra pas dans la liste des utilisateurs identifiés, même si le Post est créé avec succès. 
+ 
+
+<div id="adding-media-to-a-post">
+  ### Ajout de médias à une Publication
+</div>
+
+À l’heure actuelle, il n’existe pas de moyen d’importer entièrement des médias avec la v2 de l’API X. En revanche, vous pouvez joindre à une Publication des médias déjà importés. Vous pouvez utiliser des identifiants de média déjà [importés via le point de terminaison média v1](https://developer.x.com/en/docs/twitter-api/v1/media/upload-media/api-reference/post-media-upload) ou [X Media Studio](https://media.x.com/en/articles/products/2018/media-studio). Ces identifiants de média doivent être les vôtres ou ceux d’un utilisateur authentifié.
+
+**Étapes suivantes**
+
+[Référence de l’API](/fr/x-api/posts/manage-tweets#manage-tweets-api-reference-index)

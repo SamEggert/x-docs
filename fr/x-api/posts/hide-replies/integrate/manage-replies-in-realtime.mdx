@@ -1,0 +1,31 @@
+---
+title: Gérer les réponses par thème
+sidebarTitle: Gérer les réponses par thème
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+
+<div id="manage-replies-in-realtime">
+  ### Gérer les réponses en temps réel
+</div>
+
+Avec l’endpoint de masquage des réponses, vous pouvez créer un workflow qui aide vos utilisateurs à masquer les réponses présentant une probabilité très élevée d’être hors sujet.
+
+Les applications utiles combinent souvent plusieurs technologies afin d’apporter de la valeur à leurs utilisateurs. Cette page montre comment masquer des réponses à l’aide de l’[API Perspective](https://www.perspectiveapi.com/). Cette API est un système d’intelligence artificielle entraîné par [Jigsaw](https://jigsaw.google.com/), une entité de Google, pour détecter les commentaires toxiques. La logique de l’application fonctionne comme suit :
+
+1. Elle demande l’autorisation de l’utilisateur de lire ses Posts et de masquer ou réafficher ses réponses.
+2. Elle utilise l’[Account Activity API](https://developer.x.com/en/docs/x-api/v1/accounts-and-users/subscribe-account-activity/overview) pour détecter les réponses entrantes.
+3. Elle demande à l’API Perspective de fournir un « score » (un nombre entre 0 et 1) indiquant le niveau de confiance de son algorithme qu’un commentaire est similaire à des commentaires toxiques observés par le passé. (Perspective ne stocke pas le texte envoyé au service.)
+4. Elle appelle le masquage des réponses si le score de l’algorithme est très élevé.
+
+<div id="strive-for-transparency">
+  #### Visez la transparence
+</div>
+
+Comme Perspective n’est pas entraîné sur de vrais Posts, certaines nuances linguistiques peuvent amener l’application à masquer une réponse qu’un utilisateur souhaite laisser visible. Quelle que soit la technologie ou l’approche que vous utilisez pour concevoir votre application, faites toujours le nécessaire pour que vos utilisateurs comprennent ce que votre application a masqué et puissent le modifier.
+
+* La meilleure option est de toujours faire confiance à l’utilisateur et de lui donner le contrôle total de ses décisions. Cela signifie que votre expérience utilisateur doit inclure des commandes permettant d’annuler toute action effectuée par votre application au nom de l’utilisateur.
+* Lorsque vous utilisez une intelligence artificielle, votre application doit appliquer un seuil de confiance très élevé pour détecter et masquer les Posts.
+* Tout le monde n’emploie pas les mêmes mots, et votre application doit être conçue pour éviter tout biais. Soyez attentif aux mots réappropriés et à l’argot susceptibles d’entraîner des faux positifs.
+* Si vous entraînez une intelligence artificielle, envisagez d’adopter un modèle qui reflète fidèlement la langue couramment utilisée sur X.
