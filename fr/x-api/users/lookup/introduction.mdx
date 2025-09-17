@@ -1,0 +1,49 @@
+---
+title: Introduction
+sidebarTitle: Introduction
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+Vous pouvez authentifier votre requête vers tous les endpoints de recherche d’utilisateurs, à l’exception de la recherche de l’utilisateur authentifié, avec [OAuth 1.0a User Context](/fr/resources/fundamentals/authentication), [App only](/fr/resources/fundamentals/authentication#app-only-authentication-and-oauth-2-0-bearer-token) ou [OAuth 2.0 Authorization Code with PKCE](fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-2). Toutefois, si vous souhaitez accéder à des métriques privées ou à des données provenant de comptes privés, vous devrez utiliser OAuth 1.0a User Context ou OAuth 2.0 Authorization Code with PKCE et transmettre, avec votre requête, le jeton d’accès de l’utilisateur authentifié.
+
+Cet endpoint est couramment utilisé pour obtenir des informations à jour sur un utilisateur, vérifier qu’un utilisateur existe ou mettre à jour vos données stockées à la suite d’un événement de conformité.
+
+<div id="authenticated-user-lookup">
+  ### Recherche de l’utilisateur authentifié
+</div>
+
+Si vous vous authentifiez pour le compte d’autres utilisateurs, il est essentiel de pouvoir identifier au nom de qui vous pouvez effectuer une requête.
+
+Ce point de terminaison nécessite l’utilisation d’[OAuth 1.0a (contexte utilisateur)](/fr/resources/fundamentals/authentication) ou d’[OAuth 2.0 (code d’autorisation avec PKCE)](fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-2). Il renvoie des informations sur l’utilisateur autorisé, c’est-à-dire l’utilisateur associé aux jetons d’accès utilisateur transmis avec la requête.
+
+Vous pouvez accéder à ce point de terminaison via la méthode GET. Une limite par utilisateur de 75 requêtes toutes les 15 minutes s’applique à ce point de terminaison.
+
+<Note>
+  **Configuration du compte**
+
+  Pour accéder à ces points de terminaison, vous aurez besoin de :
+
+  * D’un [compte développeur](https://developer.x.com/en/portal/petition/essential/basic-info) approuvé.
+  * De vous authentifier à l’aide des clés et des jetons d’une [application développeur](/fr/resources/fundamentals/developer-apps) située dans un [projet](/fr/resources/fundamentals/projects). 
+
+  En savoir plus sur l’accès aux points de terminaison de l’API X v2 dans notre [guide de démarrage](/fr/x-api/getting-started/getting-access).
+</Note>
+
+<div className="flex space-x-2">
+  <Button href="/fr/x-api/posts/hide-replies/quickstart">
+    Démarrage rapide
+  </Button>
+
+  <Button href="https://github.com/xdevplatform/Twitter-API-v2-sample-code">
+    Exemples de code
+  </Button>
+
+  <Button href="https://app.getpostman.com/run-collection/9956214-784efcda-ed4c-4491-a4c0-a26470a67400">
+    Exécuter dans Postman
+  </Button>
+
+  <Button href="https://developer.x.com/apitools/api?endpoint=/2/users&method=get">
+    Essayer avec API Explorer
+  </Button>
+</div>

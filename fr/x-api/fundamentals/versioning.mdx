@@ -1,0 +1,70 @@
+---
+title: "Versioning"
+---
+
+<p>Avec X API v2, nous avons introduit une nouvelle stratégie de gestion des versions qui permet aux développeurs de mieux anticiper les changements apportés aux API publiques de X et de savoir quand ils devront migrer vers de nouvelles versions. </p>
+<p>Les développeurs seront informés des dépréciations, retraits, modifications et ajouts apportés à l’API X via nos <a href="https://developer.x.com/en/updates/stay-informed">canaux de communication</a>, afin de planifier correctement l’intégration de ces changements dans leur feuille de route de développement. Toutes les modifications de l’API seront consignées dans le journal des modifications.</p>
+<p>L’API X compte actuellement trois versions. Nous recommandons vivement d’utiliser X API v2 lors de la planification de votre intégration, sauf si une fonctionnalité requise par votre cas d’usage n’a pas encore été publiée en v2. </p>
+<p>Pour en savoir plus sur chaque version, veuillez consulter les pages suivantes :</p>
+
+<ul>
+  <li><a href="/fr/x-api/introduction">X API v2</a></li>
+  <li>Gnip 2.0 (<a href="/fr/x-api/enterprise-gnip-2.0/enterprise-gnip">entreprise</a>)</li>
+</ul>
+
+<div id="versioning-strategy">
+  ## Stratégie de versionnage
+</div>
+
+<p>La gestion des versions de l’API X est indiquée par des numéros de version inclus dans le chemin d’accès des routes de nos endpoints :</p>
+<p>`https://api.x.com/2/tweets`</p>
+<p>Nous prévoyons de publier des versions majeures de l’API X selon les besoins, mais pas plus d’une fois tous les 12 mois. Une version majeure est publiée lorsque des changements incompatibles sont introduits dans l’API. Nous publierons des guides de migration lors du lancement d’une nouvelle version majeure afin d’aider les développeurs à passer à la nouvelle version. </p>
+<p>Un changement incompatible exige que les développeurs modifient leur code pour conserver les fonctionnalités existantes de leur application. Les changements non incompatibles seront cumulatifs et déployés sur la version la plus récente lorsqu’ils seront prêts, sans nécessiter d’intervention de la part des développeurs, sauf s’ils souhaitent tirer parti des nouvelles fonctionnalités.</p>
+<p>Si un changement incompatible doit être déployé en cours de cycle (pour des raisons de sécurité ou de confidentialité), il sera appliqué à la version la plus récente.</p>
+
+<div id="breaking-changes">
+  ### Modifications incompatibles
+</div>
+
+<p>Ces modifications obligent les développeurs à adapter leur code afin de préserver les fonctionnalités existantes de leur application.</p>
+
+<ul>
+  <li>Ajout d’un nouveau paramètre obligatoire</li>
+  <li>Suppression d’un point de terminaison (endpoint) existant</li>
+  <li>Suppression d’un champ dans la réponse (obligatoire ou optionnel)</li>
+  <li>Suppression d’un paramètre de requête</li>
+  <li>Restructuration du format d’entrée ou de sortie (par exemple, faire passer un champ de niveau supérieur en sous-champ, ou rendre les erreurs « en ligne »)</li>
+  <li>Modification du nom ou du type de données d’un paramètre d’entrée existant ou d’une valeur de sortie</li>
+  <li>Modification du nom d’un champ</li>
+  <li>Modification du nom d’une ressource</li>
+  <li>Modification d’un code de réponse</li>
+  <li>Modification des types d’erreurs</li>
+  <li>Modifications des étendues (scopes) d’autorisation existantes</li>
+</ul>
+
+<div id="non-breaking-changes">
+  ### Modifications rétrocompatibles
+</div>
+
+<ul>
+  <li>Ajout d’un nouvel endpoint</li>
+  <li>Ajout d’un nouveau paramètre optionnel</li>
+  <li>Ajout d’un nouveau champ de réponse</li>
+  <li>Modification du texte des messages d’erreur</li>
+  <li>Disponibilité de nouvelles étendues (scopes)</li>
+  <li>« Mise à null » de champs (remplacement de la valeur d’un champ par null pour des raisons de confidentialité/sécurité, en alternative à sa suppression complète)</li>
+</ul>
+
+<div id="deprecation-and-retirement">
+  ### Dépréciation et retrait
+</div>
+
+<p>Tout d’abord, voici notre définition de ce que signifient la dépréciation et le retrait pour l’API X :</p>
+
+<ul>
+  <li><b>Dépréciation :</b> La fonctionnalité n’est plus prise en charge par l’équipe. Aucune nouvelle évolution ne sera proposée pour cette fonctionnalité et, en cas de bogues ou de problèmes avec le produit, la probabilité que nous envisagions un correctif est extrêmement faible. </li>
+  <li><b>Retrait :</b> La fonctionnalité ne sera plus accessible.</li>
+</ul>
+
+<p>Dans la plupart des cas, dès qu’une nouvelle version est publiée, la version précédente est marquée comme dépréciée. Les versions restent en état de dépréciation pendant une certaine période, après quoi elles sont retirées. </p>
+<p>Veuillez <a href="https://developer.x.com/en/updates/stay-informed">rester informé</a> pour en savoir plus sur les futures dépréciations et retraits.</p>

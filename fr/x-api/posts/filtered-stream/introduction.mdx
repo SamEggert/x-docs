@@ -1,0 +1,61 @@
+---
+title: Introduction
+sidebarTitle: Introduction
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+Le groupe de points de terminaison du flux filtré permet aux développeurs de filtrer un flux de publications publiques. Les fonctionnalités de ce groupe incluent plusieurs points de terminaison qui vous permettent de créer et de gérer des règles, puis de les appliquer pour filtrer un flux et renvoyer les publications publiques correspondantes. Ce groupe permet aux utilisateurs d’écouter des sujets et des événements spécifiques, de suivre les conversations autour de compétitions, de comprendre l’évolution des tendances, et plus encore.
+
+Les développeurs peuvent utiliser le point de terminaison REST [rules](/fr/x-api/posts/filtered-stream#post-2-tweets-search-stream-rules) pour ajouter et supprimer des règles sur une connexion de flux persistante sans devoir se déconnecter. Ces [règles](/fr/x-api/posts/filtered-stream#building-rules-for-filtered-stream) peuvent être créées avec des opérateurs qui ciblent des attributs de publication tels que des mots-clés, des hashtags et des URL. Les opérateurs et les clauses de règle peuvent être combinés avec une logique booléenne et des parenthèses pour affiner le comportement de correspondance du filtre.
+
+Une fois que vous avez ajouté un ensemble de règles, vous pouvez [établir une connexion de streaming](/fr/x-api/posts/filtered-stream#get-2-tweets-search-stream) qui commencera à diffuser des [objets Publication](/fr/x-api/fundamentals/data-dictionary#tweet) au format JSON via une connexion HTTP Streaming persistante. Vous ne recevrez que le contenu correspondant à vos règles tant que vous êtes connecté au flux.
+
+Le point de terminaison de recherche filtrée prend en charge les publications modifiées. Il livrera les publications modifiées correspondant à un ou plusieurs de vos filtres, accompagnées de leur historique des modifications, y compris un tableau d’identifiants de publication. Pour les publications sans historique de modification, ce tableau contiendra un seul identifiant. Pour les publications modifiées, ce tableau contient plusieurs identifiants, disposés par ordre croissant reflétant l’ordre des modifications, la version la plus récente se trouvant en dernière position du tableau. Pour en savoir plus sur le fonctionnement des modifications de publications, consultez la page [Principes de base des modifications de publications](/fr/x-api/fundamentals/edit-posts).
+
+Certains aspects du point de terminaison de flux filtré sont limités par le [niveau d’accès](/fr/x-api/getting-started/about-x-api) :
+
+**Accès Pro**
+
+* 1 000 règles par projet
+* 100 requêtes par 15 minutes lors de l’utilisation du point de terminaison POST /2/tweets/search/stream/rules pour ajouter des règles
+* Utilisation de tous les opérateurs lors de la création de vos règles
+* Règles jusqu’à 1 024 caractères
+
+**Accès Enterprise**
+
+* 25 000+ règles par projet
+* Utilisation de tous les opérateurs lors de la création de vos règles
+* Règles jusqu’à 2 048 caractères
+* Postulez [ici](https://developer.x.com/en/products/x-api/enterprise/enterprise-api-interest-form) pour l’accès Enterprise
+
+Les publications renvoyées par le flux filtré sont comptabilisées dans le [Plafond de publications](/fr/x-api/fundamentals/post-cap) mensuel.
+
+<Note>
+  **Configuration du compte**
+
+  Pour accéder à ces points de terminaison, vous aurez besoin de :
+
+  * Un [compte développeur](https://developer.x.com/en/portal/petition/essential/basic-info) approuvé.
+  * De vous authentifier en utilisant les clés et jetons d’une [application développeur](/fr/resources/fundamentals/developer-apps) située au sein d’un [projet](/fr/resources/fundamentals/projects).
+
+  En savoir plus sur l’accès aux points de terminaison de l’API X v2 dans notre [guide de démarrage](/fr/x-api/getting-started/getting-access).
+</Note>
+
+<div className="flex">
+  <Button href="/fr/x-api/posts/filtered-stream/quickstart">
+    Démarrage rapide
+  </Button>
+
+  <Button href="https://github.com/xdevplatform/Twitter-API-v2-sample-code">
+    Exemple de code
+  </Button>
+
+  <Button href="https://www.postman.com/xapidevelopers/">
+    Exécuter dans Postman
+  </Button>
+
+  <Button href="https://developer.x.com/apitools/api?endpoint=/2/tweets&method=post">
+    Essayer avec API Explorer
+  </Button>
+</div>

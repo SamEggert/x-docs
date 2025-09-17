@@ -1,0 +1,113 @@
+---
+title: Modifier des tweets
+---
+
+Les endpoints Enterprise ont été mis à jour pour fournir les métadonnées des publications modifiées. La fonctionnalité *Modifier les publications* a été introduite pour des tests auprès des employés de X le 1er septembre 2022. À partir de cette date, les publications admissibles pouvaient être modifiées pendant 30 minutes et jusqu’à 5 fois. *Tous les objets des publications créées depuis le 29 septembre 2022* incluent les métadonnées de modification, même si la publication n’a jamais été modifiée. Chaque fois qu’une publication est modifiée, un nouvel ID de publication est créé. L’historique des modifications d’une publication peut être décrit en chaînant ces ID, en commençant par l’ID d’origine. De plus, si une publication quelconque dans la chaîne de modifications est supprimée, toutes les publications de cette chaîne sont également supprimées.
+
+Ces métadonnées sont automatiquement incluses. Aucun paramètre de requête n’est nécessaire pour inclure l’historique des modifications disponible dans l’objet Post.
+
+Grâce à ces nouvelles métadonnées, un développeur peut déterminer :
+
+* Si une Publication était modifiable au moment de sa création. Certaines Publications, comme celles avec des sondages ou les Publications programmées, ne peuvent pas être modifiées.
+* Les Posts sont modifiables pendant 30 minutes et jusqu’à 5 fois. Pour les Posts modifiables, vous pouvez voir s’il reste du temps d’édition et combien d’autres modifications sont encore possibles.
+* Si vous consultez une version modifiée d’un Post. Dans la plupart des cas, l’API renverra la version la plus récente d’un Post, à moins qu’une version antérieure précise ne soit demandée via l’ID du Post.
+
+Trois nouveaux attributs de Post ont été ajoutés au niveau de la racine :
+
+* **edit&#95;history**  - Fournit tous les ID de Post associés à l’historique des modifications du Post. L’attribut &quot;initial&#95;tweet&#95;id&quot; indique le Post d’origine et l’attribut &quot;edit&#95;tweet&#95;ids&quot; est un tableau répertoriant tous les ID associés à son historique de modifications. Si le Post n’a pas été modifié, ce tableau ne contiendra qu’un seul ID.
+
+```
+"historique_modifications": {
+    "id_tweet_initial": "1283764123"
+    "ids_tweets_modifiés": ["1283764123"]
+  }
+```
+
+* **edit&#95;controls** - Fournit des attributs indiquant la fin de la fenêtre de modification de 30 minutes et le nombre de modifications potentielles restantes.
+
+```
+"edit_controls": {  
+     "editable_until_ms": 1660155761384,
+     "edits_remaining": 3   
+  }
+```
+
+* **editable** - Indique si une publication était admissible à la modification lors de sa création.
+
+&quot;modifiable&quot;: true
+
+La plupart des publications sont éligibles. Toutefois, les types de publications suivants ne le sont pas :
+
+* La publication est sponsorisée
+* La publication comporte un sondage
+* Le post est une réponse qui ne fait pas partie de son propre fil
+* Le post est un Retweet (notez que les Tweets cités peuvent être modifiés)
+* Le post est en diffusion nulle (nullcast)
+* Publication communautaire
+* Publication Super Follow
+* Publication collaborative
+
+**Exemples d’attributs pour une publication non éditée**
+
+Le JSON ci-dessous met en évidence les métadonnées d’édition incluses pour une Publication publiée après l’ajout de la fonctionnalité de modification de publication. Cet exemple concerne une publication qui n’a aucun historique d’édition.
+
+Notez que le tableau « edit&#95;tweet&#95;ids » ne contient qu’un seul identifiant.
+
+```
+{
+  "created_at": "Wed Aug 16 18:29:02 +0000 2022",
+  "id": 1557433858676740098,
+  "id_str": "1557433858676740098",
+  "text": "Je me demande si j’utiliserai un jour le bouton Modifier",
+  "edit_history": {
+    "initial_tweet_id": "1557433858676740098",
+    "edit_tweet_ids": ["1557433858676740098"]
+  },
+  "edit_controls": {
+    "editable_until_ms": 1660155761384,
+    "edits_remaining": 5
+  },
+  "editable": true
+}
+```
+
+**Exemples d’attributs pour une publication modifiée**
+
+Le JSON ci-dessous met en avant les métadonnées d’édition incluses pour une publication publiée après l’ajout de la fonctionnalité d’édition de publication. Cet exemple concerne une publication ayant fait l’objet d’une seule édition.
+
+Notez que le tableau `"edit_tweet_ids"` contient deux identifiants : l’un pour la publication originale et l’autre pour la version modifiée.
+
+```
+{
+  "created_at": "Wed Aug 16 18:35:42 +0000 2022",
+  "id": 1557445923210514432,
+  "id_str": "1557445923210514432",
+  "text": "Je me demande si j’utiliserai un jour le bouton d’édition",
+  "edit_history": {
+    "initial_tweet_id": "1557433858676740098",
+    "edit_tweet_ids": ["1557433858676740098", "1557445923210514432"]
+  },
+  "edit_controls": {
+    "editable_until_ms": 1660155761384,
+    "edits_remaining": 4
+  },
+  "editable": true
+}
+```
+
+**Assistance en conformité**
+
+Le [Compliance Firehose](/fr/x-api/enterprise-gnip-2.0/fundamentals/firehouse) et l’endpoint v2 de [batch compliance](/fr/x-api/compliance/batch-compliance/introduction) ont tous deux été mis à jour pour prendre en charge l’édition de posts :
+
+Un nouveau type d’événement « tweet&#95;edit » a été ajouté au Compliance Firehose.
+
+```
+{
+  "tweet_edit": {
+    "id": <tweetId>,
+    "initial_tweet_id": <tweetId>,
+    "edit_tweet_ids": [<tweetId1>, <tweetId2>, <tweetId3> ...],
+    "timestamp_ms": "<timestampMsStr>"
+  }
+}
+```

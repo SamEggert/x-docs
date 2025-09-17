@@ -1,0 +1,39 @@
+---
+title: Introduction
+sidebarTitle: Introduction
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+La recherche de publications de Liste propose un seul point de terminaison pour récupérer des publications à partir d’une Liste spécifique. Avec ce point de terminaison, vous pouvez créer des solutions permettant aux utilisateurs de personnaliser, organiser et prioriser les publications qu’ils voient dans leur fil.
+
+Ce point de terminaison est soumis à une limite de 900 requêtes par tranche de 15 minutes, et la réponse permet d’interroger les 800 dernières publications d’une Liste donnée.
+
+Vous pouvez utiliser [OAuth 1.0a (contexte utilisateur)](/fr/resources/fundamentals/authentication), [App only](https://developer.x.com/resources/fundamentals/authentication#app-only-authentication-and-oauth-2-0-bearer-token), ou [OAuth 2.0 Authorization Code avec PKCE](fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-2) pour authentifier vos requêtes vers ce point de terminaison.
+
+**Configuration du compte**
+
+Pour accéder à ces points de terminaison, vous aurez besoin de :
+
+* D’un [compte développeur](https://developer.x.com/en/portal/petition/essential/basic-info) approuvé.
+* De vous authentifier à l’aide des clés et des jetons d’une [application développeur](/fr/resources/fundamentals/developer-apps) située dans un [projet](/fr/resources/fundamentals/projects).
+
+Pour en savoir plus sur l’accès aux points de terminaison de l’API X v2, consultez notre [guide de démarrage](/fr/x-api/getting-started/getting-access).
+
+<div className="flex space-x-2">
+  <Button href="/fr/x-api/lists/list-tweets/quickstart">
+    Démarrage rapide
+  </Button>
+
+  <Button href="https://github.com/xdevplatform/Twitter-API-v2-sample-code">
+    Exemple de code
+  </Button>
+
+  <Button href="https://developer.x.com/apitools/api?endpoint=%2F2%2Flists%2F%7Bid%7D%2Ftweets&method=get">
+    Exécuter dans Postman
+  </Button>
+
+  <Button href="">
+    Essayer avec API Explorer
+  </Button>
+</div>

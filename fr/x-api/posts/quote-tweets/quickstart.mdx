@@ -1,0 +1,249 @@
+---
+title: Démarrage rapide
+sidebarTitle: Démarrage rapide
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+<div id="getting-started-with-the-quote-tweets-lookup-endpoint">
+  ## Bien démarrer avec l’endpoint de recherche des Tweets cités
+</div>
+
+Ce guide de démarrage rapide vous aidera à effectuer votre première requête vers les endpoints de recherche des Tweets cités avec un ensemble de champs spécifiés, en utilisant [Postman](/fr/tutorials/postman-getting-started).
+
+Si vous souhaitez voir des exemples de code dans différents langages, consultez notre dépôt GitHub [X API v2 sample code](https://github.com/xdevplatform/Twitter-API-v2-sample-code). 
+
+<div id="prerequisites">
+  #### Conditions préalables
+</div>
+
+Pour suivre ce guide, vous devez disposer d’un ensemble de [clés et jetons](/fr/resources/fundamentals/authentication) pour authentifier votre requête. Vous pouvez générer ces clés et jetons en suivant ces étapes :
+
+* [Créez un compte développeur](https://developer.x.com/en/apply-for-access) et obtenez l’approbation.
+* Créez un [projet](/fr/resources/fundamentals/projects) et une [application développeur](/fr/resources/fundamentals/developer-apps) associée dans le portail développeur.
+* Accédez à la page « Keys and tokens » de votre application pour générer les identifiants requis. Veillez à enregistrer tous les identifiants dans un endroit sécurisé.
+
+**Étapes pour créer une requête de recherche de Quote Tweets**
+
+**Étape 1 : Commencer avec un outil ou une bibliothèque**
+
+Il existe plusieurs outils, exemples de code et bibliothèques que vous pouvez utiliser pour effectuer une requête vers cet endpoint, mais nous allons utiliser l’outil Postman ici pour simplifier le processus.
+
+Pour charger la collection Postman de X API v2 dans votre environnement, cliquez sur le bouton suivant :
+
+<Button href="https://app.getpostman.com/run-collection/9956214-784efcda-ed4c-4491-a4c0-a26470a67400">
+  Ajouter X API v2 à Postman
+</Button>
+
+Une fois la collection X API v2 chargée dans Postman, accédez au dossier timeline et trouvez la requête « Quote Tweets by ID ».
+
+**Étape 2 : Authentifier votre requête**
+
+Pour effectuer correctement une requête vers la X API, vous devez vérifier que vous avez l’autorisation. Pour ce faire avec cet endpoint, vous devez authentifier votre requête avec l’une des méthodes suivantes : [OAuth 2.0 App-Only](/fr/resources/fundamentals/authentication#app-only-authentication-and-oauth-2-0-bearer-token), [OAuth 2.0 Authorization Code with PKCE](fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-2), ou [OAuth 1.0a User Context](/fr/resources/fundamentals/authentication).
+
+Pour simplifier, nous utiliserons OAuth 2.0 App-Only pour cette requête, mais vous devrez utiliser l’une des autres méthodes d’authentification si vous souhaitez demander des [métriques](/fr/x-api/fundamentals/metrics) ou des posts privés.
+
+Vous devez ajouter vos clés et jetons, en particulier le [App Access Token](/fr/resources/fundamentals/authentication#using-and-generating-an-app-only-bearer-token) (également appelé App-only Bearer Token) dans Postman. Pour ce faire, sélectionnez l’environnement nommé « X API v2 » dans le coin supérieur droit de Postman et ajoutez vos clés et jetons dans les champs « initial value » et « current value » (en cliquant sur l’icône en forme d’œil à côté de la liste déroulante des environnements).
+
+Cette variable sera automatiquement renseignée dans l’onglet Authorization de la requête si vous avez procédé correctement.
+
+**Étape 3 : Identifier et spécifier le post pour lequel vous souhaitez récupérer les Quote Tweets**
+
+Vous devez spécifier, dans la requête, le post pour lequel vous souhaitez récupérer les Quote Tweets en transmettant l’ID du post.
+
+Dans cet exemple, l’ID du post que nous utiliserons est 1409931481552543749.
+
+Dans Postman, accédez à l’onglet « Params » et saisissez cet ID de post dans la colonne « Value » du paramètre id.
+
+|     |     |
+| :--- | :--- |
+| **Key** | **Value** |
+| `id` | 1409931481552543749 |
+
+**Étape 4 : Identifier et spécifier les champs que vous souhaitez récupérer**
+
+Si vous cliquez sur le bouton « Send » après l’étape trois, vous recevrez les champs par défaut de l’[objet Post](/fr/x-api/fundamentals/data-dictionary#tweet) dans votre réponse : id, text et edit&#95;history&#95;tweet&#95;ids.
+
+Si vous souhaitez recevoir des champs supplémentaires, vous devrez les spécifier dans votre requête avec les paramètres [fields](/fr/x-api/fundamentals/fields) et/ou [expansions](/fr/x-api/fundamentals/expansions).
+
+Pour cet exercice, nous demanderons trois ensembles supplémentaires de champs provenant d’objets différents :
+
+1. Le champ supplémentaire tweet.created&#95;at dans les objets utilisateur principaux.
+2. Les champs par défaut de l’objet utilisateur des auteurs associés pour les posts renvoyés : id, name et username
+3. Le champ supplémentaire user.created&#95;at dans les objets utilisateur associés.
+
+Dans Postman, accédez à l’onglet « Params » et ajoutez la paire key:value suivante au tableau « Query Params » :
+
+|     |     |     |     |
+| :--- | :--- | :--- | :--- |
+| **Clé** | **Valeur** | **Champs renvoyés** |
+| `tweet.fields` | `created_at` | `tweets.created_at` |
+| `expansions` | `author_id` | `includes.users.id`, `includes.users.name`, `includes.users.username` |
+| `user.fields` | `created_at` | `includes.users.created_at` |     |
+
+Vous devriez maintenant voir l’URL suivante à côté du bouton « Send » :
+
+`https://api.x.com/2/tweets/:id/quote_tweets?expansions=author_id&tweet.fields=created_at&user.fields=created_at`
+
+**Veuillez noter :**
+
+Dans Postman, le paramètre de chemin :id dans le champ URL ne se met **pas** automatiquement à jour avec la valeur que vous saisissez dans le champ de paramètres `id`, c’est pourquoi l’URL ci-dessus inclut `:id` et non 1409931481552543749.
+
+**Étape cinq : Envoyez votre requête et examinez la réponse**
+
+Une fois tout configuré, cliquez sur le bouton « Send » et vous recevrez la réponse suivante :
+
+```
+{
+ "data": [
+   {
+     "created_at": "2022-02-22T04:31:34.000Z",
+     "text": "RT @chris_bail: Twitter a créé un cours complet (avec des vidéos, du code et d’autres ressources) pour aider les chercheurs à apprendre à collecter des données…",
+     "author_id": "29757971",
+     "id": "1495979553889697792"
+   },
+   {
+     "created_at": "2022-01-26T17:07:43.000Z",
+     "text": "RT @suhemparack: Ravis de partager notre cours « Bien démarrer avec l’#TwitterAPI v2 pour la recherche académique »\n\nSi vous connaissez des étudiants q…",
+     "author_id": "241588187",
+     "id": "1486385372401737728"
+   },
+   {
+     "created_at": "2022-01-11T17:28:04.000Z",
+     "text": "RT @suhemparack: Ravis de partager notre cours « Bien démarrer avec l’#TwitterAPI v2 pour la recherche académique »\n\nSi vous connaissez des étudiants q…",
+     "author_id": "24961055",
+     "id": "1480954678447857669"
+   },
+   {
+     "created_at": "2022-01-10T20:34:46.000Z",
+     "text": "RT @suhemparack: Ravis de partager notre cours « Bien démarrer avec l’#TwitterAPI v2 pour la recherche académique »\n\nSi vous connaissez des étudiants q…",
+     "author_id": "1441574419789324291",
+     "id": "1480639272721940486"
+   },
+   {
+     "created_at": "2021-12-16T22:55:24.000Z",
+     "text": "RT @chris_bail: Twitter a créé un cours complet (avec des vidéos, du code et d’autres ressources) pour aider les chercheurs à apprendre à collecter des données…",
+     "author_id": "1623598771",
+     "id": "1471614967207976961"
+   },
+   {
+     "created_at": "2021-12-13T15:59:55.000Z",
+     "text": "RT @suhemparack: Ravis de partager notre cours « Bien démarrer avec l’#TwitterAPI v2 pour la recherche académique »\n\nSi vous connaissez des étudiants q…",
+     "author_id": "1506401233",
+     "id": "1470423243513372679"
+   },
+   {
+     "created_at": "2021-12-10T02:02:45.000Z",
+     "text": "RT @suhemparack: Ravis de partager notre cours « Bien démarrer avec l’#TwitterAPI v2 pour la recherche académique »\n\nSi vous connaissez des étudiants q…",
+     "author_id": "40103034",
+     "id": "1469125403373568001"
+   },
+   {
+     "created_at": "2021-12-08T17:27:54.000Z",
+     "text": "RT @suhemparack: Ravis de partager notre cours « Bien démarrer avec l’#TwitterAPI v2 pour la recherche académique »\n\nSi vous connaissez des étudiants q…",
+     "author_id": "1436400156006567936",
+     "id": "1468633446935318529"
+   },
+   {
+     "created_at": "2021-09-15T21:40:24.000Z",
+     "text": "RT @suhemparack: Ravis de partager notre cours « Bien démarrer avec l’#TwitterAPI v2 pour la recherche académique »\n\nSi vous connaissez des étudiants q…",
+     "author_id": "81650379",
+     "id": "1438256410417143809"
+   },
+   {
+     "created_at": "2021-08-26T16:45:16.000Z",
+     "text": "RT @suhemparack: Ravis de partager notre cours « Bien démarrer avec l’#TwitterAPI v2 pour la recherche académique »\n\nSi vous connaissez des étudiants q…",
+     "author_id": "40462535",
+     "id": "1430934381829492746"
+   }
+ ],
+ "includes": {
+   "users": [
+     {
+       "username": "j_a_tucker",
+       "id": "29757971",
+       "name": "Joshua Tucker",
+       "name": "Joshua Tucker",
+     },
+     {
+       "username": "whimchic",
+       "id": "241588187",
+       "name": "whimchic",
+       "created_at": "2011-01-22T16:51:43.000Z"
+     },
+     {
+       "username": "mattbiehl",
+       "id": "24961055",
+       "name": "Matthias Biehl",
+       "created_at": "2009-03-17T21:41:27.000Z"
+     },
+     {
+       "username": "weixinac",
+       "id": "1441574419789324291",
+       "name": "J",
+       "created_at": "2021-09-25T01:25:19.000Z"
+     },
+     {
+       "username": "RSangeleer",
+       "id": "1623598771",
+       "name": "Richard Sangeleer",
+       "created_at": "2013-07-26T18:25:45.000Z"
+     },
+     {
+       "username": "Gulnerman",
+       "id": "1506401233",
+       "name": "Giz Gulnerman",
+       "created_at": "2013-06-11T20:13:40.000Z"
+     },
+     {
+       "username": "efishman123",
+       "id": "40103034",
+       "name": "Elishema Fishman",
+       "created_at": "2009-05-14T22:25:58.000Z"
+     },
+     {
+       "username": "dtcxwz",
+       "id": "1436400156006567936",
+       "name": "Hüseyin Ateş",
+       "created_at": "2021-09-10T18:44:30.000Z"
+     },
+     {
+       "username": "brendaberkelaar",
+       "id": "81650379",
+       "name": "Dr. Brenda Berkelaar",
+       "created_at": "2009-10-11T18:09:16.000Z"
+     },
+     {
+       "username": "misoca",
+       "id": "40462535",
+       "name": "Michael Soto",
+       "created_at": "2009-05-16T13:26:05.000Z"
+     }
+   ]
+ },
+ "meta": {
+   "result_count": 10,
+   "next_token": "avdjwk0udyx6"
+ }
+}
+```
+
+<div id="step-six-paginate-through-your-results">
+  #### Sixième étape : paginer les résultats
+</div>
+
+Dans la réponse précédente, vous trouverez en bas un objet de métadonnées qui inclut les champs suivants :
+
+* results&#95;count
+* next&#95;token
+
+À l’étape quatre, comme nous n’avons pas indiqué de paramètre max&#95;results, nous n’obtiendrons que 10 posts par défaut. Pour accéder aux pages supplémentaires de données, prenez la valeur du champ next&#95;token de nos derniers résultats et ajoutez cette chaîne comme valeur du paramètre pagination&#95;token sur la page Params de Postman, en laissant tout le reste inchangé. 
+
+|     |     |
+| :--- | :--- |
+| **Clé** | **Valeur** |
+| `pagination_token` | avdjwk0udyx6 |
+
+Une fois tout configuré, vous pouvez cliquer à nouveau sur « Send » et vous devriez recevoir la page de résultats suivante. 
+
+Nous avons rédigé un guide sur la [pagination](/fr/x-api/fundamentals/pagination) pour expliquer ce concept plus en détail.

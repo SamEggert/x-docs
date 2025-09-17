@@ -1,0 +1,118 @@
+---
+title: Guide de démarrage rapide
+sidebarTitle: Guide de démarrage rapide
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+<div id="getting-started-with-the-list-lookup-endpoint">
+  ## Mise en route avec l’endpoint List lookup
+</div>
+
+Ce guide de démarrage rapide vous aidera à envoyer votre première requête à l’endpoint List lookup à l’aide de Postman.
+
+Veuillez consulter notre dépôt GitHub [X API v2 sample code](https://github.com/xdevplatform/Twitter-API-v2-sample-code) si vous souhaitez voir des exemples de code dans différents langages.
+
+**Remarque :** Pour cet exemple, nous enverrons une requête à l’endpoint *List lookup by ID*, mais vous pouvez appliquer les connaissances de ce guide de démarrage rapide à d’autres requêtes de lookup.
+
+<Note>
+  ### Prérequis
+
+  Pour suivre ce guide, vous devez disposer d’un ensemble de [keys and tokens](/fr/resources/fundamentals/authentication) pour authentifier votre requête. Vous pouvez générer ces keys and tokens en suivant ces étapes :
+
+  * [Inscrivez-vous à un compte développeur](https://developer.x.com/en/apply-for-access) et obtenez l’approbation.
+  * Créez un [Project](/fr/resources/fundamentals/projects) et une [developer App](/fr/resources/fundamentals/developer-apps) associée dans le portail développeur.
+  * Accédez à la page “Keys and tokens” de votre App pour générer les identifiants requis. Assurez-vous d’enregistrer tous les identifiants dans un emplacement sécurisé.
+</Note>
+
+<div id="steps-to-build-a-list-lookup-request">
+  ### Étapes pour créer une requête de recherche de liste
+</div>
+
+**Première étape : commencer avec un outil ou une bibliothèque**
+
+Plusieurs outils, exemples de code et bibliothèques permettent d’effectuer une requête vers cet endpoint ; ici, nous utiliserons Postman pour simplifier le processus.
+
+Pour charger la collection Postman de X API v2 dans votre environnement, cliquez sur le bouton suivant :
+
+<Button href="https://app.getpostman.com/run-collection/9956214-784efcda-ed4c-4491-a4c0-a26470a67400">
+  Ajouter X API v2 à Postman
+</Button>
+
+Une fois la collection X API v2 chargée dans Postman, accédez au dossier « List », sélectionnez le sous-dossier « List lookup », puis choisissez « List by ID ».
+ 
+
+**Deuxième étape : authentifier votre requête**
+
+Pour effectuer correctement une requête vers X API, vous devez vérifier que vous disposez des autorisations nécessaires. Pour cet endpoint, vous devez authentifier votre requête avec l’une des méthodes suivantes : [App only](/fr/resources/fundamentals/authentication#app-only-authentication-and-oauth-2-0-bearer-token), [OAuth 2.0 Authorization Code with PKCE](fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-2) ou [OAuth 1.0a User Context](/fr/resources/fundamentals/authentication).
+
+Par simplicité, nous allons utiliser App only pour cette requête ; toutefois, si vous souhaitez demander des [metrics](/fr/x-api/fundamentals/metrics) privées ou des listes privées, vous devrez utiliser l’une des autres méthodes d’authentification. 
+
+Pour utiliser App only, vous devez ajouter vos clés et jetons (notamment le [App only Access Token](/fr/resources/fundamentals/authentication#using-and-generating-an-app-only-bearer-token)) dans Postman en sélectionnant l’environnement « X API v2 » (en haut à droite de Postman), puis en renseignant vos clés et jetons dans les champs « initial value » et « current value » (en cliquant sur l’icône en forme d’œil à côté du menu déroulant des environnements).
+
+Si tout est correctement configuré, ces variables seront automatiquement renseignées dans l’onglet Authorization de la requête.
+ 
+
+**Troisième étape : identifier et spécifier la liste à récupérer**
+
+Vous devez indiquer la liste que vous souhaitez récupérer dans la requête. Vous pouvez trouver l’ID de la liste en vous rendant sur x.com, en cliquant sur une liste, puis en regardant l’URL. Par exemple, l’ID de liste de l’URL suivante est 84839422.
+
+https://x.com/i/lists/84839422
+
+L’ID cible peut être n’importe quel ID de liste valide. Dans Postman, accédez à l’onglet « Params » et saisissez votre ID dans la colonne « Value » de la variable de chemin id. Veillez à ne pas inclure d’espaces avant ou après l’ID.
+
+|     |     |
+| :--- | :--- |
+| **Key** | **Value** |
+| id  | 84839422 (ID de la liste) |
+
+**Quatrième étape : identifier et spécifier les champs à récupérer**
+
+Si vous cliquez sur le bouton « Send » après la troisième étape, vous recevrez les champs par défaut de l’[objet List](/fr/x-api/fundamentals/data-dictionary#list) dans la réponse : id, name.
+
+Si vous souhaitez recevoir des champs supplémentaires, vous devez les spécifier dans votre requête à l’aide des paramètres list.fields et/ou [expansions](/fr/x-api/fundamentals/expansions).
+
+Pour cet exercice, nous allons demander trois ensembles de champs supplémentaires provenant d’objets différents :
+
+* Le champ supplémentaire created&#95;at dans l’objet principal Lists.
+
+* L’[objet user](/fr/x-api/fundamentals/data-dictionary#user) complet en utilisant le paramètre d’expansion.
+
+* Le champ supplémentaire user.created&#95;at dans l’objet user associé.
+
+Dans Postman, accédez à l’onglet « Params » et ajoutez la paire clé:valeur suivante au tableau « Query Params » :
+
+|     |     |     |
+| :--- | :--- | :--- |
+| **Key** | **Value** | **Returned fields** |
+| list.fields | created&#95;at | created&#95;at |
+| expansions | owner&#95;id | includes.users.id,  <br />includes.users.name,  <br />includes.users.username |
+| user.fields | created&#95;at | includes.users.created&#95;at |
+
+Vous devriez maintenant voir une URL similaire à côté du bouton « Send » :
+
+`https://api.x.com/2/lists/84839422?list.fields=owner_id&expansions=owner_id&user.fields=created_at`
+
+**Cinquième étape : envoyer votre requête et examiner la réponse**
+
+Une fois tout configuré, cliquez sur le bouton « Send » ; vous recevrez une réponse similaire à l’exemple suivant :
+
+```
+{
+  "data": {
+    "id": "84839422",
+    "name": "Comptes Twitter officiels",
+    "owner_id": "783214"
+  },
+  "includes": {
+    "users": [
+      {
+        "name": "Twitter",
+        "created_at": "2007-02-20T14:35:54.000Z",
+        "username": "Twitter",
+        "id": "783214"
+      }
+    ]
+  }
+}
+```

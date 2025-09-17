@@ -1,0 +1,145 @@
+---
+title: Recherche d’utilisateurs
+sidebarTitle: Recherche d’utilisateurs
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+<div id="getting-started-with-the-users-lookup-endpoints">
+  ## Prise en main des endpoints de recherche d’utilisateurs
+</div>
+
+Ce guide de démarrage rapide vous aidera à effectuer votre première requête vers les endpoints de recherche d’utilisateurs avec un ensemble de champs spécifiques à l’aide de [Postman](/fr/tutorials/postman-getting-started).
+
+Si vous souhaitez voir des exemples de code dans différents langages, consultez notre dépôt GitHub [X API v2 sample code](https://github.com/xdevplatform/Twitter-API-v2-sample-code).
+
+<Note>
+  ### Prérequis
+
+  Pour suivre ce guide, vous aurez besoin d’un ensemble de [keys and tokens](/fr/resources/fundamentals/authentication) pour authentifier votre requête. Vous pouvez générer ces keys and tokens en suivant ces étapes :
+
+  * [Inscrivez-vous à un compte développeur](https://developer.x.com/en/apply-for-access) et obtenez l’approbation.
+  * Créez un [Project](/fr/resources/fundamentals/projects) et une [developer App](/fr/resources/fundamentals/developer-apps) associés dans le portail développeur.
+  * Accédez à la page “Keys and tokens” de votre App pour générer les identifiants requis. Assurez-vous d’enregistrer tous les identifiants dans un emplacement sécurisé.
+</Note>
+
+<div id="steps-to-build-a-users-lookup-request">
+  ### Étapes pour créer une requête de lookup des utilisateurs
+</div>
+
+<div id="step-one-start-with-a-tool-or-library">
+  #### Première étape : commencer avec un outil ou une bibliothèque
+</div>
+
+Plusieurs outils, exemples de code et bibliothèques peuvent vous aider à effectuer une requête vers cet endpoint. Pour simplifier, nous allons utiliser l’outil Postman.
+
+Pour importer la collection Postman de X API v2 dans votre environnement, cliquez sur le bouton suivant :
+
+<Button href="https://app.getpostman.com/run-collection/9956214-784efcda-ed4c-4491-a4c0-a26470a67400">
+  Ajouter X API v2 à Postman
+</Button>
+
+Une fois la collection X API v2 importée dans Postman, accédez à l’endpoint GET /users/by.
+ 
+
+<div id="step-two-authenticate-your-request">
+  #### Deuxième étape : authentifier votre requête
+</div>
+
+Pour effectuer correctement une requête vers l’API X, vous devez vérifier que vous disposez des autorisations nécessaires. Pour ce faire, cet endpoint exige que vous authentifiiez votre requête à l’aide de l’une des méthodes suivantes : [App only](/fr/resources/fundamentals/authentication#app-only-authentication-and-oauth-2-0-bearer-token), [OAuth 2.0 Authorization Code with PKCE](fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-2) ou [OAuth 1.0a User Context](/fr/resources/fundamentals/authentication).
+
+Par simplicité, nous utiliserons App only pour cette requête, mais vous devrez recourir à l’une des autres méthodes d’authentification si vous souhaitez accéder à des [métriques](/fr/x-api/fundamentals/metrics) ou à des utilisateurs privés.
+
+Pour utiliser App only, vous devez ajouter vos clés et jetons, en particulier le [App Access Token](/fr/resources/fundamentals/authentication#using-and-generating-an-app-only-bearer-token) (également appelé App only Bearer Token) dans Postman. Pour ce faire, sélectionnez l’environnement nommé « X API v2 » dans l’angle supérieur droit de Postman, puis ajoutez vos clés et jetons dans les champs « initial value » et « current value » (en cliquant sur l’icône en forme d’œil à côté de la liste déroulante de l’environnement).
+
+Ces variables seront automatiquement renseignées dans l’onglet Authorization de la requête si vous avez procédé correctement.
+ 
+
+<div id="step-three-identify-and-specify-which-users-you-would-like-to-retrieve">
+  #### Étape trois : identifier et spécifier le(s) utilisateur(s) que vous souhaitez récupérer
+</div>
+
+Vous devez indiquer un utilisateur ou un ensemble d’utilisateurs à récupérer dans la requête. Selon l’endpoint utilisateur utilisé, vous pouvez transmettre soit un ID utilisateur, soit un nom d’utilisateur. Ici, nous allons utiliser l’endpoint [GET /users/by](/fr/x-api/users/user-lookup-by-usernames), qui permet d’envoyer plusieurs noms d’utilisateur dans une seule requête (plutôt que les endpoints [single-ID](/fr/x-api/users/user-lookup-by-id), [multi-ID](/fr/x-api/users/user-lookup-by-ids) et [single-username](/fr/x-api/users/user-lookup-by-username)), en passant un ensemble de noms d’utilisateur via le paramètre de requête usernames.
+
+Les noms d’utilisateur correspondent au handle du compte que vous pouvez trouver dans l’URL du profil d’un compte. Par exemple, le nom d’utilisateur du compte suivant est XDevelopers.
+
+`https://x.com/XDevelopers`
+
+Dans Postman, accédez à l’onglet « Params » et saisissez ce nom d’utilisateur, ou une liste de noms d’utilisateur séparés par des virgules, dans la colonne « Value » du paramètre username, en veillant à ne pas inclure d’espaces entre les noms d’utilisateur et les virgules.
+
+|     |     |
+| :--- | :--- |
+| **Clé** | **Valeur** |
+| `username` | XDevelopers,API,adsapi |
+
+<div id="step-four-identify-and-specify-which-fields-you-would-like-to-retrieve">
+  #### Étape quatre : identifier et préciser les champs que vous souhaitez récupérer
+</div>
+
+Si vous cliquez sur le bouton « Send » après l’étape trois, vous recevrez, dans votre réponse, les champs par défaut de l’[objet user](/fr/x-api/fundamentals/data-dictionary#user) : id, name et username.
+
+Si vous souhaitez recevoir des champs supplémentaires au-delà de id, name et username, vous devez spécifier ces champs dans votre requête à l’aide des paramètres [field](/fr/x-api/fundamentals/fields) et/ou [expansion](/fr/x-api/fundamentals/expansions).
+
+Pour cet exercice, nous allons demander trois ensembles supplémentaires de champs provenant d’objets différents :
+
+1. Le champ supplémentaire user.created&#95;at dans les objets user principaux.
+2. Les champs par défaut de l’objet des Posts épinglés associés pour les utilisateurs renvoyés : id et text.
+3. Le champ supplémentaire tweet.created&#95;at dans les objets Post associés.
+    
+
+Dans Postman, accédez à l’onglet « Params » et ajoutez la paire clé:valeur suivante au tableau « Query Params » :
+
+|     |     |     |
+| :--- | :--- | :--- |
+| **Clé** | **Valeur** | **Champs retournés** |
+| `user.fields` | `created_at` | `user.created_at` |
+| `expansions` | `author_id` | tweet.id, tweet.text |
+| `tweet.fields` | `created_at` | `includes.users.created_at` |
+
+Vous devriez maintenant voir l’URL suivante à côté du bouton « Send » :
+
+```
+      https://api.x.com/2/users/by?usernames=twitterdev,twitterapi,adsapi&user.fields=created_at&expansions=pinned_tweet_id&tweet.fields=author_id,created_at
+```
+
+<div id="step-five-make-your-request-and-review-your-response">
+  #### Cinquième étape : envoyez votre requête et examinez la réponse
+</div>
+
+Une fois que tout est configuré, cliquez sur le bouton « Send » et vous recevrez la réponse suivante :
+
+```
+{
+  "data": [
+    {
+      "created_at": "2013-12-14T04:35:55.000Z",
+      "id": "2244994945",
+      "name": "Twitter Dev",
+      "pinned_tweet_id": "1255542774432063488",
+      "username": "TwitterDev"
+    },
+    {
+      "created_at": "2007-05-23T06:01:13.000Z",
+      "id": "6253282",
+      "name": "Twitter API",
+      "username": "TwitterAPI"
+    },
+    {
+      "created_at": "2013-02-27T20:01:12.000Z",
+      "id": "1225933934",
+      "name": "Twitter Ads API",
+      "username": "AdsAPI"
+    }
+  ],
+  "includes": {
+    "tweets": [
+      {
+        "author_id": "2244994945",
+        "created_at": "2020-04-29T17:01:38.000Z",
+        "id": "1255542774432063488",
+        "text": "En cette période sans précédent, ce qui se passe sur Twitter peut aider le monde à mieux comprendre et à répondre à la pandémie.\n\nNous lançons un endpoint de streaming COVID-19 gratuit afin que les développeurs et les chercheurs qualifiés puissent étudier la conversation publique en temps réel. https://t.co/BPqMcQzhId"
+      }
+    ]
+  }
+}
+```
