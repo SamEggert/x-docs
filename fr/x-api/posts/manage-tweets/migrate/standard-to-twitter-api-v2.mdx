@@ -1,0 +1,58 @@
+---
+title: v1 vers v2
+sidebarTitle: v1 vers v2
+---
+
+<div id="standard-v11-compared-to-x-api-v2">
+  ## Comparaison entre la version standard v1.1 et X API v2
+</div>
+
+Si vous avez travaillé avec les endpoints standard v1.1 [POST statuses/update](https://developer.x.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-statuses-update) et [POST statuses/destroy/:id](https://developer.x.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-statuses-destroy-id), ce guide vise à vous aider à comprendre les similitudes et les différences entre les endpoints de gestion des publications de la version standard et de X API v2.
+
+* **Similarités**
+  * Authentification
+* **Différences**
+  * URL des endpoints
+
+  * Exigences pour les Apps et les Projets
+
+  * Paramètres de requête
+
+<div id="similarities">
+  ### Similarités
+</div>
+
+**Authentification**
+
+Les deux endpoints de gestion des Posts ([POST statuses/update](https://developer.x.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-statuses-update) et [POST statuses/destroy/:id](https://developer.x.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-statuses-destroy-id)) des versions standard v1.1 et X API v2 utilisent [OAuth 1.0a User Context](https://developer.x.com/content/developer-twitter/resources/fundamentals/authentication). Par conséquent, si vous utilisiez auparavant l’un des endpoints standard v1.1, vous pouvez continuer à utiliser la même méthode d’authentification en migrant vers la version X API v2. 
+
+<div id="differences">
+  ### Différences
+</div>
+
+**URL d’endpoints**
+
+* Endpoints standard v1.1 :
+  * https://api.x.com/1.1/statuses/update.json
+    (Crée une publication)
+  * `https://api.x.com/1.1/statuses/destroy/:id.json`
+    (Supprime une publication)
+* Endpoint X API v2 :
+  * https://api.x.com/2/tweets
+    (Crée une publication)
+  * https://api.x.com/2/tweets/:id
+    (Supprime la publication spécifiée)
+
+<div id="app-and-project-requirements">
+  ### Exigences relatives aux applications et aux projets
+</div>
+
+Les endpoints de l’API X v2 exigent l’utilisation d’identifiants issus d’une [application développeur](/fr/resources/fundamentals/developer-apps) associée à un [projet](/fr/resources/fundamentals/developer-apps) lors de l’authentification de vos requêtes. Tous les endpoints de l’API X v1.1 peuvent utiliser des identifiants provenant d’applications autonomes ou d’applications associées à un projet.
+
+<div id="request-parameters">
+  ### Paramètres de requête
+</div>
+
+Les paramètres de requête standard v1.1 suivants acceptaient deux paramètres de requête (user&#95;id ou screen&#95;name). L’API X v2 n’accepte que l’identifiant numérique de publication (Post ID) pour l’endpoint DELETE, et celui-ci doit être transmis dans le chemin de l’endpoint.
+
+Pour l’endpoint POST, des paramètres supplémentaires doivent être fournis dans le corps JSON de la requête. Pour en savoir plus sur les paramètres disponibles, consultez le [guide de référence de l’API](/fr/x-api/posts/manage-tweets/introduction).

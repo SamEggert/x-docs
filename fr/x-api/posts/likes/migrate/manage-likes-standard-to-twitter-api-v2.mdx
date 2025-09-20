@@ -1,0 +1,57 @@
+---
+title: Gérer les J’aime
+sidebarTitle: Gérer les J’aime
+---
+
+### Gérer les J&#39;aime : standard v1.1 comparé à l’API X v2
+
+Si vous avez travaillé avec les points de terminaison standard v1.1 [POST favorites/create](https://developer.x.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-favorites-create) et [POST favorites/destroy](https://developer.x.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-favorites-destroy), ce guide a pour but de vous aider à comprendre les similitudes et les différences entre les points de terminaison de gestion des J&#39;aime du standard v1.1 et de l’API X v2.
+
+* **Similitudes**
+  * Contexte utilisateur OAuth 1.0a
+* **Différences**
+  * URL des points de terminaison et méthodes HTTP
+  * Exigences pour les applications et les projets
+  * Paramètres de requête
+
+<div id="similarities">
+  #### Similarités
+</div>
+
+**Méthode d’authentification OAuth 1.0a en contexte utilisateur**
+
+Les deux versions de l’endpoint prennent en charge [OAuth 1.0a User Context](/fr/resources/fundamentals/authentication#oauth-1-0a-2). Par conséquent, si vous utilisiez auparavant l’un des endpoints standards v1.1 pour gérer les favoris, vous pouvez continuer à utiliser la même méthode d’authentification lors de la migration vers la version X API v2.
+
+<div id="differences">
+  #### Différences
+</div>
+
+**URL d’endpoint et méthodes HTTP**
+
+* Endpoints Standard v1.1 :
+  * POST https://api.x.com/1.1/favorites/create.json
+    (aimer une publication)
+  * POST https://api.x.com/1.1/favorites/destroy.json
+    (ne plus aimer une publication)
+* Endpoint X API v2 :
+  * POST https://api.x.com/2/tweets/:id/likes
+    (aimer une publication)
+  * DELETE https://api.x.com/2/tweets/:id/likes/:tweet&#95;id
+    (ne plus aimer une publication) 
+
+**Exigences relatives aux Apps et aux Projects**
+
+Les endpoints de X API v2 exigent que vous utilisiez des identifiants d’une [developer App](/fr/resources/fundamentals/developer-apps) associée à un [Project](/fr/resources/fundamentals/projects) lors de l’authentification de vos requêtes. Tous les endpoints X API v1.1 peuvent utiliser des identifiants provenant d’Apps autonomes ou d’Apps associées à un Project.
+
+**Paramètres de requête**
+
+Les paramètres de requête standard v1.1 suivants ont des équivalents dans X API v2 :
+
+| Standard v1.1 | X API v2 |
+| :--- | :--- |
+| id  | id  |
+| includes&#95;entities | Aucun équivalent |
+
+Veuillez noter que les paramètres Standard v1.1 sont transmis en tant que paramètres de requête, tandis que les paramètres X API v2 sont transmis en tant que paramètres de corps pour l’endpoint POST ou en tant que paramètres de chemin pour l’endpoint DELETE.
+
+De plus, l’id de l’utilisateur qui aime une publication n’est pas requis lors de l’utilisation des endpoints standard v1.1, car les [Access Tokens](/fr/resources/fundamentals/authentication#obtaining-access-tokens-using-3-legged-oauth-flow) transmis avec le [contexte utilisateur OAuth 1.0a](/fr/resources/fundamentals/authentication) permettent d’identifier l’utilisateur qui initie l’action d’aimer/ne plus aimer. 

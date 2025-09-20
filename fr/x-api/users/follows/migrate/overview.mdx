@@ -1,0 +1,82 @@
+---
+title: Vue d’ensemble
+sidebarTitle: Vue d’ensemble
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+<div id="comparing-x-apis-follows-endpoints">
+  ## Comparaison des endpoints de suivi de l’API X
+</div>
+
+<div id="follows-lookup">
+  ### Recherche des relations de suivi
+</div>
+
+Les endpoints de recherche des relations de suivi v2 remplaceront les endpoints Standard v1.1 [followers/ids](https://developer.x.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-followers-ids), v1.1 [followers/list](https://developer.x.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-followers-list), v1.1 [friends/ids](https://developer.x.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-friends-ids) et v1.1 [friends/list](https://developer.x.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-friends-list).
+
+Les tableaux suivants comparent les différents types d’endpoints de recherche des relations de suivi :
+
+|     |     |     |
+| :--- | :--- | :--- |
+| **Description** | **Standard v1.1** | **X API v2** |
+| Méthodes HTTP prises en charge | `GET` | `GET` |
+| Domaine hôte | `https://api.x.com` | `https://api.x.com` |
+| Chemin d’endpoint | /1.1/friends/ids.json<br /><br />/1.1/friends/list.json<br /><br />/1.1/followers/ids.json<br /><br />/1.1/followers/list.json | /2/users/:id/following<br /><br />/2/users/:id/followers |
+| [Authentification](/fr/resources/fundamentals/authentication) | OAuth 1.0a User Context<br /><br />App only | OAuth 1.0a User Context<br /><br />OAuth 2.0 Authorization Code avec PKCE<br /><br />App only |
+| [Limites de débit](/fr/resources/fundamentals/rate-limits) de requête par défaut | 15 requêtes par 15 min (par utilisateur)<br /><br />15 requêtes par 15 min (par app) | 15 requêtes par 15 min (par utilisateur)<br /><br />15 requêtes par 15 min (par app) |
+| Nombre maximal d’utilisateurs par réponse | GET friends/ids et GET followers/ids renvoient un maximum de 5000 IDs d’utilisateurs par page.<br /><br />  <br /><br />GET friends/list et GET followers/list renvoient un maximum de 200 objets utilisateur par page. | 1000 objets utilisateur par page |
+| Pagination | Un jeton est renvoyé dans un champ next&#95;cursor, qui peut ensuite être passé comme valeur au paramètre cursor pour retourner la page de résultats suivante. | Un jeton est renvoyé dans un champ next&#95;token, qui peut ensuite être passé comme valeur au paramètre token pour retourner la page de résultats suivante.<br /><br />La charge utile v2 fournit également un champ previous&#95;token, qui peut aussi être passé avec le paramètre pagination&#95;token pour retourner la page de résultats précédente. |
+| Format JSON | Format Standard v1.1 | [Format X API v2](/fr/x-api/fundamentals/data-dictionary) (déterminé par les paramètres de requête fields et expansions, non rétrocompatible avec les formats v1.1)<br /><br />Pour en savoir plus sur la migration du format Standard v1.1 vers le format X API v2, veuillez consulter notre [guide de migration des formats de données](/fr/x-api/migrate/data-format-migration). |
+| Prend en charge la sélection des [fields](/fr/x-api/fundamentals/data-dictionary) renvoyés dans la charge utile |     | ✔   |
+| Prend en charge les champs [annotations](/fr/x-api/fundamentals/post-annotations) des Posts |     | ✔   |
+| Prend en charge la demande de nouveaux champs [metrics](/fr/x-api/fundamentals/metrics) |     | ✔   |
+| Prend en charge le champ [conversation&#95;id](/fr/x-api/fundamentals/conversation-id) |     | ✔   |
+| Nécessite l’utilisation d’identifiants provenant d’une [developer App](/fr/resources/fundamentals/developer-apps) associée à un [project](/fr/resources/fundamentals/projects) |     | ✔   |
+
+<div id="manage-follows">
+  #### Gérer les abonnements
+</div>
+
+Les endpoints de gestion des abonnements de l’API v2 remplaceront les endpoints standard v1.1 [POST friendships/create](https://developer.x.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/post-friendships-create) et [POST friendships/destroy](https://developer.x.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/post-friendships-destroy).
+
+Les tableaux suivants comparent les endpoints de création d’abonnement des versions standard v1.1 et X API v2 :
+
+<div id="follow-a-user">
+  #### Suivre un utilisateur
+</div>
+
+| Description | Standard v1.1 | X API v2 |
+| :--- | :--- | :--- |
+| Méthodes HTTP prises en charge | POST | POST |
+| Domaine hôte | https://api.x.com | https://api.x.com |
+| Chemin d’endpoint | /1.1/friendships/create.json | /2/users/:id/following |
+| [Authentification](/fr/resources/fundamentals/authentication) | Contexte utilisateur OAuth 1.0a | Contexte utilisateur OAuth 1.0a<br /><br />OAuth 2.0 Code d’autorisation avec PKCE |
+| [Limites de débit](/fr/resources/fundamentals/rate-limits) de requêtes par défaut | 50 requêtes par 15 min | 50 requêtes par 15 min |
+| Nombre maximal d’opérations quotidiennes par utilisateur | 400 | 400 |
+| Nombre maximal d’opérations quotidiennes par application | 1000 | 1000 |
+| Nécessite l’utilisation d’identifiants provenant d’une [application développeur](/fr/resources/fundamentals/developer-apps) associée à un [projet](/fr/resources/fundamentals/projects) |     | ✔️  |
+
+<div id="unfollow-a-user">
+  #### Se désabonner d’un utilisateur
+</div>
+
+Les tableaux suivants comparent les endpoints de suppression de suivi de Standard v1.1 et de X API v2 :
+
+| Description | Standard v1.1 | X API v2 |
+| :--- | :--- | :--- |
+| Méthodes HTTP prises en charge | POST | DELETE |
+| Domaine hôte | https://api.x.com | https://api.x.com |
+| Chemin d’endpoint | /1.1/friendships/destroy.json | /2/users/:source&#95;user&#95;id/following/:target&#95;user&#95;id |
+| [Authentication](/fr/resources/fundamentals/authentication) | OAuth 1.0a User Context | OAuth 1.0a User Context<br /><br />OAuth 2.0 Authorization Code with PKCE |
+| [Rate limits](/fr/resources/fundamentals/rate-limits) par défaut pour les requêtes | 15 requêtes par 15 min (par utilisateur) | 50 requêtes par 15 min (par utilisateur) |
+| Nombre maximal d’opérations quotidiennes par application | Aucune | 500 |
+| Nécessite l’utilisation d’identifiants issus d’une [developer App](/fr/resources/fundamentals/developer-apps) associée à un [Project](/fr/resources/fundamentals/projects) |     | ✔️  |
+
+**Autres ressources de migration**
+
+[Follows lookup : Standard v1.1 vers X API v2](/fr/x-api/users/follows/migrate/standard-to-twitter-api-v2)
+
+[Gérer les suivis : Standard v1.1 vers X API v2](/fr/x-api/users/follows#manage-follows-standard-v1-1-compared-to-x-api-v2)
+
+[Hub de migration X API](/fr/x-api/migrate/overview)

@@ -1,0 +1,182 @@
+---
+title: Chronologique inversé
+sidebarTitle: Chronologique inversé
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+<div id="getting-started-with-reverse-chronological-home-timeline">
+  ## Bien démarrer avec la timeline d’accueil en ordre antéchronologique
+</div>
+
+Ce guide de démarrage rapide vous aidera à effectuer votre première requête vers l’un des endpoints de timeline avec un ensemble de champs spécifiés en utilisant [Postman](/fr/tutorials/postman-getting-started).
+
+Si vous souhaitez voir des exemples de code dans différents langages, veuillez consulter notre dépôt GitHub [X API v2 sample code](https://github.com/xdevplatform/Twitter-API-v2-sample-code).
+
+<Note>
+  **Prérequis**
+
+  Pour suivre ce guide, vous aurez besoin d’un ensemble de [clés et jetons](/fr/resources/fundamentals/authentication) pour authentifier votre requête. Vous pouvez générer ces clés et jetons en suivant ces étapes :
+
+  * [Inscrivez-vous pour un compte développeur](https://developer.x.com/en/apply-for-access) et obtenez l’approbation.
+  * Créez un [projet](/fr/resources/fundamentals/projects) et une [application développeur](/fr/resources/fundamentals/developer-apps) associée dans le portail développeur.
+  * Accédez à la page “Keys and tokens” de votre application pour générer les identifiants requis. Assurez-vous d’enregistrer tous les identifiants dans un endroit sécurisé.
+</Note>
+
+**Étapes pour construire une requête de timeline d’accueil en ordre antéchronologique**
+
+*Pour cet exemple, nous allons effectuer une requête vers l’endpoint « user Post timeline by ID », mais vous pouvez appliquer ce que vous aurez appris dans ce démarrage rapide aux requêtes de timeline des mentions utilisateur également.*
+
+**Première étape : Commencez avec un outil ou une bibliothèque**
+
+Il existe plusieurs outils, exemples de code et bibliothèques que vous pouvez utiliser pour effectuer une requête vers cet endpoint, mais nous allons utiliser l’outil Postman ici pour simplifier le processus.
+
+Pour charger la collection Postman X API v2 dans votre environnement, veuillez cliquer sur le bouton suivant :
+
+<Button href="https://app.getpostman.com/run-collection/9956214-784efcda-ed4c-4491-a4c0-a26470a67400">
+  Add X API v2 to Postman
+</Button>
+
+Une fois la collection X API v2 chargée dans Postman, accédez au dossier “Timelines” et trouvez la requête “Reverse chronological home timeline”.
+
+**Deuxième étape : Authentifiez votre requête**
+
+Pour effectuer correctement une requête vers la X API, vous devez vérifier que vous avez l’autorisation. Pour ce faire avec cet endpoint, vous devez authentifier votre requête avec [OAuth 2.0 Authorization Code with PKCE](/fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-3) ou [OAuth 1.0a User Context](/fr/resources/fundamentals/authentication).
+
+Vous devez ajouter vos clés et jetons à Postman. Vous pouvez le faire en sélectionnant l’environnement nommé “X API v2” dans le coin supérieur droit de Postman et en ajoutant vos clés et jetons dans les champs “initial value” et “current value” (en cliquant sur l’icône en forme d’œil à côté du menu déroulant de l’environnement).
+
+Ces variables seront automatiquement intégrées dans l’onglet d’autorisation de la requête si vous l’avez fait correctement.
+
+**Troisième étape : Identifier et spécifier l’utilisateur pour lequel vous souhaitez récupérer la timeline d’accueil**
+
+Vous devez spécifier un utilisateur pour lequel vous souhaitez récupérer des Posts récents dans la requête. Dans cet exemple, nous passerons un seul identifiant utilisateur.
+
+Les user IDs sont simplement la valeur numérique qui représente un handle de compte, que vous pouvez trouver dans l’URL du profil d’un compte. Par exemple, le nom d’utilisateur du compte suivant est `XDevelopers`.
+
+`https://x.com/XDevelopers`
+
+Pour convertir ce nom d’utilisateur en user ID, vous devrez utiliser l’[endpoint users lookup](/fr/x-api/users/lookup/introduction) avec le nom d’utilisateur et trouver l’identifiant numérique dans le payload. Dans le cas de @XDevelopers, le user ID est 2244994945.
+
+Dans Postman, accédez à l’onglet “Params” et saisissez ce user ID dans la colonne “Value” du paramètre id.
+
+|     |     |
+| :--- | :--- |
+| **Key** | **Value** |
+| `id` | 2244994945 |
+
+**Quatrième étape : Identifier et spécifier les champs que vous souhaitez récupérer**
+
+Si vous cliquez sur le bouton “Send” après la troisième étape, vous recevrez les champs par défaut du [Post object](/fr/x-api/fundamentals/data-dictionary#tweet) dans votre réponse : id, text et edit&#95;history&#95;tweet&#95;ids.
+
+Si vous souhaitez recevoir des champs supplémentaires, vous devrez les spécifier dans votre requête avec les paramètres [field](/fr/x-api/fundamentals/fields) et/ou [expansion](/fr/x-api/fundamentals/expansions).
+
+Pour cet exercice, nous demanderons trois ensembles supplémentaires de champs provenant d’objets différents :
+
+1. Le champ supplémentaire tweet.created&#95;at dans les objets utilisateur principaux.
+
+2. Les champs par défaut de l’objet utilisateur des auteurs associés pour les publications renvoyées : id, name et username
+
+3. Le champ supplémentaire user.created&#95;at dans les objets utilisateur associés.
+    
+
+Dans Postman, accédez à l’onglet « Params » et ajoutez la paire clé:valeur suivante au tableau « Query Params » :
+
+|     |     |     |
+| :--- | :--- | :--- |
+| **Key** | **Value** | **Returned fields** |
+| `tweet.fields` | `created_at` | `tweets.created_at` |
+| `expansions` | `author_id` | `includes.users.id`, `includes.users.name`, `includes.users.username` |
+| `user.fields` | `created_at` | `includes.users.created_at` |
+| max&#95;results | 5   |     |
+
+Vous devriez maintenant voir l’URL suivante à côté du bouton « Send » :
+
+`https://api.x.com/2/users/:id/timelines/reverse_chronological?tweet.fields=created_at&expansions=author_id&user.fields=created_at&max_results=5`
+
+<Info>
+  **Veuillez noter :**
+
+  Dans Postman, le paramètre de chemin :id dans le champ URL ne se mettra **pas** automatiquement à jour avec la valeur que vous saisissez dans le champ de paramètres `id`, raison pour laquelle l’URL ci-dessus inclut `:id` et non 2244994945.
+</Info>
+
+**Étape cinq : Envoyez votre requête et examinez la réponse**
+
+Une fois que tout est configuré, cliquez sur le bouton « Send » et vous recevrez la réponse suivante :
+
+```{
+	"data": [
+		{
+			"created_at": "2022-05-12T17:00:00.000Z",
+			"text": "Aujourd’hui marque le lancement de Devs in the Details, une série de vidéos techniques conçue par des développeurs pour des développeurs qui utilisent l’API Twitter. 🚀\n\nDans cet épisode de lancement, @jessicagarson nous explique comment elle a créé @FactualCat #WelcomeToOurTechTalk\n⬇️\n\nhttps://t.co/nGa8JTQVBJ",
+			"author_id": "2244994945",
+			"id": "1524796546306478083"
+		},
+		{
+			"created_at": "2022-05-11T19:16:40.000Z",
+			"text": "📢 Rejoignez @jessicagarson, @alanbenlee et @i_am_daniele demain, le 12 mai | 17 h 30 ET / 14 h 30 PT pour discuter de l’avenir des bots https://t.co/sQ2bIO1fz6",
+			"author_id": "2244994945",
+			"id": "1524468552404668416"
+		},
+		{
+			"created_at": "2022-05-09T20:12:01.000Z",
+			"text": "Vous créez des bots avec l’API Twitter ? 🤖\n\nRejoignez @jessicagarson, @alanbenlee et @iamdaniele jeudi 12 mai | 17 h 30 ET / 14 h 30 PT pour discuter de l’avenir des bots et répondre à toutes vos questions. 🎙📆⬇️\n\nhttps://t.co/2uVt7hCcdG",
+			"author_id": "2244994945",
+			"id": "1523757705436958720"
+		},
+		{
+			"created_at": "2022-05-06T18:19:54.000Z",
+			"text": "Si vous souhaitez postuler, ou proposer la candidature de quelqu’un d’autre au programme, n’hésitez pas à remplir le formulaire suivant :\n\nhttps://t.co/LUuWj24HLu",
+			"author_id": "2244994945",
+			"id": "1522642324781633536"
+		},
+		{
+			"created_at": "2022-05-06T18:19:53.000Z",
+			"text": "Nous avons détaillé chaque Insider dans notre publication sur le forum.\n\nJoignez-vous à nous pour féliciter les nouveaux membres ! 🥳\n\nhttps://t.co/0r5maYEjPJ",
+			"author_id": "2244994945",
+			"id": "1522642323535847424"
+		}
+	],
+	"includes": {
+		"users": [
+			{
+				"created_at": "2013-12-14T04:35:55.000Z",
+				"name": "Twitter Dev",
+				"username": "TwitterDev",
+				"id": "2244994945"
+			}
+		]
+	},
+	"meta": {
+		"result_count": 5,
+		"newest_id": "1524796546306478083",
+		"oldest_id": "1522642323535847424",
+		"next_token": "7140dibdnow9c7btw421dyz6jism75z99gyxd8egarsc4"
+	}
+}
+```
+
+**Étape six : paginer vos résultats**
+
+Dans la réponse précédente, vous trouverez, en bas, un objet de métadonnées qui inclut les champs suivants :
+
+* oldest&#95;id
+* newest&#95;id
+* results&#95;count
+* next&#95;token
+* previous&#95;token
+
+À l’étape quatre, nous avons défini `max_results` sur 5, ce qui signifie que chaque page inclura au maximum cinq résultats. Pour accéder aux pages supplémentaires de données, prenez la valeur du champ `next_token` de vos derniers résultats et ajoutez cette chaîne comme valeur du paramètre `pagination_token` sur la page des paramètres Postman, en laissant tout le reste inchangé. 
+
+|     |     |
+| :--- | :--- |
+| **Clé** | **Valeur** |
+| `pagination_token` | t3buvdr5pujq9g7bggsnf3ep2ha28 |
+
+Une fois tout configuré, cliquez de nouveau sur « Send » et vous devriez recevoir la page suivante de résultats. 
+
+Nous avons préparé un guide sur la [pagination](/fr/x-api/fundamentals/pagination) pour expliquer plus en détail ce concept. 
+
+**Prochaines étapes**
+[Personnalisez votre requête à l’aide de la référence de l’API](/fr/x-api/posts/timelines#api-reference-index)
+
+[Contactez la communauté pour obtenir de l’aide](https://devcommunity.x.com "Contactez la communauté pour obtenir de l’aide")

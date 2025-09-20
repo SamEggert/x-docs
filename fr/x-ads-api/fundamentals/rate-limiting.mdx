@@ -1,0 +1,80 @@
+---
+title: Limitation du débit
+---
+
+L’API Advertiser est soumise à des limites de débit similaires à celles de l’API REST v1.1, comme documenté ici : [REST API Rate Limiting in v1.1](https://developer.x.com/content/developer-twitter/en/docs/basics/rate-limits). Contrairement à l’API REST v1.1, il n’existe pas d’index programmatique des limites par point de terminaison. Les limites de débit par point de terminaison et les fenêtres de réinitialisation sont communiquées via les en-têtes de réponse HTTP. Toute la gestion du débit dans l’API Ads utilise OAuth 1.0A.
+
+<div id="user-level-and-ad-account-level-limits">
+  ## Limites au niveau de l’utilisateur et du compte publicitaire
+</div>
+
+Il existe deux types de limites de débit : au niveau du jeton utilisateur et au niveau du compte publicitaire. Un sous-ensemble de points de terminaison prend en charge la limitation de débit au niveau du compte publicitaire. Un jeton utilisateur est le [jeton d’accès OAuth](/fr/resources/fundamentals/authentication#obtaining-access-tokens-using-3-legged-oauth-flow) que vous utilisez pour vous authentifier et appeler l’Ads API. Chaque jeton utilisateur peut avoir accès à un ou plusieurs comptes publicitaires.
+
+Les développeurs doivent utiliser la limite de débit au niveau du compte publicitaire lorsqu’elle est renvoyée dans les en-têtes de réponse, et n’utiliser la limite au niveau de l’utilisateur que lorsque la limite du compte publicitaire n’est pas disponible.
+
+Les limites de débit au niveau de l’utilisateur sont indiquées dans ces en-têtes : **x-rate-limit-limit**, **x-rate-limit-remaining** et **x-rate-limit-reset**.
+
+Pour les points de terminaison avec limitation de débit au niveau du compte publicitaire, les limites de débit sont indiquées dans ces en-têtes : **x-account-rate-limit-limit**, **x-account-rate-limit-remaining** et **x-account-rate-limit-reset**.
+
+Les limites de débit au niveau du compte publicitaire ne sont fournies que pour les points de terminaison GET afin de permettre aux applications de synchroniser les données d’entités (telles que les objets campagne ou élément de ligne) à partir d’un seul jeton utilisateur accédant à plusieurs comptes publicitaires. Les actions d’écriture ne sont pas garanties d’utiliser les mêmes limites de débit au niveau du compte publicitaire.
+
+Pour les points de terminaison limités au niveau du compte publicitaire, la limite de débit au niveau de l’utilisateur est fixée à une valeur élevée représentant un quota global pour l’ensemble de votre application. Lorsque cela est possible, la limite de débit au niveau du compte publicitaire doit prévaloir pour contrôler votre volume de requêtes.
+
+<div id="best-practices">
+  ## Bonnes pratiques
+</div>
+
+1. Enregistrez dans votre base de données l’horodatage de la dernière synchronisation et, lorsque c’est pertinent, demandez les données avec l’option `sort_by=updated_at-desc` afin de pouvoir arrêter votre processus de synchronisation dès que vous atteignez des données antérieures à votre dernier horodatage synchronisé. Cela évitera de resynchroniser inutilement les mêmes données.
+
+2. Demandez plusieurs entités en une seule requête : certaines API endpoints vous permettent de spécifier une liste de valeurs séparées par des virgules pour récupérer plusieurs éléments de données similaires. Cela peut réduire le nombre total d’appels et ainsi utiliser plus efficacement la limite de taux.
+
+3. Demandez la valeur maximale du paramètre “count” dans vos requêtes : certains endpoints, tels que [GET accounts/:account&#95;id/targeting&#95;criteria](/fr/x-ads-api/campaign-management#targeting-criteria), sont fortement recommandés d’être appelés avec la valeur maximale de count afin de renvoyer 1000 objets au lieu de la valeur par défaut de 200.
+
+<div id="analytics-syncing">
+  ## Synchronisation des analyses
+</div>
+
+Consultez le [guide sur la limitation de débit des analyses](/fr/x-ads-api/analytics#best-practices) pour en savoir plus sur les limites de débit des points de terminaison d’analyse.
+
+<div id="faqs">
+  ## FAQ
+</div>
+
+*Est-il possible d’augmenter les limites de débit pour un compte publicitaire spécifique ou pour notre application ?*
+
+Nous ne pouvons généralement pas augmenter les limites de débit, qui sont définies pour prendre en charge les plus grands comptes publicitaires. Veuillez appliquer les bonnes pratiques décrites dans ce document en premier lieu et, si les limites de débit continuent d’affecter votre capacité à monter en charge ou à atteindre vos objectifs business, veuillez contacter vos interlocuteurs X Ads API avec tous les détails sur le cas d’usage et les demandes concernées.
+
+<div id="scopes-of-rate-limiting">
+  ## Périmètres de limitation du débit
+</div>
+
+<div id="scopes-for-this-doc">
+  ### Périmètres pour ce document
+</div>
+
+* Catégorie : tous les points de terminaison de la catégorie donnée sont soumis à une limite de débit unique allouée par fenêtre.
+* Point de terminaison : chaque point de terminaison dispose de sa propre limite allouée distincte par fenêtre.
+
+<div id="ads-api-rate-limit-chart">
+  ## Tableau des limites de débit de l’API Ads
+</div>
+
+<div id="ads-api-rate-limits">
+  ### Limites de débit de l’API Ads
+</div>
+
+| Type d’endpoint | Portée par endpoint ou catégorie | Limite par fenêtre de 1 minute |
+| :--- | :--- | :--- |
+| Écritures (POST, PUT, DELETE) | Catégorie | 450 |
+| Audience | Endpoint | 1 500 |
+
+| Type d’endpoint | Portée par endpoint ou catégorie | Limite par fenêtre de 15 minutes |
+| :--- | :--- | :--- |
+| Analytics (synchrone) | Catégorie | 250 |
+| Lectures des entités principales (line items, campaigns, etc.)<br /><br />Autres lectures de compte (autres endpoints GET avec :account&#95;id) | Endpoint (niveau compte publicitaire)<br /><br />Endpoint (niveau partiel du compte publicitaire) | 10 000<br /><br />2 000 |
+| Critères de ciblage (hors ci-dessous) | Catégorie | 400 |
+| Critères de ciblage (tv&#95;markets, tv&#95;shows) | Endpoint | 2 000 |
+| Insights audience | Catégorie | 400 |
+| Insights mots-clés | Catégorie | 500 |
+| Lectures globales (endpoints GET sans :account&#95;id) | Endpoint | 5   |
+| Conversions | Endpoint | 60 000 |

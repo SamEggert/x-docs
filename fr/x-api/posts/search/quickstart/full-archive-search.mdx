@@ -1,0 +1,150 @@
+---
+title: Recherche dans l’archive complète
+sidebarTitle: Recherche dans l’archive complète
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+<div id="getting-started-with-the-full-archive-search-endpoint">
+  ## Mise en route avec le point de terminaison de recherche sur l’archive complète
+</div>
+
+Ce guide de démarrage rapide vous aidera à effectuer votre première requête vers le point de terminaison de recherche sur l’archive complète avec un ensemble de champs spécifiés à l’aide de Postman.
+
+Si vous souhaitez consulter des exemples de code dans différents langages, veuillez visiter notre dépôt GitHub [X API v2 sample code](https://github.com/xdevplatform/Twitter-API-v2-sample-code).
+
+<Note>
+  ### Prérequis
+
+  Le point de terminaison de recherche sur l’archive complète est actuellement disponible uniquement avec les niveaux d’accès Pro et Enterprise. Pour utiliser ce point de terminaison, vous devez passer à l’accès Pro ou [demander un accès Enterprise](https://docs.google.com/forms/d/e/1FAIpQLScO3bczKWO2jFHyVZJUSEGfdyfFaqt2MvmOfl_aJp0KxMqtDA/viewform).
+
+  En plus d’être approuvé pour l’accès, vous aurez besoin d’un ensemble de [clés et jetons](/fr/resources/fundamentals/authentication) pour authentifier votre requête. Vous pouvez générer ces clés et jetons en suivant ces étapes :
+
+  * Accédez à votre [projet](/fr/resources/fundamentals/projects) avec accès Enterprise ou Pro dans le portail développeur et assurez-vous d’avoir une [application développeur](/fr/resources/fundamentals/developer-apps) associée au sein de ce projet.
+
+  * Accédez à la page « Keys and tokens » de votre application pour générer les identifiants requis. Veillez à enregistrer tous les identifiants dans un emplacement sécurisé.
+</Note>
+
+<div id="steps-to-build-a-full-archive-search-request">
+  ### Étapes pour créer une requête de recherche sur l’archive complète
+</div>
+
+**Première étape : commencer avec un outil ou une bibliothèque**
+
+Il existe plusieurs outils, exemples de code et bibliothèques que vous pouvez utiliser pour effectuer une requête vers cet endpoint, mais nous allons utiliser l’outil Postman ici pour simplifier le processus.
+
+Pour charger la collection Postman de X API v2 dans votre environnement, cliquez sur le bouton suivant :
+
+<Button href="https://app.getpostman.com/run-collection/9956214-784efcda-ed4c-4491-a4c0-a26470a67400">
+  Ajouter X API v2 à Postman
+</Button>
+
+Une fois la collection X API v2 chargée dans Postman, accédez à Search Posts &gt; Full-archive search request.
+
+**Deuxième étape : authentifier votre requête**
+
+Pour effectuer correctement une requête vers la X API, vous devez vérifier que vous avez l’autorisation. Pour ce faire avec cet endpoint, vous devez authentifier votre requête avec les méthodes d’authentification [OAuth 2.0 App-Only](/fr/resources/fundamentals/authentication#app-only-authentication-and-oauth-2-0-bearer-token).
+
+Vous devez ajouter vos clés et jetons, en particulier le [App Access Token](/fr/resources/fundamentals/authentication#using-and-generating-an-app-only-bearer-token) (également appelé App-only Bearer Token) à Postman. Pour cela, sélectionnez l’environnement nommé « X API v2 » dans le coin supérieur droit de Postman, puis ajoutez vos clés et jetons dans les champs « initial value » et « current value » (en cliquant sur l’icône en forme d’œil à côté du menu déroulant de l’environnement).
+
+Cette variable sera automatiquement renseignée dans l’onglet Authorization de la requête si tout est configuré correctement.
+ 
+
+**Troisième étape : créer une requête de recherche**
+
+Chaque recherche dans l’archive complète nécessite une unique requête de recherche. Pour cet exemple, nous allons utiliser une requête qui correspond aux Posts publiés par le compte @XDevelopers. Pour cette requête, nous utilisons l’opérateur from et le définissons sur XDevelopers (insensible à la casse) :
+
+`from:XDevelopers`
+
+Dans Postman, accédez à l’onglet « Params » et saisissez cet ID, ou une chaîne d’ID de Posts séparés par une virgule, dans la colonne « Value » du paramètre `ids`.
+ 
+
+| Key | Value | Description |
+| :--- | :--- | :--- |
+| `query` | `from:XDevelopers` | Requête de recherche à soumettre à l’endpoint de recherche de l’archive complète |
+
+Quatrième étape : identifier et spécifier les champs que vous souhaitez récupérer
+
+Si vous cliquez sur le bouton « Send » après l’étape trois, vous recevrez les champs par défaut du [Post object](/fr/x-api/fundamentals/data-dictionary#tweet) dans votre réponse : `id`, `text` et `edit_history_tweet_ids`. Notez que si vous recevez des Posts antérieurs à la prise en charge de l’édition, le champ `edit_history_tweet_ids` ne sera pas fourni. Aucun rétro-remplissage historique n’a été effectué pour ce champ. 
+
+Si vous souhaitez recevoir des champs supplémentaires au-delà de ces champs par défaut, vous devrez les spécifier dans votre requête avec les paramètres [field](/fr/x-api/fundamentals/fields) et/ou [expansion](/fr/x-api/fundamentals/expansions).
+
+Pour cet exercice, nous allons demander quatre ensembles différents de champs provenant d’objets distincts :
+
+1. Les champs par défaut du Post object
+2. Le champ supplémentaire tweet.created&#95;at dans les objets utilisateur principaux
+3. Les champs par défaut du [user object](/fr/x-api/fundamentals/data-dictionary#user) des auteurs associés pour les Posts retournés
+4. Le champ supplémentaire user.description dans les objets utilisateur associés
+    
+
+Dans Postman, accédez à l’onglet « Params » et ajoutez la paire clé:valeur suivante au tableau « Query Params » :
+
+| Key | Value | Returned fields |
+| :--- | :--- | :--- |
+| `tweet.fields` | `created_at` | `tweets.created_at` |
+| `expansions` | `author_id` | includes.users.id, includes.users.name, includes.users.username |
+| user.fields | description | includes.users.description |
+
+Vous devriez maintenant voir l’URL suivante à côté du bouton « Send » :
+
+`https://api.x.com/2/tweets/search/all?query=from:XDevelopers&tweet.fields=created_at&expansions=author_id&user.fields=created_at`
+
+<Note>
+  **Veuillez noter**
+
+  Par défaut, seuls les 10 Posts les plus récents seront retournés. Si vous souhaitez plus de 10 Posts par requête, vous pouvez utiliser le paramètre max&#95;results et le définir à un maximum de 500 Posts par requête. De même, par défaut, les Posts des 30 derniers jours seront retournés. Si vous souhaitez obtenir des Posts antérieurs à 30 jours, vous pouvez utiliser les paramètres start&#95;time et end&#95;time dans votre appel API.
+</Note>
+
+**Cinquième étape : Envoyez votre requête et examinez la réponse**
+
+Une fois tout configuré, cliquez sur le bouton « Send » et vous recevrez une réponse semblable à celle-ci :
+
+```
+{
+   "data": [
+       {
+           "author_id": "2244994945",
+           "created_at": "2020-06-11T16:05:06.000Z",
+           "id": "1271111223220809728",
+           "text": "Tune in tonight and watch as @jessicagarson takes us through running your favorite Python package in R. 🍿\n\nLearn how to use two powerful programming languages for data science together, and see a live example that uses the recent search endpoint from Twitter’s Developer Labs. https://t.co/v178oUZNuj"
+       },
+       {
+           "author_id": "2244994945",
+           "created_at": "2020-06-10T19:25:24.000Z",
+           "id": "1270799243071062016",
+           "text": "As we work towards building the new Twitter API, we’ve extended the deprecation timeline for several Labs v1 endpoints. Learn more 📖 https://t.co/rRWaJYJgKk"
+       },
+       {
+           "author_id": "2244994945",
+           "created_at": "2020-06-09T18:08:47.000Z",
+           "id": "1270417572001976322",
+           "text": "Annotations help you learn more about a Tweet — they can even help you find topics of interest. 🔬\n\nIn this tutorial, @suhemparack shows us how find Tweets related to COVID-19 using annotations + the filtered stream endpoint.\n\nLearn how you can, too. ⤵️\nhttps://t.co/qwVOgw0zSV"
+       }
+   ],
+   "includes": {
+       "users": [
+           {
+               "description": "The voice of Twitter's #DevRel team, and your official source for updates, news, & events about Twitter's API. \n\n#BlackLivesMatter",
+               "id": "2244994945",
+               "name": "Twitter Dev",
+               "username": "TwitterDev"
+           }
+       ]
+   },
+   "meta": {
+       "newest_id": "1271111223220809728",
+       "oldest_id": "1270417572001976322",
+       "result_count": 3
+   }
+}
+```
+
+Dans cet exemple, nous avons utilisé une requête très simple. Pour des guides plus détaillés, consultez les ressources ci-dessous. 
+
+**Étapes suivantes**
+
+[Personnalisez votre requête à l’aide de la référence de l’API](/fr/x-api/posts/full-archive-search)
+
+[Consultez la liste complète des opérateurs de requête](/fr/x-api/posts/search/integrate/build-a-query "See a full list of query operators")
+
+[Utilisez du code d’exemple pour ces endpoints](https://github.com/xdevplatform/Twitter-API-v2-sample-code "Use sample code for these endpoints")

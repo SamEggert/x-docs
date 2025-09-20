@@ -1,0 +1,96 @@
+---
+title: Guide de démarrage rapide
+sidebarTitle: Démarrage rapide
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+<div id="getting-started-with-the-manage-lists-endpoint-group">
+  ## Prise en main du groupe d’endpoints de gestion des Listes
+</div>
+
+Cette présentation rapide vous aidera à effectuer votre première requête vers les endpoints de gestion des Listes avec [Postman](/fr/tutorials/postman-getting-started).
+
+Si vous souhaitez voir des exemples de code dans différents langages, consultez notre dépôt GitHub [X API v2 sample code](https://github.com/xdevplatform/Twitter-API-v2-sample-code).
+
+**Remarque :** Dans cet exemple, nous enverrons une requête à l’endpoint *Create a List*, mais vous pourrez appliquer les apprentissages de ce démarrage rapide à d’autres requêtes de gestion.
+
+<Note>
+  **Prérequis**
+
+  Pour suivre ce guide, vous aurez besoin d’un ensemble de [keys and tokens](/fr/resources/fundamentals/authentication) pour authentifier votre requête. Vous pouvez générer ces clés et ces jetons en suivant les étapes ci-dessous :
+
+  * [Inscrivez-vous pour obtenir un compte développeur](https://developer.x.com/en/apply-for-access) et attendez son approbation.
+  * Créez un [Project](/fr/resources/fundamentals/projects) et une [developer App](/fr/resources/fundamentals/developer-apps) associée dans le portail développeur.
+  * Accédez à la page « Keys and tokens » de votre App pour générer les identifiants requis. Veillez à enregistrer tous les identifiants dans un emplacement sécurisé.
+</Note>
+
+<div id="steps-to-build-a-manage-list-request">
+  ### Étapes pour créer une requête de gestion de liste
+</div>
+
+**Étape 1 : Commencer avec un outil ou une bibliothèque**
+
+Il existe plusieurs outils, exemples de code et bibliothèques pour effectuer une requête vers cet endpoint ; ici, nous utiliserons Postman pour simplifier le processus.
+
+Pour charger la collection Postman X API v2 dans votre environnement, cliquez sur le bouton suivant :
+
+<Button href="https://app.getpostman.com/run-collection/9956214-784efcda-ed4c-4491-a4c0-a26470a67400">
+  Ajouter X API v2 à Postman
+</Button>
+
+Une fois la collection X API v2 chargée dans Postman, accédez au dossier “List”, sélectionnez le dossier “Manage List”, puis choisissez &quot;Create a List&quot;.
+
+**Étape 2 : Authentifier votre requête**
+
+Pour effectuer correctement une requête vers la X API, vous devez vérifier que vous êtes autorisé à le faire. Pour les endpoints de gestion des Posts, vous devez authentifier votre requête avec [OAuth 1.0a User Context](/fr/resources/fundamentals/authentication) ou [OAuth 2.0 Authorization Code with PKCE](fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-2).
+
+Dans cet exemple, nous allons utiliser OAuth 1.0a User Context.
+
+Vous devez ajouter vos clés et jetons (en particulier votre API Key, API Secret Key, OAuth 1.0a user Access Token et OAuth 1.0a user Access Token Secret) à Postman. Pour cela, sélectionnez l’environnement nommé “X API v2” (en haut à droite de Postman), puis ajoutez vos clés et jetons dans les champs &quot;initial value&quot; et &quot;current value&quot; (en cliquant sur l’icône en forme d’œil à côté de la liste déroulante des environnements).
+
+Si tout est correctement configuré, ces variables seront automatiquement renseignées dans l’onglet Authorization de la requête.
+ 
+**Étape 3 : Indiquer le nom de la nouvelle liste**
+
+Lors de la création d’une nouvelle liste avec cet endpoint, le nom de la liste est un paramètre requis dans le corps de la requête. En option, vous pouvez fournir une description et indiquer si la liste est privée.
+
+Dans Postman, accédez à l’onglet “Body” et saisissez le nom de la liste comme valeur du paramètre name. Si vous souhaitez ajouter une description, ajoutez une nouvelle clé intitulée description, de la même manière que name, puis indiquez la description de la liste comme valeur. Pour rendre une liste privée, suivez le même schéma, mais seules les valeurs true ou false sont acceptées pour ce paramètre. 
+
+|     |     |     |
+| :--- | :--- | :--- |
+| **Key** | **Value** | **Parameter type** |
+| `name` | Name of the list (required) | body |
+| description | Description for the list (optional) | body |
+| private | true or false (optional) | body |
+
+Vous devriez maintenant voir une URL similaire à côté du bouton &quot;Send&quot; :
+
+`https://api.x.com/2/lists`
+
+Étape 4 : Envoyer votre requête et examiner la réponse
+
+Une fois que tout est prêt, cliquez sur le bouton &quot;Send&quot; ; vous recevrez une réponse similaire à l’exemple suivant :
+
+```
+{
+  "data": {
+    "id": "1441162269824405510",
+    "name": "New list created from Postman"
+  }
+}
+```
+
+Si l’objet de réponse contient un id et le nom de votre liste, la création a réussi. 
+
+Pour supprimer une liste, sélectionnez la requête “Delete a List”, également située dans le dossier “Lists” de la collection X API v2 chargée dans Postman. Cet endpoint requiert l’ID de la liste à supprimer. Dans l’onglet “Params”, saisissez l’ID de la liste à supprimer comme valeur de la colonne id. 
+
+En cas de succès, vous recevrez une réponse similaire à l’exemple suivant : 
+
+```
+{
+  "data": {
+    "deleted": true
+  }
+}
+```

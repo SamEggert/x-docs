@@ -1,0 +1,151 @@
+---
+title: Prise en main
+sidebarTitle: Prise en main
+---
+
+import { Button } from '/snippets/fr/button.mdx';
+
+<div id="getting-started-with-the-manage-direct-message-endpoints">
+  ## Premiers pas avec les endpoints de gestion des Messages privés
+</div>
+
+Ce guide de démarrage rapide vous aidera à effectuer votre première requête vers les endpoints de Messages privés à l’aide de Postman, un outil de gestion et d’exécution de requêtes HTTP. Pour en savoir plus sur nos collections Postman, consultez notre guide [Utiliser Postman](/fr/tutorials/postman-getting-started).
+
+Veuillez consulter notre dépôt GitHub [Exemples de code X API v2](https://github.com/xdevplatform/Twitter-API-v2-sample-code) si vous souhaitez examiner des exemples en Python. Par ailleurs, les [kits de développement logiciel (SDK) de la X Developer Platform](/fr/x-api/tools-and-libraries/sdks) officiels seront mis à jour pour prendre en charge ces endpoints de Messages privés.  
+
+<Note>
+  **Prérequis**
+
+  Pour suivre ce guide, vous aurez besoin d’un jeu de [clés et jetons](/fr/resources/fundamentals/authentication) pour authentifier votre requête. Vous pouvez générer ces clés et jetons en suivant ces étapes :
+
+  * [Inscrivez-vous à un compte développeur](https://developer.x.com/en/apply-for-access) et attendez l’approbation.
+  * Créez un [projet](/fr/resources/fundamentals/projects) et une [application développeur](/fr/resources/fundamentals/developer-apps) associée dans le portail développeur.
+  * Accédez à la page « Keys and tokens » de votre application pour générer les identifiants requis. Assurez-vous d’enregistrer tous les identifiants dans un emplacement sécurisé.
+</Note>
+
+<div id="steps-to-building-manage-direct-message-requests">
+  ### Étapes pour gérer les requêtes de Messages privés
+</div>
+
+Dans cet exemple, en une seule requête, nous allons créer une nouvelle conversation de groupe et y ajouter un premier message. Nous ajouterons ensuite un deuxième message à la conversation créée.
+
+<div id="step-one-start-with-a-tool-or-library">
+  #### Première étape : Commencez avec un outil ou une bibliothèque
+</div>
+
+Pour commencer à travailler avec les endpoints de gestion des Messages privés, nous allons utiliser l’outil Postman pour simplifier le processus. Une collection d’exemples de requêtes X API v2, rédigée par XDev, sera utilisée pour explorer six endpoints permettant de créer de nouveaux Messages privés et de lister les événements de conversation.
+
+Bien que la plupart de la collection soit préremplie, vous devrez fournir quelques informations propres à l’application X créée pour héberger ces requêtes API. Commençons par charger/mettre à jour la collection.
+
+Pour charger la collection X API v2 dans votre environnement Postman, veuillez cliquer sur le bouton suivant :
+
+<Button href="https://app.getpostman.com/run-collection/9956214-784efcda-ed4c-4491-a4c0-a26470a67400">
+  Ajouter X API v2 à Postman
+</Button>
+
+Une fois la collection X API v2 chargée dans Postman, accédez au dossier “Manage Direct Messages”. L’onglet “Authorization” de ce dossier a été prérempli lorsque possible, et vous pouvez mettre à jour quelques paramètres pour renseigner les détails d’authentification de votre application X. Ce dossier contient également trois endpoints pour créer de nouveaux Messages privés. Notez qu’il existe aussi un dossier “Direct Message lookup” avec trois endpoints pour récupérer les événements de conversation, notamment l’envoi et la réception de messages, ainsi que l’arrivée et le départ de participants.
+
+Comme la création de conversations de groupe est une nouvelle fonctionnalité intéressante de X API v2, cet exemple s’y consacre. Nous utiliserons l’exemple “New group DM and conversation”. Cette requête servira à créer une conversation de groupe en Message privé.
+
+L’étape suivante consiste à vous authentifier auprès de l’endpoint.
+
+**Deuxième étape : Authentifiez votre requête**
+
+Pour effectuer correctement une requête vers X API, vous devez vérifier que vous avez l’autorisation de le faire. Pour réussir une requête vers cet endpoint, nous utiliserons [OAuth 2.0 Authorization Code Flow with PKCE](fr/resources/fundamentals/authentication#oauth-2-0-authorization-code-flow-with-pkce-2). Vous pouvez générer un jeton d’accès dans Postman.
+
+Avec Postman, vous pouvez définir la méthode d’authentification au niveau du dossier ou au niveau de la requête. Ici, nous allons configurer les détails d’authentification au niveau du dossier.
+
+Accédez au dossier “Manage Direct Messages”, sélectionnez l’onglet “Authorization” et confirmez que “Type” est réglé sur “OAuth 2.0”, et que “Add auth data to” est réglé sur “Request Headers”. Dans la section “Current Token”, assurez-vous que “Header Prefix” est réglé sur Bearer.
+
+Pour configurer et générer un nouveau jeton :
+
+1. Créez un nom de jeton, par exemple “Manage DMs”.
+
+2. Confirmez que **Grant Type** est réglé sur Authorization Code (with PKCE).
+
+3. Définissez votre **Callback URL**. Mettez à jour votre Callback URL pour qu’elle corresponde exactement à l’URL de rappel associée à votre application dans le [v2 Dev Portal](https://developer.x.com/en/portal/dashboard). Avec l’application X utilisée dans cet exemple, la Callback URL est définie sur : [*https://www.example.com*.](https://www.example.com/) (Notez que comme cela doit correspondre exactement, [*https://example.com*](https://example.com) ne fonctionnerait pas.)
+
+4. Confirmez que **Auth URL** est réglée sur [https://x.com/i/oauth2/authorize](https://x.com/i/oauth2/authorize).
+
+5. Confirmez que **Access Token URL** est réglée sur [https://api.x.com/2/oauth2/token](https://api.x.com/2/oauth2/token).\
+   **Client ID** : copiez-collez l’ID client OAuth 2.0 depuis le Developer Portal.\
+   **Client Secret** : vous n’en aurez besoin que si vous utilisez un type d’app qui est un client confidentiel. Le cas échéant, copiez-collez le Client Secret OAuth 2.0 depuis le Developer Portal.
+
+6. Confirmez que **Scope** est réglé sur dm.read, dm.write, tweet.read et users.read.
+
+7. Confirmez que **State** est réglé sur “state”.
+
+8. Confirmez que **Client Authentication** est réglé sur Send as Basic Auth header.
+
+9. Cliquez sur **Get New Access Token**, puis sur “Authorize app” dans le cadre du processus “Sign-in with X”.
+
+10. Cliquez sur le bouton “Proceed”, puis sur “Use Token” pour générer un jeton.
+
+11. Cliquez sur le bouton “Save” pour enregistrer ces paramètres de configuration.
+
+Vous pourriez recevoir un message indiquant que vous n’êtes pas connecté à X. Si vous rencontrez cette erreur, vous devrez vous connecter, dans Postman, au compte X au nom duquel vous tentez de publier.
+
+Maintenant que ces détails OAuth 2.0 ont été définis au niveau du dossier, accédez à chacun des exemples, ouvrez leur onglet &quot;Authorization&quot; et vérifiez que le Type est réglé sur &quot;Inherit auth from parent.&quot;
+
+Notez que ce jeton expirera bientôt et que vous devrez le régénérer en cliquant sur le bouton &quot;Get New Access Token&quot;. Cliquer sur ce bouton déclenchera le processus &quot;Sign-in with X&quot; et générera un nouveau jeton pour effectuer des requêtes.
+
+<div id="step-three-specify-the-direct-message-conversation-participants-and-message-contents">
+  #### Étape trois : spécifier les participants à la conversation de Messages privés et le contenu du message
+</div>
+
+Accédez à l’onglet « Body » et mettez à jour l’objet JSON d’exemple. Définissez l’attribut participant&#95;ids sur les comptes auxquels vous souhaitez envoyer le Message privé.
+
+`{
+   "message": {"text": "Hello to just you two, this is a new group conversation."},
+   "participant_ids": ["944480690","906948460078698496"],
+   "conversation_type": "Group"
+}`
+
+<div id="step-four-make-your-request-and-review-the-response">
+  #### Quatrième étape : envoyez votre requête et examinez la réponse
+</div>
+
+Une fois tout configuré, cliquez sur le bouton « Send », et vous recevrez une réponse similaire à l’exemple ci-dessous. Rappel : si votre jeton a expiré depuis sa création ci-dessus, vous pouvez retourner à l’onglet Authorization du dossier et cliquer sur « Get New Access Token » pour générer un nouveau jeton.
+
+```
+{
+   "data": {
+       "dm_conversation_id": "1582103724607971328",
+       "dm_event_id": "1582103724607971332"
+   }
+}
+```
+
+Si l’objet « data » de la réponse contient un dm&#95;conversation&#95;id et un dm&#95;event&#95;id, vous avez bien créé une nouvelle conversation de Messages privés. Pour commencer à consulter les événements associés à cette conversation, rendez-vous sur le guide de démarrage rapide Direct Message lookup.
+
+<div id="step-five-add-another-message-to-that-group-conversation">
+  #### Étape cinq : ajouter un autre message à cette conversation de groupe
+</div>
+
+Sélectionnez maintenant l’exemple « Add DM to conversation », puis l’onglet « Params ». Sous « Path Variables », mettez à jour dm&#95;conversation&#95;id avec l’ID de la conversation que vous avez créée ci‑dessus.
+
+|     |     |
+| :--- | :--- |
+| **Key** | **Value** |
+| dm&#95;conversation&#95;id | 1582103724607971328 |
+
+Avec cet ID de conversation, le chemin de requête sera : https://api.x.com/2/dm&#95;conversations/1582103724607971328/messages
+
+Mettez également à jour l’onglet « Body » avec un JSON de requête contenant le texte du message que vous souhaitez envoyer :
+
+```
+{
+   "text": "Adding a new message to our group conversation..."
+}
+```
+
+Une fois tout configuré, cliquez sur le bouton « Send » ; vous recevrez une réponse similaire à l’exemple suivant :
+
+```
+{
+   "data": {
+       "dm_conversation_id": "1582103724607971328",
+       "dm_event_id": "1582106224379559940"
+   }
+}
+```
