@@ -1,5 +1,5 @@
 {
-  "projectId": "prj_ejqxbtieenu58jv3lh2812nh",
+  "projectId": "prj_ft93id55i7kxsfi8gumczk6w",
   "$schema": "https://assets.gtx.dev/config-schema.json",
   "files": {
     "json": {
@@ -24,7 +24,7 @@
   "defaultLocale": "en",
   "locales": [
     "en",
-    "fr"
+    "ro"
   ],
   "options": {
     "jsonSchema": {
@@ -62,5 +62,6 @@
     "docsHideDefaultLocaleImport": true,
     "experimentalHideDefaultLocale": true,
     "experimentalAddHeaderAnchorIds": "mintlify"
-  }
+  },
+  "baseUrl": "http://localhost:10000"
 }
